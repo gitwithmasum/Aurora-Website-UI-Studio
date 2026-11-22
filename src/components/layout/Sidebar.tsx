@@ -15,11 +15,13 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Boxes,
-  Zap
+  Zap,
+  Plus,
+  FileCode
 } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { NAVIGATION_COMPONENTS } from '../../data/navigationComponents';
-import { ComponentItem } from '../../types/studio';
+import { sound } from '../../utils/soundEngine';
 
 export const Sidebar: React.FC = () => {
   const { 
@@ -32,10 +34,12 @@ export const Sidebar: React.FC = () => {
     isFavorite,
     recentlyViewed,
     savedPresets,
+    customTemplates,
     activeFilter,
     setActiveFilter,
     isSidebarOpen,
-    setIsSidebarOpen
+    setIsSidebarOpen,
+    setIsTemplateInjectorOpen
   } = useStudio();
 
   const [expandedSubcats, setExpandedSubcats] = useState<{ [key: string]: boolean }>({
@@ -46,12 +50,12 @@ export const Sidebar: React.FC = () => {
   });
 
   const toggleSubcat = (subcat: string) => {
+    sound.playHover();
     setExpandedSubcats((prev) => ({ ...prev, [subcat]: !prev[subcat] }));
   };
 
   // Filter components
   const filteredComponents = NAVIGATION_COMPONENTS.filter((comp) => {
-    // Search query match
     const matchesSearch = 
       comp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       comp.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -59,7 +63,6 @@ export const Sidebar: React.FC = () => {
 
     if (!matchesSearch) return false;
 
-    // Tab filter match
     if (activeFilter === 'favorites') return favorites.includes(comp.id);
     if (activeFilter === 'header') return comp.subcategory === 'header';
     if (activeFilter === 'navigation') return comp.subcategory === 'navigation';
@@ -69,7 +72,6 @@ export const Sidebar: React.FC = () => {
     return true;
   });
 
-  // Group by subcategory
   const subcategories = [
     { id: 'header', label: 'Header Components', count: NAVIGATION_COMPONENTS.filter(c => c.subcategory === 'header').length },
     { id: 'navigation', label: 'Navigation Components', count: NAVIGATION_COMPONENTS.filter(c => c.subcategory === 'navigation').length },
@@ -79,24 +81,27 @@ export const Sidebar: React.FC = () => {
 
   if (!isSidebarOpen) {
     return (
-      <div className="h-full border-r border-white/10 bg-[#080c14] p-2 flex flex-col items-center justify-between">
+      <div className="h-full border-r border-cyan-500/15 bg-[#050811] p-2 flex flex-col items-center justify-between z-30 select-none">
         <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-400 border border-white/10"
+          onClick={() => {
+            sound.playBlip(1200);
+            setIsSidebarOpen(true);
+          }}
+          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-400 border border-white/10 transition-colors"
           title="Expand Studio Navigation (Cmd+B)"
         >
           <PanelLeftOpen className="w-5 h-5" />
         </button>
-        <div className="writing-mode-vertical text-[10px] font-mono tracking-widest text-slate-500 uppercase select-none">
-          STUDIO NAV
+        <div className="writing-mode-vertical text-[10px] font-mono tracking-widest text-cyan-500/40 uppercase">
+          AURORA // NAV
         </div>
-        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-glow-cyan" />
       </div>
     );
   }
 
   return (
-    <aside className="w-80 h-full border-r border-white/10 bg-[#080c14] flex flex-col select-none z-30 shrink-0">
+    <aside className="w-80 h-full border-r border-cyan-500/15 bg-[#050811] flex flex-col select-none z-30 shrink-0">
       {/* Brand Header */}
       <div className="p-4 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -115,12 +120,40 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setIsSidebarOpen(false)}
-          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"
+          onClick={() => {
+            sound.playHover();
+            setIsSidebarOpen(false);
+          }}
+          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
           title="Collapse Sidebar (Cmd+B)"
         >
           <PanelLeftClose className="w-4 h-4" />
         </button>
+      </div>
+
+      {/* Blueprint Vault Quick Launcher Card */}
+      <div className="p-3 pb-0">
+        <div 
+          onClick={() => {
+            sound.playScan();
+            setIsTemplateInjectorOpen(true);
+          }}
+          className="p-2.5 rounded-xl bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-indigo-950/40 border border-cyan-500/30 hover:border-cyan-400 cursor-pointer transition-all shadow-glow-cyan flex items-center justify-between group"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
+              <Sparkles className="w-3.5 h-3.5" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                <span>Blueprint Arsenal</span>
+                <span className="text-[9px] px-1 rounded bg-cyan-500/30 font-mono text-cyan-300">{customTemplates.length}</span>
+              </div>
+              <span className="text-[10px] text-cyan-400/80 font-mono block">Click to Inject / View Vault</span>
+            </div>
+          </div>
+          <Plus className="w-4 h-4 text-cyan-400 group-hover:rotate-90 transition-transform" />
+        </div>
       </div>
 
       {/* Search Input */}
@@ -132,7 +165,7 @@ export const Sidebar: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search 36 components... (⌘K)"
-            className="w-full pl-8 pr-7 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
+            className="w-full pl-8 pr-7 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-mono"
           />
           {searchQuery && (
             <button 
@@ -159,7 +192,7 @@ export const Sidebar: React.FC = () => {
               onClick={() => setActiveFilter(tab.id as any)}
               className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all ${
                 activeFilter === tab.id
-                  ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/40'
+                  ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/40 shadow-glow-cyan'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -180,7 +213,7 @@ export const Sidebar: React.FC = () => {
             </span>
           </div>
           <p className="text-[10px] text-slate-400 mt-1 leading-snug">
-            All 36 interactive components implemented with live simulator and reactive controls.
+            36 components with live simulators, multi-templates, and custom code injector.
           </p>
         </div>
 

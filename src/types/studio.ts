@@ -80,3 +80,15 @@ export interface SavedPreset {
   settings: CustomizationSettings;
   createdAt: string;
 }
+
+export interface CustomTemplate {
+  id: string;
+  name: string;
+  componentId: string;
+  description: string;
+  codeSnippet: string;
+  tags: string[];
+  settings: CustomizationSettings;
+  isUserCreated: boolean;
+  createdAt: string;
+}

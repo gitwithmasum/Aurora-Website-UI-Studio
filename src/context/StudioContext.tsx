@@ -5,15 +5,17 @@ import {
   CustomizationSettings, 
   DeviceMode, 
   SavedPreset, 
+  CustomTemplate,
   ThemePreset 
 } from '../types/studio';
 import { CATEGORIES } from '../data/categories';
 import { NAVIGATION_COMPONENTS } from '../data/navigationComponents';
 import { DEFAULT_CUSTOMIZATION, THEME_PRESETS } from '../data/themePresets';
+import { sound } from '../utils/soundEngine';
 
-export type CanvasBackgroundType = 'grid' | 'dots' | 'mesh' | 'dark' | 'light' | 'transparent';
-export type FilterType = 'all' | 'header' | 'navigation' | 'profile-actions' | 'effects' | 'favorites' | 'presets';
-export type StudioTab = 'preview' | 'code' | 'matrix' | 'docs';
+export type CanvasBackgroundType = 'grid' | 'dots' | 'radar' | 'mesh' | 'dark' | 'light';
+export type FilterType = 'all' | 'header' | 'navigation' | 'profile-actions' | 'effects' | 'favorites' | 'custom-templates';
+export type StudioTab = 'preview' | 'code' | 'matrix' | 'templates';
 
 interface StudioContextType {
   categories: CategoryItem[];
@@ -45,6 +47,12 @@ interface StudioContextType {
   savePreset: (name: string) => void;
   deletePreset: (id: string) => void;
   applyPreset: (preset: SavedPreset) => void;
+  customTemplates: CustomTemplate[];
+  addCustomTemplate: (template: Omit<CustomTemplate, 'id' | 'createdAt'>) => void;
+  deleteCustomTemplate: (id: string) => void;
+  applyCustomTemplate: (template: CustomTemplate) => void;
+  isTemplateInjectorOpen: boolean;
+  setIsTemplateInjectorOpen: (open: boolean) => void;
   recentlyViewed: string[];
   isCommandPaletteOpen: boolean;
   setIsCommandPaletteOpen: (open: boolean) => void;
@@ -54,13 +62,20 @@ interface StudioContextType {
   setIsSidebarOpen: (open: boolean) => void;
   zoomLevel: number;
   setZoomLevel: (zoom: number) => void;
+  soundEnabled: boolean;
+  setSoundEnabled: (enabled: boolean) => void;
+  crtEnabled: boolean;
+  setCrtEnabled: (enabled: boolean) => void;
+  hudMode: 'tactical' | 'standard';
+  setHudMode: (mode: 'tactical' | 'standard') => void;
 }
 
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
 
-const STORAGE_KEY_FAVORITES = 'ui_studio_favorites';
-const STORAGE_KEY_PRESETS = 'ui_studio_presets';
-const STORAGE_KEY_RECENT = 'ui_studio_recent';
+const STORAGE_KEY_FAVORITES = 'aurora_favorites';
+const STORAGE_KEY_PRESETS = 'aurora_presets';
+const STORAGE_KEY_TEMPLATES = 'aurora_custom_templates';
+const STORAGE_KEY_RECENT = 'aurora_recent';
 
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [categories] = useState<CategoryItem[]>(CATEGORIES);
@@ -68,27 +83,32 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [components] = useState<ComponentItem[]>(NAVIGATION_COMPONENTS);
   const [activeComponent, setActiveComponentState] = useState<ComponentItem>(NAVIGATION_COMPONENTS[0]);
   const [activeVariantId, setActiveVariantId] = useState<string>(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
-  const [activeTab, setActiveTab] = useState<StudioTab>('preview');
-  const [deviceMode, setDeviceMode] = useState<DeviceMode>('desktop');
-  const [canvasBg, setCanvasBg] = useState<CanvasBackgroundType>('grid');
+  const [activeTab, setActiveTabState] = useState<StudioTab>('preview');
+  const [deviceMode, setDeviceModeState] = useState<DeviceMode>('desktop');
+  const [canvasBg, setCanvasBgState] = useState<CanvasBackgroundType>('radar');
   const [customizations, setCustomizations] = useState<CustomizationSettings>(DEFAULT_CUSTOMIZATION);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [activeFilter, setActiveFilterState] = useState<FilterType>('all');
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [isTemplateInjectorOpen, setIsTemplateInjectorOpen] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [soundEnabled, setSoundEnabledState] = useState<boolean>(true);
+  const [crtEnabled, setCrtEnabledState] = useState<boolean>(false);
+  const [hudMode, setHudModeState] = useState<'tactical' | 'standard'>('tactical');
 
-  // Local storage persisted state
+  // Favorites
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY_FAVORITES);
-      return stored ? JSON.parse(stored) : ['top-navigation-bar', 'command-menu', 'glass-navigation-bar'];
+      return stored ? JSON.parse(stored) : ['top-navigation-bar', 'command-menu', 'dock-navigation'];
     } catch {
       return ['top-navigation-bar'];
     }
   });
 
+  // Presets
   const [savedPresets, setSavedPresets] = useState<SavedPreset[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY_PRESETS);
@@ -98,73 +118,117 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   });
 
+  // Custom User Templates (Persistent Blueprint Arsenal)
+  const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_TEMPLATES);
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    // Seed default sample futuristic template
+    return [
+      {
+        id: 'template_quantum_core',
+        name: 'Quantum Hyper-Grid Header',
+        componentId: 'top-navigation-bar',
+        description: 'Deep space telemetry header with cyan laser brackets and biometric status node.',
+        codeSnippet: `// Sample Quantum Header Blueprint\nexport const QuantumHeader = () => (\n  <header className="p-4 bg-black/90 border border-cyan-500/50 rounded-2xl shadow-glow-cyan flex justify-between">\n    <span className="font-mono text-cyan-400 font-bold">AURORA // CORE</span>\n  </header>\n);`,
+        tags: ['Cyberpunk', 'Quantum', 'HUD'],
+        settings: {
+          ...DEFAULT_CUSTOMIZATION,
+          theme: 'cyberpunk',
+          primaryColor: '#00f2fe',
+          accentColor: '#f43f5e',
+          shadowStyle: 'neon',
+          borderRadius: 4,
+        },
+        isUserCreated: false,
+        createdAt: 'Official Blueprint',
+      },
+    ];
+  });
+
+  // Recently viewed
   const [recentlyViewed, setRecentlyViewed] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY_RECENT);
-      return stored ? JSON.parse(stored) : ['top-navigation-bar', 'sticky-header', 'command-menu'];
+      return stored ? JSON.parse(stored) : ['top-navigation-bar', 'sticky-header'];
     } catch {
       return ['top-navigation-bar'];
     }
   });
 
-  // Sync favorites
+  // Sound sync
+  const setSoundEnabled = (enabled: boolean) => {
+    sound.enabled = enabled;
+    setSoundEnabledState(enabled);
+    if (enabled) sound.playBlip(1600);
+  };
+
+  const setCrtEnabled = (enabled: boolean) => {
+    sound.playBlip(900);
+    setCrtEnabledState(enabled);
+  };
+
+  const setHudMode = (mode: 'tactical' | 'standard') => {
+    sound.playScan();
+    setHudModeState(mode);
+  };
+
+  const setActiveTab = (tab: StudioTab) => {
+    sound.playBlip(1200);
+    setActiveTabState(tab);
+  };
+
+  const setDeviceMode = (mode: DeviceMode) => {
+    sound.playBlip(1400);
+    setDeviceModeState(mode);
+  };
+
+  const setCanvasBg = (bg: CanvasBackgroundType) => {
+    sound.playBlip(1100);
+    setCanvasBgState(bg);
+  };
+
+  const setActiveFilter = (filter: FilterType) => {
+    sound.playHover();
+    setActiveFilterState(filter);
+  };
+
+  // Sync to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_FAVORITES, JSON.stringify(favorites));
-    } catch (e) {
-      console.error(e);
-    }
+    } catch {}
   }, [favorites]);
 
-  // Sync presets
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_PRESETS, JSON.stringify(savedPresets));
-    } catch (e) {
-      console.error(e);
-    }
+    } catch {}
   }, [savedPresets]);
 
-  // Sync recent
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_TEMPLATES, JSON.stringify(customTemplates));
+    } catch {}
+  }, [customTemplates]);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_RECENT, JSON.stringify(recentlyViewed));
-    } catch (e) {
-      console.error(e);
-    }
+    } catch {}
   }, [recentlyViewed]);
 
-  // Keybindings (Cmd+K for command menu, Cmd+B for sidebar)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsCommandPaletteOpen((prev) => !prev);
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
-        e.preventDefault();
-        setIsSidebarOpen((prev) => !prev);
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'i') {
-        e.preventDefault();
-        setIsInspectorOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
   const setActiveComponent = (comp: ComponentItem) => {
+    sound.playBlip(1300);
     setActiveComponentState(comp);
     setActiveVariantId(comp.variations[0]?.id || 'standard');
 
-    // Add to recently viewed
     setRecentlyViewed((prev) => {
       const filtered = prev.filter((id) => id !== comp.id);
       return [comp.id, ...filtered].slice(0, 8);
     });
 
-    // If component has specific defaults, merge them
     if (comp.defaultSettings) {
       setCustomizations((prev) => ({
         ...prev,
@@ -174,6 +238,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateCustomizations = (partial: Partial<CustomizationSettings>) => {
+    sound.playHover();
     setCustomizations((prev) => ({
       ...prev,
       ...partial,
@@ -181,6 +246,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const applyTheme = (theme: ThemePreset) => {
+    sound.playScan();
     const themeConfig = THEME_PRESETS[theme];
     if (themeConfig) {
       setCustomizations((prev) => ({
@@ -192,6 +258,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const resetCustomizations = () => {
+    sound.playConfirm();
     const themeConfig = THEME_PRESETS[customizations.theme] || THEME_PRESETS.dark;
     setCustomizations({
       ...themeConfig.settings,
@@ -200,6 +267,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const toggleFavorite = (compKey: string) => {
+    sound.playConfirm();
     setFavorites((prev) => 
       prev.includes(compKey) ? prev.filter((id) => id !== compKey) : [...prev, compKey]
     );
@@ -208,6 +276,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const isFavorite = (compKey: string) => favorites.includes(compKey);
 
   const savePreset = (name: string) => {
+    sound.playConfirm();
     const newPreset: SavedPreset = {
       id: `preset_${Date.now()}`,
       name,
@@ -219,15 +288,42 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const deletePreset = (id: string) => {
+    sound.playBlip(600);
     setSavedPresets((prev) => prev.filter((p) => p.id !== id));
   };
 
   const applyPreset = (preset: SavedPreset) => {
+    sound.playScan();
     const targetComp = components.find((c) => c.id === preset.componentId);
     if (targetComp) {
       setActiveComponentState(targetComp);
     }
     setCustomizations({ ...preset.settings });
+  };
+
+  // Custom Template actions
+  const addCustomTemplate = (templateData: Omit<CustomTemplate, 'id' | 'createdAt'>) => {
+    sound.playConfirm();
+    const newTemplate: CustomTemplate = {
+      ...templateData,
+      id: `tmpl_${Date.now()}`,
+      createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+    };
+    setCustomTemplates((prev) => [newTemplate, ...prev]);
+  };
+
+  const deleteCustomTemplate = (id: string) => {
+    sound.playBlip(500);
+    setCustomTemplates((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const applyCustomTemplate = (template: CustomTemplate) => {
+    sound.playScan();
+    const targetComp = components.find((c) => c.id === template.componentId);
+    if (targetComp) {
+      setActiveComponentState(targetComp);
+    }
+    setCustomizations({ ...template.settings });
   };
 
   return (
@@ -262,6 +358,12 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         savePreset,
         deletePreset,
         applyPreset,
+        customTemplates,
+        addCustomTemplate,
+        deleteCustomTemplate,
+        applyCustomTemplate,
+        isTemplateInjectorOpen,
+        setIsTemplateInjectorOpen,
         recentlyViewed,
         isCommandPaletteOpen,
         setIsCommandPaletteOpen,
@@ -271,6 +373,12 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsSidebarOpen,
         zoomLevel,
         setZoomLevel,
+        soundEnabled,
+        setSoundEnabled,
+        crtEnabled,
+        setCrtEnabled,
+        hudMode,
+        setHudMode,
       }}
     >
       {children}
