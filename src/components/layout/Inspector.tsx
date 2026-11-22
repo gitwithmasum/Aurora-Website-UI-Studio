@@ -18,7 +18,7 @@ import {
   Zap,
   Eye
 } from 'lucide-react';
-import { THEME_PRESETS } from '../../data/themePresets';
+import { THEME_PRESETS, ATMOSPHERIC_PALETTES, AtmosphericPalette } from '../../data/themePresets';
 import { ThemePreset, InteractionState } from '../../types/studio';
 
 export const Inspector: React.FC = () => {
@@ -160,11 +160,70 @@ export const Inspector: React.FC = () => {
 
         {/* 2. THEME & COLORS SECTION */}
         {activeSection === 'theme' && (
-          <div className="space-y-4">
-            {/* 6 Core Presets */}
+          <div className="space-y-5">
+            {/* Curated Atmospheric Color Palettes (Inspired by @uiuxaadi showcases) */}
             <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Atmospheric Palettes</span>
+                </label>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300">
+                  VOLUMETRIC
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mb-2 leading-tight">
+                Curated glow harmonies with lateral spotlights and capsule pill aesthetics:
+              </p>
+
+              <div className="space-y-2">
+                {ATMOSPHERIC_PALETTES.map((pal) => {
+                  const isCurrent = customizations.theme === pal.themeId;
+                  return (
+                    <div
+                      key={pal.id}
+                      onClick={() => applyTheme(pal.themeId)}
+                      className={`p-2.5 rounded-xl border cursor-pointer transition-all ${
+                        isCurrent
+                          ? 'border-cyan-400 bg-cyan-950/30 shadow-glow-cyan'
+                          : 'border-white/10 bg-white/5 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-xs text-white">{pal.name}</span>
+                        {isCurrent && <Check className="w-3.5 h-3.5 text-cyan-400" />}
+                      </div>
+
+                      {/* Stacked Color Pill Preview (matching the reference images) */}
+                      <div className="flex items-center gap-1 h-6 rounded-lg overflow-hidden p-0.5 bg-black/40 border border-white/10">
+                        {pal.colors.map((hex) => (
+                          <div
+                            key={hex}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard?.writeText(hex);
+                              updateCustomizations({ primaryColor: hex });
+                            }}
+                            className="flex-1 h-full rounded transition-transform hover:scale-110 relative group"
+                            style={{ backgroundColor: hex }}
+                            title={`Click to copy: ${hex}`}
+                          >
+                            <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-black/90 text-[9px] font-mono text-white opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-30">
+                              {hex}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Standard Theme Presets Grid */}
+            <div className="pt-2 border-t border-white/10">
               <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-2 font-bold">
-                Theme Presets
+                All Presets ({Object.keys(THEME_PRESETS).length})
               </label>
               <div className="grid grid-cols-2 gap-2">
                 {Object.keys(THEME_PRESETS).map((tKey) => {
@@ -174,15 +233,15 @@ export const Inspector: React.FC = () => {
                     <button
                       key={tKey}
                       onClick={() => applyTheme(tKey as ThemePreset)}
-                      className={`p-2.5 rounded-xl border text-left transition-all ${
+                      className={`p-2 rounded-xl border text-left transition-all ${
                         isCurrent 
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-semibold' 
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-semibold shadow-glow-cyan' 
                           : 'bg-white/5 border-white/5 hover:border-white/20 text-slate-300'
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         <span 
-                          className="w-3 h-3 rounded-full border border-white/20" 
+                          className="w-3 h-3 rounded-full border border-white/20 shrink-0" 
                           style={{ backgroundColor: preset.settings.primaryColor }}
                         />
                         <span className="text-xs truncate">{preset.badge}</span>

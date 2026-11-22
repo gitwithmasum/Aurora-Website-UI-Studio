@@ -206,10 +206,13 @@ export const StudioLayout: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Interactive Live Canvas with Reticle Framing */}
-                    <div className={`flex-1 overflow-auto p-4 md:p-8 flex items-center justify-center transition-all ${canvasBgClassMap[canvasBg]}`}>
+                    {/* Interactive Live Canvas with Atmospheric Stage & Reticle Framing */}
+                    <div 
+                      className={`flex-1 overflow-auto p-4 md:p-8 flex items-center justify-center transition-all atmospheric-stage ${canvasBgClassMap[canvasBg]}`}
+                      style={{ '--stage-flare': `${customizations.primaryColor}80` } as React.CSSProperties}
+                    >
                       <div 
-                        className={`w-full transition-all duration-300 flex items-center justify-center ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-4' : ''}`}
+                        className={`w-full transition-all duration-300 flex items-center justify-center relative z-10 ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-4' : ''}`}
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
                       >
                         <NavigationRenderer />

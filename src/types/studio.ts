@@ -4,7 +4,12 @@ export type ThemePreset =
   | 'glassmorphism'
   | 'cyberpunk'
   | 'black-gold'
-  | 'minimal';
+  | 'minimal'
+  | 'electric-violet'
+  | 'crimson-velvet'
+  | 'deep-ocean'
+  | 'midnight-steel'
+  | 'opal-frost';
 
 export type DeviceMode = 'desktop' | 'laptop' | 'tablet' | 'mobile';
 
