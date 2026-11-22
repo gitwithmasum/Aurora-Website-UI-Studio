@@ -1,0 +1,82 @@
+export type ThemePreset = 
+  | 'light'
+  | 'dark'
+  | 'glassmorphism'
+  | 'cyberpunk'
+  | 'black-gold'
+  | 'minimal';
+
+export type DeviceMode = 'desktop' | 'laptop' | 'tablet' | 'mobile';
+
+export type InteractionState = 
+  | 'default'
+  | 'hover'
+  | 'active'
+  | 'focus'
+  | 'pressed'
+  | 'disabled'
+  | 'expanded'
+  | 'collapsed'
+  | 'loading'
+  | 'selected';
+
+export interface CustomizationSettings {
+  theme: ThemePreset;
+  primaryColor: string;
+  accentColor: string;
+  bgColor: string;
+  textColor: string;
+  borderRadius: number; // 0 to 24px
+  borderWidth: number; // 0 to 4px
+  borderColor: string;
+  borderStyle: 'solid' | 'dashed' | 'none';
+  shadowStyle: 'none' | 'soft' | 'glow' | 'dramatic' | 'neon';
+  blurIntensity: number; // 0 to 32px
+  paddingY: number; // 4 to 32px
+  paddingX: number; // 8 to 48px
+  gap: number; // 4 to 32px
+  fontSize: 'xs' | 'sm' | 'base' | 'lg';
+  fontWeight: 'normal' | 'medium' | 'semibold' | 'bold';
+  letterSpacing: 'tight' | 'normal' | 'wide';
+  widthMode: 'full' | 'contained' | 'compact';
+  iconStyle: 'minimal' | 'filled' | 'duotone';
+  animationSpeed: 'none' | 'fast' | 'normal' | 'slow';
+  activeState: InteractionState;
+}
+
+export interface ComponentVariation {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface ComponentItem {
+  id: string;
+  name: string;
+  category: string;
+  categoryId: string;
+  subcategory: 'header' | 'navigation' | 'profile-actions' | 'effects';
+  description: string;
+  tags: string[];
+  status: 'ready' | 'beta' | 'coming-soon';
+  variations: ComponentVariation[];
+  defaultSettings?: Partial<CustomizationSettings>;
+}
+
+export interface CategoryItem {
+  id: string;
+  number: string;
+  name: string;
+  description: string;
+  iconName: string;
+  count: number;
+  status: 'available' | 'coming-soon';
+}
+
+export interface SavedPreset {
+  id: string;
+  name: string;
+  componentId: string;
+  settings: CustomizationSettings;
+  createdAt: string;
+}
