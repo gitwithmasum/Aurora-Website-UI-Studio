@@ -92,7 +92,7 @@ export const StudioLayout: React.FC = () => {
               <FuturisticSampleBar />
 
               {/* Component Header & Variant Switcher */}
-              <div className="px-6 py-2.5 border-b border-cyan-500/15 bg-[#050811]/90 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+              <div className="px-6 py-2.5 border-b border-[#253745]/60 bg-[#11212D]/90 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-sm font-extrabold tracking-tight text-white flex items-center gap-2">

@@ -8,8 +8,8 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #050811;
-  color: #f1f5f9;
+  background-color: #06141B;
+  color: #CCD0CF;
 }
 
 /* Custom futuristic scrollbars */
@@ -19,24 +19,24 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(8, 12, 20, 0.8);
+  background: rgba(6, 20, 27, 0.9);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(6, 182, 212, 0.25);
+  background: rgba(155, 168, 171, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(6, 182, 212, 0.7);
+  background: rgba(204, 208, 207, 0.7);
 }
 
 /* Studio sci-fi background patterns */
 .bg-grid-pattern {
   background-size: 28px 28px;
   background-image: 
-    linear-gradient(to right, rgba(6, 182, 212, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(6, 182, 212, 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgba(155, 168, 171, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(155, 168, 171, 0.08) 1px, transparent 1px);
 }
 
 /* Atmospheric Volumetric Flares (Inspired by @uiuxaadi showcases) */
@@ -53,7 +53,7 @@ body {
   width: 320px;
   height: 70%;
   border-radius: 100%;
-  background: radial-gradient(ellipse at center, var(--stage-flare, rgba(157, 113, 232, 0.55)) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, var(--stage-flare, rgba(155, 168, 171, 0.65)) 0%, transparent 70%);
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;
@@ -68,7 +68,7 @@ body {
   width: 320px;
   height: 70%;
   border-radius: 100%;
-  background: radial-gradient(ellipse at center, var(--stage-flare, rgba(157, 113, 232, 0.55)) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, var(--stage-flare, rgba(155, 168, 171, 0.65)) 0%, transparent 70%);
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;

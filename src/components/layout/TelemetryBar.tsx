@@ -40,7 +40,7 @@ export const TelemetryBar: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-8 border-t border-cyan-500/20 bg-[#04060c] px-4 flex items-center justify-between text-[10px] font-mono select-none z-30 shrink-0">
+    <div className="h-8 border-t border-[#253745]/60 bg-[#06141B] px-4 flex items-center justify-between text-[10px] font-mono select-none z-30 shrink-0">
       {/* Left: Telemetry Data Stream */}
       <div className="flex items-center gap-4 text-slate-400">
         <div className="flex items-center gap-1.5 text-cyan-400">

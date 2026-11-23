@@ -41,6 +41,25 @@ export interface SampleArchetype {
 
 export const FUTURISTIC_SAMPLES: SampleArchetype[] = [
   {
+    id: 'aurora-midnight-steel',
+    themeId: 'midnight-steel',
+    title: 'Aurora Midnight Steel (Official)',
+    tagline: 'Abyssal Navy · Cold Steel Slate · Titanium Silver Highlights',
+    primaryColor: '#9BA8AB',
+    accentColor: '#4A5C6A',
+    bgColor: '#06141B',
+    flareColor: 'rgba(155, 168, 171, 0.85)',
+    borderRadius: 22,
+    borderWidth: 1,
+    blurIntensity: 22,
+    shadowStyle: 'glow',
+    pillShape: true,
+    hudReticle: true,
+    crtEffect: false,
+    badge: 'OFFICIAL SIGNATURE',
+    colors: ['#06141B', '#11212D', '#253745', '#4A5C6A', '#9BA8AB', '#CCD0CF']
+  },
+  {
     id: 'visionos-nebula',
     themeId: 'electric-violet',
     title: 'VisionOS Nebula Capsule',
@@ -168,7 +187,7 @@ export const FuturisticSampleBar: React.FC = () => {
   } = useStudio();
 
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedSampleId, setSelectedSampleId] = useState<string>('visionos-nebula');
+  const [selectedSampleId, setSelectedSampleId] = useState<string>('aurora-midnight-steel');
   const [showArranger, setShowArranger] = useState(false);
 
   const activeSample = FUTURISTIC_SAMPLES.find(s => s.id === selectedSampleId) || FUTURISTIC_SAMPLES[0];
@@ -200,7 +219,7 @@ export const FuturisticSampleBar: React.FC = () => {
   };
 
   return (
-    <div className="border-b border-cyan-500/20 bg-[#050811]/95 backdrop-blur-xl relative z-20 select-none">
+    <div className="border-b border-[#253745]/60 bg-[#06141B]/95 backdrop-blur-xl relative z-20 select-none">
       {/* Top Header Strip with Telemetry & Toggle */}
       <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">

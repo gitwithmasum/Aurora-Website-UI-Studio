@@ -5,16 +5,24 @@ export default {
   theme: {
     extend: {
       colors: {
+        aurora: {
+          950: '#06141B', // Deep Abyssal Midnight Base
+          900: '#11212D', // Dark Navy Slate Surface
+          800: '#253745', // Steel Blue Borders & Accents
+          600: '#4A5C6A', // Cold Slate Secondary
+          400: '#9BA8AB', // Titanium Ice Primary
+          200: '#CCD0CF', // Silver Mist Highlight / Text
+        },
         studio: {
-          bg: '#080c14',
-          card: '#0f172a',
-          surface: '#131d31',
-          border: 'rgba(255, 255, 255, 0.08)',
-          'border-light': 'rgba(255, 255, 255, 0.15)',
-          muted: '#94a3b8',
-          accent: '#06b6d4',
-          'accent-glow': '#00f2fe',
-          cyan: '#06b6d4',
+          bg: '#06141B',
+          card: '#11212D',
+          surface: '#11212D',
+          border: 'rgba(155, 168, 171, 0.15)',
+          'border-light': 'rgba(155, 168, 171, 0.25)',
+          muted: '#9BA8AB',
+          accent: '#9BA8AB',
+          'accent-glow': '#CCD0CF',
+          cyan: '#9BA8AB',
           gold: '#eab308',
           neon: '#a855f7',
         },

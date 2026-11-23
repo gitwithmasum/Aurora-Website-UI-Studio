@@ -62,7 +62,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenSavePreset, onOpenEx
   ];
 
   return (
-    <header className="h-14 border-b border-white/10 bg-[#080c14] px-4 flex items-center justify-between z-20 shrink-0 select-none">
+    <header className="h-14 border-b border-[#253745]/60 bg-[#06141B] px-4 flex items-center justify-between z-20 shrink-0 select-none">
       {/* Left: Breadcrumb & Search trigger */}
       <div className="flex items-center gap-3">
         <button

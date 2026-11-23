@@ -29,9 +29,22 @@ export const StyleSamplesModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const styleSamples = [
     {
+      id: 'midnight-steel',
+      themeId: 'midnight-steel' as ThemePreset,
+      title: '01. Aurora Midnight Steel (Official Signature)',
+      subtitle: 'Abyssal Midnight Navy · Titanium Slate · Silver Mist',
+      desc: 'The official signature theme of Aurora UI Studio based on @uiuxaadi palette. Deep #06141B ground with icy titanium highlights and cold steel accents.',
+      primaryHex: '#9BA8AB',
+      accentHex: '#4A5C6A',
+      bgHex: '#06141B',
+      textHex: '#CCD0CF',
+      flare: 'rgba(155, 168, 171, 0.75)',
+      tags: ['Official', 'Midnight Steel', 'Titanium'],
+    },
+    {
       id: 'electric-violet',
       themeId: 'electric-violet' as ThemePreset,
-      title: '01. VisionOS Nebula Capsule',
+      title: '02. VisionOS Nebula Capsule',
       subtitle: 'Liquid Glass · Volumetric Violet Flares · Soft Pill Geometry',
       desc: 'Inspired by Spatial computing and @uiuxaadi luxury UI. High blur, glowing lavender beacons, and lateral spotlight dispersion.',
       primaryHex: '#9D71E8',
@@ -44,7 +57,7 @@ export const StyleSamplesModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       id: 'crimson-velvet',
       themeId: 'crimson-velvet' as ThemePreset,
-      title: '02. Cyberpunk Velvet Rose',
+      title: '03. Cyberpunk Velvet Rose',
       subtitle: 'Burgundy Crimson · Hot Neon Glow · Champagne Highlights',
       desc: 'High-contrast luxury cyberpunk. Deep burgundy ground with high-voltage magenta lasers and soft ambient lighting.',
       primaryHex: '#FF69B4',
@@ -57,7 +70,7 @@ export const StyleSamplesModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       id: 'deep-ocean',
       themeId: 'deep-ocean' as ThemePreset,
-      title: '03. JARVIS Bioluminescent HUD',
+      title: '04. JARVIS Bioluminescent HUD',
       subtitle: 'Deep Abyssal Teal · Cyan Telemetry · Tactical Brackets',
       desc: 'Command center telemetry aesthetics. Abyssal midnight teal with bioluminescent cyan light and holographic coordinate readouts.',
       primaryHex: '#0F969C',
@@ -70,7 +83,7 @@ export const StyleSamplesModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       id: 'black-gold',
       themeId: 'black-gold' as ThemePreset,
-      title: '04. Obsidian Gold Luxury Monolith',
+      title: '05. Obsidian Gold Luxury Monolith',
       subtitle: 'Champagne Gold · Obsidian Black · Metallic Refinements',
       desc: 'Ultra-prestigious dark mode. Obsidian black backdrops with champagne gold laser borders and refined typographic tracking.',
       primaryHex: '#EAB308',

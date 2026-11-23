@@ -60,9 +60,9 @@ export const Inspector: React.FC = () => {
   ];
 
   return (
-    <aside className="w-80 h-full border-l border-white/10 bg-[#080c14] flex flex-col z-20 shrink-0 select-none">
+    <aside className="w-80 h-full border-l border-[#253745]/60 bg-[#06141B] flex flex-col z-20 shrink-0 select-none">
       {/* Inspector Header */}
-      <div className="p-4 border-b border-white/10 flex items-center justify-between">
+      <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sliders className="w-4 h-4 text-cyan-400" />
           <span className="font-bold text-xs uppercase tracking-wider text-white">

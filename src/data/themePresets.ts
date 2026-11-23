@@ -22,6 +22,17 @@ export interface AtmosphericPalette {
 
 export const ATMOSPHERIC_PALETTES: AtmosphericPalette[] = [
   {
+    id: 'midnight-steel',
+    name: 'Aurora Midnight Steel (Official Signature)',
+    themeId: 'midnight-steel',
+    glowColor: 'rgba(155, 168, 171, 0.65)',
+    colors: ['#06141B', '#11212D', '#253745', '#4A5C6A', '#9BA8AB', '#CCD0CF'],
+    surface: '#06141B',
+    primary: '#9BA8AB',
+    accent: '#4A5C6A',
+    text: '#CCD0CF',
+  },
+  {
     id: 'electric-violet',
     name: 'Electric Violet / Nebula',
     themeId: 'electric-violet',
@@ -53,17 +64,6 @@ export const ATMOSPHERIC_PALETTES: AtmosphericPalette[] = [
     primary: '#0F969C',
     accent: '#6DA5C0',
     text: '#E0F7FA',
-  },
-  {
-    id: 'midnight-steel',
-    name: 'Midnight Titanium / Cold Steel',
-    themeId: 'midnight-steel',
-    glowColor: 'rgba(155, 168, 171, 0.55)',
-    colors: ['#06141B', '#11212D', '#253745', '#4A5C6A', '#9BA8AB', '#CCD0CF'],
-    surface: '#06141B',
-    primary: '#9BA8AB',
-    accent: '#4A5C6A',
-    text: '#CCD0CF',
   },
   {
     id: 'opal-frost',
@@ -341,30 +341,30 @@ export const THEME_PRESETS: Record<ThemePreset, ThemeConfig> = {
     },
   },
   'midnight-steel': {
-    name: 'Midnight Titanium / Stealth Steel',
+    name: 'Aurora Midnight Steel (Official Signature)',
     id: 'midnight-steel',
-    description: 'Cold slate gunmetal with titanium silver accents and atmospheric spotlight.',
-    badge: 'Titanium',
+    description: 'Flagship deep midnight navy (#06141B) with cold steel slate (#4A5C6A) and titanium silver highlights (#CCD0CF).',
+    badge: 'Signature',
     settings: {
       theme: 'midnight-steel',
       primaryColor: '#9BA8AB',
       accentColor: '#4A5C6A',
       bgColor: '#06141B',
       textColor: '#CCD0CF',
-      borderRadius: 16,
+      borderRadius: 20,
       borderWidth: 1,
-      borderColor: 'rgba(155, 168, 171, 0.35)',
+      borderColor: 'rgba(155, 168, 171, 0.4)',
       borderStyle: 'solid',
-      shadowStyle: 'soft',
-      blurIntensity: 14,
-      paddingY: 12,
-      paddingX: 22,
+      shadowStyle: 'glow',
+      blurIntensity: 22,
+      paddingY: 14,
+      paddingX: 24,
       gap: 16,
       fontSize: 'sm',
       fontWeight: 'medium',
       letterSpacing: 'wide',
       widthMode: 'contained',
-      iconStyle: 'minimal',
+      iconStyle: 'duotone',
       animationSpeed: 'normal',
       activeState: 'default',
     },
@@ -401,5 +401,5 @@ export const THEME_PRESETS: Record<ThemePreset, ThemeConfig> = {
 };
 
 export const DEFAULT_CUSTOMIZATION: CustomizationSettings = {
-  ...THEME_PRESETS['electric-violet'].settings,
+  ...THEME_PRESETS['midnight-steel'].settings,
 } as CustomizationSettings;

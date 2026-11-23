@@ -108,9 +108,9 @@ export const Sidebar: React.FC = () => {
   }
 
   return (
-    <aside className="w-80 h-full border-r border-cyan-500/20 bg-[#04060c] flex flex-col select-none z-30 shrink-0 font-sans">
+    <aside className="w-80 h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none z-30 shrink-0 font-sans">
       {/* 1. Cybernetic Brand Header */}
-      <div className="p-4 border-b border-white/10 bg-[#060913]/90 relative">
+      <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 relative">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <div className="relative">
