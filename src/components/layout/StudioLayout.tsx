@@ -105,27 +105,22 @@ export const StudioLayout: React.FC = () => {
             {/* Main Stage */}
             <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
               {/* Component Header & Variant Switcher */}
-              <div className="px-3 sm:px-6 py-2.5 border-b border-[#253745]/70 bg-gradient-to-r from-[#06141B]/95 via-[#11212D]/90 to-[#0A1622]/95 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0 min-w-0 w-full relative">
+              <div className="px-3 sm:px-6 py-2.5 border-b border-[#253745]/70 bg-gradient-to-r from-[#06141B]/95 via-[#11212D]/90 to-[#0A1622]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-2.5 shrink-0 min-w-0 w-full relative">
                 {/* Holographic Top Laser Hairline Accent */}
                 <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
 
-                {/* Left: Clean Minimalist Component Identity */}
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <h1 className="text-sm sm:text-base font-bold tracking-tight text-white truncate">
-                      {activeComponent.name}
-                    </h1>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
-                      {activeComponent.subcategory}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 mt-0.5 max-w-xl truncate">
-                    {activeComponent.description}
-                  </p>
+                {/* 1. Centered Component Identity & Badge */}
+                <div className="flex items-center justify-center gap-2.5 flex-wrap">
+                  <h1 className="text-sm sm:text-base font-bold tracking-tight text-white truncate">
+                    {activeComponent.name}
+                  </h1>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
+                    {activeComponent.subcategory}
+                  </span>
                 </div>
 
-                {/* Right: Futuristic HUD Template & Variant Dock */}
-                <div className="flex items-center gap-2 shrink-0 max-w-full min-w-0">
+                {/* 2. Centered Futuristic HUD Template & Variant Dock Underneath */}
+                <div className="flex items-center justify-center max-w-full min-w-0">
                   <div className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg min-w-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div className="flex items-center gap-1.5 px-2 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
                       <Layers className="w-3.5 h-3.5 text-cyan-400" />
