@@ -12,7 +12,6 @@ import {
   ChevronDown, 
   Sparkles, 
   PanelLeftClose,
-  PanelLeftOpen,
   Boxes,
   Zap,
   Plus,
@@ -195,24 +194,7 @@ export const Sidebar: React.FC = () => {
   });
 
   if (!isSidebarOpen) {
-    return (
-      <div className="hidden md:flex h-full border-r border-cyan-500/20 bg-[#04060c] p-2 flex-col items-center justify-between z-20 select-none shrink-0">
-        <button
-          onClick={() => {
-            sound.playBlip(1200);
-            setIsSidebarOpen(true);
-          }}
-          className="p-2 rounded-xl bg-cyan-950/40 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition-all shadow-glow-cyan"
-          title="Expand Studio Navigation (Cmd+B)"
-        >
-          <PanelLeftOpen className="w-5 h-5" />
-        </button>
-        <div className="writing-mode-vertical text-[10px] font-mono tracking-widest text-cyan-400/60 uppercase">
-          AURORA // HUD
-        </div>
-        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-glow-cyan" />
-      </div>
-    );
+    return null;
   }
 
   return (

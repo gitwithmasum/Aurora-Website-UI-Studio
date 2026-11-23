@@ -7,7 +7,8 @@ import {
   Sparkles, 
   Check, 
   ChevronDown,
-  Menu
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 import { THEME_PRESETS } from '../../data/themePresets';
 import { ThemePreset } from '../../types/studio';
@@ -37,18 +38,26 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
 
   return (
     <header className="h-11 border-b border-[#253745]/30 bg-[#06141B]/95 backdrop-blur-md px-2 sm:px-4 flex items-center justify-between z-20 shrink-0 select-none min-w-0 w-full gap-2">
-      {/* Left: Mobile Nav Toggle + Search + Clean Breadcrumb */}
-      <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
-        {/* Mobile Sidebar Hamburger Toggle */}
+      {/* Left: Sidebar Collapse/Expand Toggle + Search + Clean Breadcrumb */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+        {/* Sidebar Toggle Button (next to Search) */}
         <button
           onClick={() => {
             sound.playBlip(1200);
             setIsSidebarOpen(!isSidebarOpen);
           }}
-          className="md:hidden p-1.5 rounded-md text-cyan-400 hover:text-white hover:bg-white/10 shrink-0"
-          title="Toggle Navigation Menu"
+          className={`p-1.5 rounded-lg border transition-all shrink-0 ${
+            isSidebarOpen 
+              ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10' 
+              : 'bg-cyan-950/40 border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/20 shadow-glow-cyan'
+          }`}
+          title={isSidebarOpen ? "Collapse Sidebar (Cmd+B)" : "Expand Sidebar (Cmd+B)"}
         >
-          <Menu className="w-4 h-4" />
+          {isSidebarOpen ? (
+            <PanelLeftClose className="w-4 h-4" />
+          ) : (
+            <PanelLeftOpen className="w-4 h-4" />
+          )}
         </button>
 
         {/* Subtle Search Trigger */}
