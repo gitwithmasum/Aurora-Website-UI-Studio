@@ -204,7 +204,7 @@ export const Sidebar: React.FC = () => {
 
   if (!isSidebarOpen) {
     return (
-      <div className="h-full border-r border-cyan-500/20 bg-[#04060c] p-2 flex flex-col items-center justify-between z-30 select-none">
+      <div className="hidden lg:flex h-full border-r border-cyan-500/20 bg-[#04060c] p-2 flex-col items-center justify-between z-30 select-none shrink-0">
         <button
           onClick={() => {
             sound.playBlip(1200);
@@ -224,7 +224,17 @@ export const Sidebar: React.FC = () => {
   }
 
   return (
-    <aside className="w-80 h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none z-30 shrink-0 font-sans">
+    <>
+      {/* Mobile / Tablet Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+        onClick={() => {
+          sound.playHover();
+          setIsSidebarOpen(false);
+        }}
+      />
+
+      <aside className="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 max-w-[85vw] h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none shrink-0 font-sans shadow-2xl lg:shadow-none transition-transform duration-300">
       {/* 1. Cybernetic Brand Header */}
       <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 relative">
         <div className="flex items-center justify-between mb-2">
@@ -459,6 +469,9 @@ export const Sidebar: React.FC = () => {
                         onClick={() => {
                           sound.playBlip(1300);
                           setActiveComponent(comp);
+                          if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                            setIsSidebarOpen(false);
+                          }
                         }}
                         className={`group relative flex items-center justify-between px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
                           isActive
@@ -512,5 +525,6 @@ export const Sidebar: React.FC = () => {
         <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-cyan-400">⌘K</kbd>
       </div>
     </aside>
-  );
+  </>
+);
 };

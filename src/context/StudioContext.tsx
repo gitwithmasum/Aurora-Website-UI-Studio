@@ -124,8 +124,18 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilter, setActiveFilterState] = useState<FilterType>('all');
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
-  const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1280;
+    }
+    return true;
+  });
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  });
   const [isTemplateInjectorOpen, setIsTemplateInjectorOpen] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [soundEnabled, setSoundEnabledState] = useState<boolean>(true);

@@ -40,49 +40,50 @@ export const TelemetryBar: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-8 border-t border-[#253745]/60 bg-[#06141B] px-4 flex items-center justify-between text-[10px] font-mono select-none z-30 shrink-0">
+    <div className="h-8 border-t border-[#253745]/60 bg-[#06141B] px-2 sm:px-4 flex items-center justify-between text-[10px] font-mono select-none z-30 shrink-0 min-w-0 w-full overflow-hidden">
       {/* Left: Telemetry Data Stream */}
-      <div className="flex items-center gap-4 text-slate-400">
-        <div className="flex items-center gap-1.5 text-cyan-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="font-bold">AURORA KERNEL v4.12</span>
+      <div className="flex items-center gap-2 sm:gap-4 text-slate-400 min-w-0">
+        <div className="flex items-center gap-1.5 text-cyan-400 truncate">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+          <span className="font-bold truncate">AURORA KERNEL v4.12</span>
         </div>
 
-        <span className="opacity-30">|</span>
+        <span className="opacity-30 hidden sm:inline">|</span>
 
-        <div className="hidden sm:flex items-center gap-1.5">
+        <div className="hidden sm:flex items-center gap-1.5 shrink-0">
           <Activity className="w-3 h-3 text-emerald-400" />
           <span>FPS: {fps}</span>
           <span className="opacity-50">({latency}ms)</span>
         </div>
 
-        <span className="opacity-30 hidden sm:inline">|</span>
+        <span className="opacity-30 hidden md:inline">|</span>
 
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="hidden md:flex items-center gap-1.5 shrink-0">
           <Radio className="w-3 h-3 text-indigo-400" />
           <span>TELEMETRY: LINKED</span>
         </div>
 
-        <span className="opacity-30 hidden md:inline">|</span>
+        <span className="opacity-30 hidden lg:inline">|</span>
 
-        <div className="hidden lg:flex items-center gap-1.5 text-amber-400">
+        <div className="hidden lg:flex items-center gap-1.5 text-amber-400 shrink-0">
           <Cpu className="w-3 h-3" />
           <span>VAULT: {customTemplates.length} BLUEPRINTS</span>
         </div>
       </div>
 
       {/* Right: Tactical Sci-Fi Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         {/* Quick Launch Template Injector */}
         <button
           onClick={() => {
             sound.playScan();
             setIsTemplateInjectorOpen(true);
           }}
-          className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 transition-colors"
+          className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 transition-colors shrink-0"
         >
-          <Sparkles className="w-3 h-3" />
-          <span className="font-bold uppercase tracking-wider">Inject Blueprint</span>
+          <Sparkles className="w-3 h-3 text-cyan-400" />
+          <span className="font-bold uppercase tracking-wider hidden sm:inline">Inject Blueprint</span>
+          <span className="font-bold uppercase tracking-wider sm:hidden">Inject</span>
         </button>
 
         {/* Tactical HUD Reticle Mode */}

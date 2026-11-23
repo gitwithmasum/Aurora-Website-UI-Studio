@@ -86,14 +86,14 @@ export const StudioLayout: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col h-screen w-screen overflow-hidden bg-[#050811] text-slate-100 antialiased font-sans ${crtEnabled ? 'crt-scanlines' : ''}`}>
+    <div className={`flex flex-col h-screen w-screen max-w-full overflow-hidden bg-[#050811] text-slate-100 antialiased font-sans ${crtEnabled ? 'crt-scanlines' : ''}`}>
       {/* Upper Area: Sidebar + Main Content + Inspector */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-w-0 w-full relative">
         {/* 1. Left Sidebar */}
         <Sidebar />
 
         {/* 2. Main Studio Core */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
           {/* Top Navbar */}
           <TopNavbar 
             onOpenSavePreset={() => setIsSaveModalOpen(true)}
@@ -102,34 +102,34 @@ export const StudioLayout: React.FC = () => {
           />
 
           {/* Workspace Body */}
-          <div className="flex-1 flex overflow-hidden relative">
+          <div className="flex-1 min-w-0 flex overflow-hidden relative w-full">
             {/* Main Stage */}
-            <main className="flex-1 flex flex-col h-full overflow-hidden">
+            <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
               {/* Futuristic Samples Arsenal & Arranger Bar */}
               <FuturisticSampleBar />
 
               {/* Component Header & Variant Switcher */}
-              <div className="px-6 py-2.5 border-b border-[#253745]/60 bg-[#11212D]/90 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm font-extrabold tracking-tight text-white flex items-center gap-2">
+              <div className="px-3 sm:px-6 py-2 border-b border-[#253745]/60 bg-[#11212D]/90 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-2 shrink-0 min-w-0 w-full">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                    <h1 className="text-sm font-extrabold tracking-tight text-white flex items-center gap-2 truncate">
                       <span>{activeComponent.name}</span>
                     </h1>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 capitalize">
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 capitalize shrink-0">
                       {activeComponent.subcategory}
                     </span>
-                    <span className="hidden md:inline text-[10px] font-mono text-slate-500">
+                    <span className="hidden lg:inline text-[10px] font-mono text-slate-500 shrink-0">
                       // ID: {activeComponent.id}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-0.5 max-w-2xl line-clamp-1">
+                  <p className="text-[11px] text-slate-400 mt-0.5 max-w-2xl line-clamp-1 truncate">
                     {activeComponent.description}
                   </p>
                 </div>
 
                 {/* Design Variant Pills */}
-                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1">
-                  <span className="text-[9px] font-mono uppercase text-cyan-500/60 font-bold shrink-0 mr-1">
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 max-w-full min-w-0">
+                  <span className="text-[9px] font-mono uppercase text-cyan-500/60 font-bold shrink-0 mr-1 hidden sm:inline">
                     TEMPLATES:
                   </span>
                   {activeComponent.variations.map((v) => {
@@ -141,7 +141,7 @@ export const StudioLayout: React.FC = () => {
                           sound.playBlip(1400);
                           setActiveVariantId(v.id);
                         }}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                        className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
                           isSelected
                             ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-300 font-semibold border border-cyan-500/50 shadow-glow-cyan'
                             : 'bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10'
@@ -168,14 +168,14 @@ export const StudioLayout: React.FC = () => {
               </div>
 
               {/* Dynamic View Tab Rendering */}
-              <div className="flex-1 overflow-hidden relative flex flex-col">
+              <div className="flex-1 overflow-hidden relative flex flex-col min-w-0 w-full">
                 {activeTab === 'preview' && (
-                  <div className="flex-1 flex flex-col overflow-hidden">
+                  <div className="flex-1 flex flex-col overflow-hidden min-w-0 w-full">
                     {/* Canvas Viewport Toolbar */}
-                    <div className="px-6 py-1.5 border-b border-white/5 bg-[#070b16]/70 flex items-center justify-between text-xs text-slate-400 shrink-0">
-                      <div className="flex items-center gap-3">
+                    <div className="px-3 sm:px-6 py-1.5 border-b border-white/5 bg-[#070b16]/70 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-xs text-slate-400 shrink-0 min-w-0 w-full overflow-x-auto">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         {/* Device Mode Selector */}
-                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10">
+                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10 shrink-0">
                           {[
                             { id: 'desktop', label: 'Desktop', icon: Monitor },
                             { id: 'laptop', label: 'Laptop', icon: Laptop },
@@ -202,19 +202,19 @@ export const StudioLayout: React.FC = () => {
                           })}
                         </div>
 
-                        <span className="font-mono text-[10px] text-cyan-400">
+                        <span className="font-mono text-[10px] text-cyan-400 hidden sm:inline truncate">
                           {deviceMode.toUpperCase()} ({deviceWidthMap[deviceMode]})
                         </span>
-                        <span className="hidden sm:inline text-slate-700">|</span>
-                        <span className="hidden sm:inline font-mono text-[10px] text-slate-400">
+                        <span className="hidden md:inline text-slate-700">|</span>
+                        <span className="hidden md:inline font-mono text-[10px] text-slate-400 truncate">
                           THEME: {customizations.theme.toUpperCase()}
                         </span>
                       </div>
 
                       {/* Canvas Background and Zoom Controls */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
                         {/* Background switcher */}
-                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10">
+                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10 overflow-x-auto">
                           {(['radar', 'grid', 'dots', 'mesh', 'dark', 'light'] as CanvasBackgroundType[]).map((bg) => (
                             <button
                               key={bg}
@@ -222,7 +222,7 @@ export const StudioLayout: React.FC = () => {
                                 sound.playBlip(1100);
                                 setCanvasBg(bg);
                               }}
-                              className={`px-2 py-0.5 rounded text-[10px] font-mono capitalize transition-all ${
+                              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono capitalize transition-all ${
                                 canvasBg === bg ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
                               }`}
                             >
@@ -243,7 +243,7 @@ export const StudioLayout: React.FC = () => {
                           >
                             <ZoomOut className="w-3.5 h-3.5" />
                           </button>
-                          <span className="text-[10px] font-mono px-1.5 text-slate-300">{zoom}%</span>
+                          <span className="text-[10px] font-mono px-1 sm:px-1.5 text-slate-300">{zoom}%</span>
                           <button 
                             onClick={() => {
                               sound.playHover();
@@ -260,11 +260,11 @@ export const StudioLayout: React.FC = () => {
 
                     {/* Interactive Live Canvas with Atmospheric Stage & Reticle Framing */}
                     <div 
-                      className={`flex-1 overflow-auto p-4 md:p-8 flex items-center justify-center transition-all atmospheric-stage ${canvasBgClassMap[canvasBg]}`}
+                      className={`flex-1 overflow-auto p-2 sm:p-4 md:p-8 flex items-center justify-center transition-all atmospheric-stage min-w-0 w-full ${canvasBgClassMap[canvasBg]}`}
                       style={{ '--stage-flare': `${customizations.primaryColor}80` } as React.CSSProperties}
                     >
                       <div 
-                        className={`w-full transition-all duration-300 flex items-center justify-center relative z-10 ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-4' : ''}`}
+                        className={`w-full max-w-full transition-all duration-300 flex items-center justify-center relative z-10 min-w-0 overflow-x-auto ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-2 sm:p-4' : ''}`}
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
                       >
                         {(() => {

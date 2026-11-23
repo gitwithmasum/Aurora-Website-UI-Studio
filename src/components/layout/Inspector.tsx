@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { THEME_PRESETS, ATMOSPHERIC_PALETTES, AtmosphericPalette } from '../../data/themePresets';
 import { ThemePreset, InteractionState } from '../../types/studio';
+import { sound } from '../../utils/soundEngine';
 
 export const Inspector: React.FC = () => {
   const { 
@@ -60,7 +61,17 @@ export const Inspector: React.FC = () => {
   ];
 
   return (
-    <aside className="w-80 h-full border-l border-[#253745]/60 bg-[#06141B] flex flex-col z-20 shrink-0 select-none">
+    <>
+      {/* Backdrop on screens < 2xl when Inspector is open */}
+      <div 
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 2xl:hidden transition-opacity"
+        onClick={() => {
+          sound.playHover();
+          setIsInspectorOpen(false);
+        }}
+      />
+
+      <aside className="fixed 2xl:static inset-y-0 right-0 z-50 2xl:z-20 w-80 max-w-[90vw] h-full border-l border-[#253745]/60 bg-[#06141B] flex flex-col shrink-0 select-none shadow-2xl 2xl:shadow-none transition-transform duration-300">
       {/* Inspector Header */}
       <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -625,5 +636,6 @@ export const Inspector: React.FC = () => {
         </button>
       </div>
     </aside>
-  );
+  </>
+);
 };

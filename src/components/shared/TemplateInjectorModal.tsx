@@ -223,27 +223,27 @@ export const TemplateInjectorModal: React.FC = () => {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in select-none">
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-3xl rounded-2xl border border-cyan-500/40 bg-[#06141B] shadow-2xl p-6 flex flex-col max-h-[92vh] cyber-box animate-in zoom-in-95 text-slate-100"
+        className="w-full max-w-3xl rounded-2xl border border-cyan-500/40 bg-[#06141B] shadow-2xl p-3 sm:p-6 flex flex-col max-h-[94vh] cyber-box animate-in zoom-in-95 text-slate-100 overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-glow-cyan">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-glow-cyan shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-sm text-white font-mono tracking-wide">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-extrabold text-xs sm:text-sm text-white font-mono tracking-wide truncate">
                   TEMPLATE ARCHITECT & BLUEPRINT VAULT
                 </h3>
-                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shrink-0">
                   MULTI-CATEGORY
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">
                 Select category and component to design, store, and inject bespoke futuristic templates.
               </p>
             </div>
@@ -251,14 +251,14 @@ export const TemplateInjectorModal: React.FC = () => {
 
           <button 
             onClick={() => setIsTemplateInjectorOpen(false)}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Mode Tabs */}
-        <div className="flex items-center gap-2 my-4 border-b border-white/5 pb-2 shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 my-3 sm:my-4 border-b border-white/5 pb-2 shrink-0">
           <button
             onClick={() => setActiveTab('create')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
