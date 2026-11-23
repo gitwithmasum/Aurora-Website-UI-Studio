@@ -30,6 +30,7 @@ export interface CustomizationSettings {
   primaryColor: string;
   accentColor: string;
   bgColor: string;
+  surfaceColor?: string;
   textColor: string;
   borderRadius: number; // 0 to 24px
   borderWidth: number; // 0 to 4px

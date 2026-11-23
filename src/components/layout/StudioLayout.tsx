@@ -8,6 +8,10 @@ import { TelemetryBar } from './TelemetryBar';
 import { TemplateInjectorModal } from '../shared/TemplateInjectorModal';
 import { NavigationRenderer } from '../../categories/navigation/NavigationRenderer';
 import { ButtonRenderer } from '../../categories/buttons/ButtonRenderer';
+import { CardRenderer } from '../../categories/cards/CardRenderer';
+import { FormRenderer } from '../../categories/forms/FormRenderer';
+import { OverlayRenderer } from '../../categories/overlays/OverlayRenderer';
+import { ProgressRenderer } from '../../categories/progress/ProgressRenderer';
 import { CodePlayground } from '../shared/CodePlayground';
 import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
@@ -253,11 +257,15 @@ export const StudioLayout: React.FC = () => {
                         className={`w-full transition-all duration-300 flex items-center justify-center relative z-10 ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-4' : ''}`}
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
                       >
-                        {activeCategory.id === 'category-02' || activeComponent.categoryId === 'category-02' ? (
-                          <ButtonRenderer />
-                        ) : (
-                          <NavigationRenderer />
-                        )}
+                        {(() => {
+                          const catId = activeComponent.categoryId || activeCategory.id;
+                          if (catId === 'category-02') return <ButtonRenderer />;
+                          if (catId === 'category-03') return <CardRenderer />;
+                          if (catId === 'category-04') return <FormRenderer />;
+                          if (catId === 'category-05') return <OverlayRenderer />;
+                          if (catId === 'category-06') return <ProgressRenderer />;
+                          return <NavigationRenderer />;
+                        })()}
                       </div>
                     </div>
                   </div>

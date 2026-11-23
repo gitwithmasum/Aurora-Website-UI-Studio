@@ -3,15 +3,37 @@ import { useStudio } from '../../context/StudioContext';
 import { Copy, Check, Download, FileCode, Code, Layers, Sparkles } from 'lucide-react';
 import { generateComponentCode } from '../../categories/navigation/codeGenerators/navigationCodeGenerator';
 import { generateButtonCode } from '../../categories/buttons/codeGenerators/buttonCodeGenerator';
+import { generateCardCode } from '../../categories/cards/codeGenerators/cardCodeGenerator';
+import { generateFormCode } from '../../categories/forms/codeGenerators/formCodeGenerator';
+import { generateOverlayCode } from '../../categories/overlays/codeGenerators/overlayCodeGenerator';
+import { generateProgressCode } from '../../categories/progress/codeGenerators/progressCodeGenerator';
 
 export const CodePlayground: React.FC = () => {
   const { activeComponent, activeVariantId, customizations } = useStudio();
   const [activeLang, setActiveLang] = useState<'react' | 'html' | 'css' | 'tailwind'>('react');
   const [copied, setCopied] = useState(false);
 
-  const codeSnippets = activeComponent.categoryId === 'category-02'
-    ? generateButtonCode(activeComponent, activeVariantId, customizations)
-    : generateComponentCode(activeComponent, activeVariantId, customizations);
+  const getCodeSnippets = () => {
+    const catId = activeComponent.categoryId;
+    if (catId === 'category-02') {
+      return generateButtonCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-03') {
+      return generateCardCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-04') {
+      return generateFormCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-05') {
+      return generateOverlayCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-06') {
+      return generateProgressCode(activeComponent, activeVariantId, customizations);
+    }
+    return generateComponentCode(activeComponent, activeVariantId, customizations);
+  };
+
+  const codeSnippets = getCodeSnippets();
   const currentCode = codeSnippets[activeLang];
 
   const handleCopy = () => {

@@ -11,10 +11,21 @@ import {
 import { CATEGORIES } from '../data/categories';
 import { NAVIGATION_COMPONENTS } from '../data/navigationComponents';
 import { BUTTON_COMPONENTS } from '../data/buttonComponents';
+import { CARD_COMPONENTS } from '../data/cardComponents';
+import { FORM_COMPONENTS } from '../data/formComponents';
+import { OVERLAY_COMPONENTS } from '../data/overlayComponents';
+import { PROGRESS_COMPONENTS } from '../data/progressComponents';
 import { DEFAULT_CUSTOMIZATION, THEME_PRESETS } from '../data/themePresets';
 import { sound } from '../utils/soundEngine';
 
-export const ALL_COMPONENTS: ComponentItem[] = [...NAVIGATION_COMPONENTS, ...BUTTON_COMPONENTS];
+export const ALL_COMPONENTS: ComponentItem[] = [
+  ...NAVIGATION_COMPONENTS,
+  ...BUTTON_COMPONENTS,
+  ...CARD_COMPONENTS,
+  ...FORM_COMPONENTS,
+  ...OVERLAY_COMPONENTS,
+  ...PROGRESS_COMPONENTS,
+];
 
 export type CanvasBackgroundType = 'grid' | 'dots' | 'radar' | 'mesh' | 'dark' | 'light';
 export type FilterType = 'all' | 'header' | 'navigation' | 'profile-actions' | 'effects' | 'favorites' | 'custom-templates';
@@ -225,13 +236,15 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const handleSelectCategory = (cat: CategoryItem) => {
     sound.playConfirm();
     setActiveCategoryState(cat);
-    if (cat.id === 'category-02') {
-      setActiveComponentState(BUTTON_COMPONENTS[0]);
-      setActiveVariantId(BUTTON_COMPONENTS[0].variations[0]?.id || 'standard');
-    } else {
-      setActiveComponentState(NAVIGATION_COMPONENTS[0]);
-      setActiveVariantId(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
-    }
+    let targetFirstComp = NAVIGATION_COMPONENTS[0];
+    if (cat.id === 'category-02') targetFirstComp = BUTTON_COMPONENTS[0];
+    else if (cat.id === 'category-03') targetFirstComp = CARD_COMPONENTS[0];
+    else if (cat.id === 'category-04') targetFirstComp = FORM_COMPONENTS[0];
+    else if (cat.id === 'category-05') targetFirstComp = OVERLAY_COMPONENTS[0];
+    else if (cat.id === 'category-06') targetFirstComp = PROGRESS_COMPONENTS[0];
+
+    setActiveComponentState(targetFirstComp);
+    setActiveVariantId(targetFirstComp.variations[0]?.id || 'standard');
   };
 
   const setActiveComponent = (comp: ComponentItem) => {

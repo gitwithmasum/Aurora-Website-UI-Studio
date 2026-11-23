@@ -28,6 +28,10 @@ import {
 import { CATEGORIES } from '../../data/categories';
 import { NAVIGATION_COMPONENTS } from '../../data/navigationComponents';
 import { BUTTON_COMPONENTS } from '../../data/buttonComponents';
+import { CARD_COMPONENTS } from '../../data/cardComponents';
+import { FORM_COMPONENTS } from '../../data/formComponents';
+import { OVERLAY_COMPONENTS } from '../../data/overlayComponents';
+import { PROGRESS_COMPONENTS } from '../../data/progressComponents';
 import { ATMOSPHERIC_PALETTES } from '../../data/themePresets';
 import { sound } from '../../utils/soundEngine';
 import { ThemePreset } from '../../types/studio';
@@ -69,19 +73,55 @@ export const Sidebar: React.FC = () => {
     setExpandedSubcats((prev) => ({ ...prev, [subcat]: !prev[subcat] }));
   };
 
-  const isButtonCategory = activeCategory.id === 'category-02';
-  const currentCategoryComponents = isButtonCategory ? BUTTON_COMPONENTS : NAVIGATION_COMPONENTS;
+  const getCategoryComponents = (catId: string) => {
+    switch (catId) {
+      case 'category-02': return BUTTON_COMPONENTS;
+      case 'category-03': return CARD_COMPONENTS;
+      case 'category-04': return FORM_COMPONENTS;
+      case 'category-05': return OVERLAY_COMPONENTS;
+      case 'category-06': return PROGRESS_COMPONENTS;
+      default: return NAVIGATION_COMPONENTS;
+    }
+  };
 
-  const subcategories = isButtonCategory ? [
-    { id: 'core-buttons', label: 'Core Action Buttons', count: '07 NODES' },
-    { id: 'triggers-controls', label: 'Triggers & Controls', count: '07 NODES' },
-    { id: 'advanced-fx', label: 'Advanced & Micro-FX', count: '06 NODES' },
-  ] : [
-    { id: 'header', label: 'Header Protocols', count: '08 NODES' },
-    { id: 'navigation', label: 'Navigation Matrix', count: '14 NODES' },
-    { id: 'profile-actions', label: 'Profile & Actions', count: '07 NODES' },
-    { id: 'effects', label: 'Micro-FX / Physics', count: '07 NODES' },
-  ];
+  const currentCategoryComponents = getCategoryComponents(activeCategory.id);
+
+  const subcategoryLabels: Record<string, string> = {
+    // 01 Nav
+    header: 'Header Protocols',
+    navigation: 'Navigation Matrix',
+    'profile-actions': 'Profile & Actions',
+    effects: 'Micro-FX / Physics',
+    // 02 Buttons
+    'core-buttons': 'Core Action Buttons',
+    'triggers-controls': 'Triggers & Controls',
+    'advanced-fx': 'Advanced & Micro-FX',
+    // 03 Cards
+    'content-cards': 'Content & Information Cards',
+    'aesthetic-cards': 'Aesthetic & Kinetic Cards',
+    'feature-project-cards': 'Feature & Project Cards',
+    // 04 Forms
+    'basic-inputs': 'Basic Data Inputs',
+    'selection-controls': 'Selection & Toggle Controls',
+    'advanced-pickers': 'Advanced Pickers & Uploads',
+    'enhanced-states': 'Enhanced Validation States',
+    // 05 Overlays
+    'dialogs-modals': 'Dialogs & Fullscreen Modals',
+    'drawers-sheets': 'Drawers & Command Palettes',
+    'popovers-tooltips': 'Popovers, Tooltips & Context',
+    'media-notices': 'Media Overlays & Notices',
+    // 06 Progress
+    'spinners-rings': 'Spinners & Indicators',
+    'progress-bars': 'Progress Bars & Timelines',
+    'skeletons-loaders': 'Skeletons & System Loaders',
+  };
+
+  const uniqueSubcatIds = Array.from(new Set(currentCategoryComponents.map(c => c.subcategory)));
+  const subcategories = uniqueSubcatIds.map(subId => ({
+    id: subId,
+    label: subcategoryLabels[subId] || subId.replace(/-/g, ' ').toUpperCase(),
+    count: `${currentCategoryComponents.filter(c => c.subcategory === subId).length.toString().padStart(2, '0')} NODES`,
+  }));
 
   // Filter components
   const filteredComponents = currentCategoryComponents.filter((comp) => {
@@ -93,17 +133,6 @@ export const Sidebar: React.FC = () => {
     if (!matchesSearch) return false;
 
     if (activeFilter === 'favorites') return favorites.includes(comp.id);
-    if (isButtonCategory) {
-      if (activeFilter === 'header') return comp.subcategory === 'core-buttons';
-      if (activeFilter === 'navigation') return comp.subcategory === 'triggers-controls';
-      if (activeFilter === 'effects') return comp.subcategory === 'advanced-fx';
-    } else {
-      if (activeFilter === 'header') return comp.subcategory === 'header';
-      if (activeFilter === 'navigation') return comp.subcategory === 'navigation';
-      if (activeFilter === 'profile-actions') return comp.subcategory === 'profile-actions';
-      if (activeFilter === 'effects') return comp.subcategory === 'effects';
-    }
-
     return true;
   });
 
@@ -267,16 +296,6 @@ export const Sidebar: React.FC = () => {
           {[
             { id: 'all', label: `ALL (${currentCategoryComponents.length})` },
             { id: 'favorites', label: `★ FAV (${favorites.length})` },
-            ...(isButtonCategory ? [
-              { id: 'header', label: 'CORE (7)' },
-              { id: 'navigation', label: 'TRIGGERS (7)' },
-              { id: 'effects', label: 'FX (6)' },
-            ] : [
-              { id: 'header', label: 'HDR (8)' },
-              { id: 'navigation', label: 'NAV (14)' },
-              { id: 'profile-actions', label: 'ACT (7)' },
-              { id: 'effects', label: 'FX (7)' },
-            ]),
           ].map((tab) => (
             <button
               key={tab.id}
@@ -296,45 +315,43 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Category Switcher (Category 01 & Category 02) */}
+      {/* 4. Active Protocols Grid (Categories 01 to 06) */}
       <div className="p-3 pb-0 space-y-2">
         <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold flex items-center justify-between px-1">
-          <span>ACTIVE PROTOCOLS (01 & 02)</span>
-          <span className="text-[9px] text-cyan-400">56 LIVE</span>
+          <span>ACTIVE PROTOCOLS (01–06)</span>
+          <span className="text-[9px] text-cyan-400 font-bold">133 LIVE NODES</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          {/* Category 01 Selector */}
-          <div
-            onClick={() => setActiveCategory(CATEGORIES[0])}
-            className={`p-2.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-              !isButtonCategory
-                ? 'border-cyan-400 bg-cyan-950/40 shadow-glow-cyan'
-                : 'border-white/10 bg-white/5 hover:border-white/20'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="font-mono font-bold text-[10px] text-cyan-300">01. NAV</span>
-              {!isButtonCategory && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />}
-            </div>
-            <span className="text-[9px] font-mono text-slate-400">36 Nodes</span>
-          </div>
-
-          {/* Category 02 Selector */}
-          <div
-            onClick={() => setActiveCategory(CATEGORIES[1])}
-            className={`p-2.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-              isButtonCategory
-                ? 'border-cyan-400 bg-cyan-950/40 shadow-glow-cyan'
-                : 'border-white/10 bg-white/5 hover:border-white/20'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="font-mono font-bold text-[10px] text-cyan-300">02. BUTTONS</span>
-              {isButtonCategory && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />}
-            </div>
-            <span className="text-[9px] font-mono text-slate-400">20 Nodes</span>
-          </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {CATEGORIES.slice(0, 6).map((cat) => {
+            const isSelected = activeCategory.id === cat.id;
+            const shortName = cat.name.split(' ')[0];
+            return (
+              <div
+                key={cat.id}
+                onClick={() => {
+                  sound.playConfirm();
+                  setActiveCategory(cat);
+                }}
+                className={`p-2 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                  isSelected
+                    ? 'border-cyan-400 bg-cyan-950/50 shadow-glow-cyan cyber-box'
+                    : 'border-white/10 bg-white/5 hover:border-white/20'
+                }`}
+              >
+                <div className="flex items-center justify-between text-xs mb-0.5">
+                  <span className={`font-mono font-bold text-[10px] ${isSelected ? 'text-cyan-300' : 'text-slate-300'}`}>
+                    {cat.number}. {shortName.toUpperCase()}
+                  </span>
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-mono text-slate-400">{cat.count} Nodes</span>
+                  <span className="text-[8px] font-mono px-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">LIVE</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -417,15 +434,15 @@ export const Sidebar: React.FC = () => {
           );
         })}
 
-        {/* 6. Future Categories 03–16 (Encrypted Classified Pods) */}
+        {/* 6. Future Categories 07–16 (Encrypted Classified Pods) */}
         <div className="pt-4 border-t border-cyan-500/20 space-y-2">
           <div className="px-2 text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold flex items-center justify-between">
-            <span>CLASSIFIED PROTOCOLS (03–16)</span>
+            <span>CLASSIFIED PROTOCOLS (07–16)</span>
             <Lock className="w-3 h-3 text-slate-600" />
           </div>
 
           <div className="space-y-1">
-            {CATEGORIES.slice(2).map((cat) => (
+            {CATEGORIES.slice(6).map((cat) => (
               <div
                 key={cat.id}
                 className="group flex items-center justify-between px-3 py-2 rounded-xl text-xs text-slate-500 border border-dashed border-white/10 bg-white/[0.01] hover:bg-cyan-950/20 hover:border-cyan-500/30 transition-all font-mono"

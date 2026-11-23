@@ -25,8 +25,8 @@ export const CATEGORIES: CategoryItem[] = [
     name: 'Cards & Containers',
     description: 'Glassmorphic cards, holographic containers, interactive tilt cards, and content pods.',
     iconName: 'LayoutGrid',
-    count: 24,
-    status: 'coming-soon',
+    count: 20,
+    status: 'available',
   },
   {
     id: 'category-04',
@@ -34,8 +34,8 @@ export const CATEGORIES: CategoryItem[] = [
     name: 'Forms & Input Fields',
     description: 'Cyberpunk inputs, validation rings, multi-step steppers, floating labels, and biometric fields.',
     iconName: 'FormInput',
-    count: 30,
-    status: 'coming-soon',
+    count: 26,
+    status: 'available',
   },
   {
     id: 'category-05',
@@ -43,8 +43,8 @@ export const CATEGORIES: CategoryItem[] = [
     name: 'Modal, Popup & Overlay',
     description: 'Backdrop blur dialogs, drawer panels, popovers, sheet modals, and contextual menus.',
     iconName: 'Layers',
-    count: 20,
-    status: 'coming-soon',
+    count: 17,
+    status: 'available',
   },
   {
     id: 'category-06',
@@ -52,8 +52,8 @@ export const CATEGORIES: CategoryItem[] = [
     name: 'Loading & Progress Components',
     description: 'Quantum spinners, skeleton loaders, HUD progress rings, and futuristic pulse gauges.',
     iconName: 'Loader2',
-    count: 22,
-    status: 'coming-soon',
+    count: 14,
+    status: 'available',
   },
   {
     id: 'category-07',
