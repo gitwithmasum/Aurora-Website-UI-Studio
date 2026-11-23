@@ -27,7 +27,6 @@ import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
 import { ExportModal } from '../shared/ExportModal';
 import { StyleSamplesModal } from '../shared/StyleSamplesModal';
-import { FuturisticSampleBar } from '../shared/FuturisticSampleBar';
 import { 
   Sparkles, 
   Layers, 
@@ -105,9 +104,6 @@ export const StudioLayout: React.FC = () => {
           <div className="flex-1 min-w-0 flex overflow-hidden relative w-full">
             {/* Main Stage */}
             <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
-              {/* Futuristic Samples Arsenal & Arranger Bar */}
-              <FuturisticSampleBar />
-
               {/* Component Header & Variant Switcher */}
               <div className="px-3 sm:px-6 py-2 border-b border-[#253745]/60 bg-[#11212D]/90 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-2 shrink-0 min-w-0 w-full">
                 <div className="min-w-0">

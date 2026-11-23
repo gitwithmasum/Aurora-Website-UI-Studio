@@ -13,6 +13,8 @@ import {
   Bookmark, 
   X,
   ChevronDown,
+  ChevronUp,
+  ChevronRight,
   Layers,
   Shield,
   Zap,
@@ -20,6 +22,7 @@ import {
 } from 'lucide-react';
 import { THEME_PRESETS, ATMOSPHERIC_PALETTES, AtmosphericPalette } from '../../data/themePresets';
 import { ThemePreset, InteractionState } from '../../types/studio';
+import { FUTURISTIC_SAMPLES, SampleArchetype } from '../shared/FuturisticSampleBar';
 import { sound } from '../../utils/soundEngine';
 
 export const Inspector: React.FC = () => {
@@ -33,13 +36,44 @@ export const Inspector: React.FC = () => {
     resetCustomizations,
     isInspectorOpen,
     setIsInspectorOpen,
-    savePreset
+    savePreset,
+    hudMode,
+    setHudMode,
+    crtEnabled,
+    setCrtEnabled
   } = useStudio();
 
-  const [activeSection, setActiveSection] = useState<'variants' | 'theme' | 'dimensions' | 'effects' | 'typography' | 'states'>('variants');
+  const [activeSection, setActiveSection] = useState<'samples' | 'variants' | 'theme' | 'dimensions' | 'effects' | 'typography' | 'states'>('samples');
+  const [selectedSampleId, setSelectedSampleId] = useState<string>('aurora-midnight-steel');
+  const [showArranger, setShowArranger] = useState<boolean>(true);
   const [copiedConfig, setCopiedConfig] = useState(false);
 
   if (!isInspectorOpen) return null;
+
+  const handleApplySample = (sample: SampleArchetype) => {
+    sound.playConfirm();
+    setSelectedSampleId(sample.id);
+    applyTheme(sample.themeId);
+    
+    updateCustomizations({
+      primaryColor: sample.primaryColor,
+      accentColor: sample.accentColor,
+      bgColor: sample.bgColor,
+      borderRadius: sample.borderRadius,
+      borderWidth: sample.borderWidth,
+      blurIntensity: sample.blurIntensity,
+      shadowStyle: sample.shadowStyle
+    });
+
+    if (sample.hudReticle) {
+      setHudMode('tactical');
+    } else {
+      setHudMode('standard');
+    }
+    if (sample.crtEffect !== undefined) {
+      setCrtEnabled(sample.crtEffect);
+    }
+  };
 
   const handleCopyConfig = () => {
     navigator.clipboard?.writeText(JSON.stringify(customizations, null, 2));
@@ -80,36 +114,274 @@ export const Inspector: React.FC = () => {
       </div>
 
       {/* Navigation Sub-Tabs */}
-      <div className="grid grid-cols-3 p-1.5 gap-1 border-b border-white/5 bg-slate-950/40 text-[11px] font-medium text-slate-400">
-        {[
-          { id: 'variants', label: 'Variants', icon: Sparkles },
-          { id: 'theme', label: 'Colors', icon: Palette },
-          { id: 'dimensions', label: 'Spacing', icon: Maximize },
-          { id: 'effects', label: 'Effects', icon: Zap },
-          { id: 'typography', label: 'Type', icon: Type },
-          { id: 'states', label: 'States', icon: Activity },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeSection === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveSection(tab.id as any)}
-              className={`flex items-center justify-center gap-1.5 py-1.5 rounded-lg transition-all ${
-                isActive 
-                  ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/40' 
-                  : 'hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <Icon className="w-3 h-3" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+      <div className="p-2 border-b border-white/5 bg-slate-950/60">
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-none pb-0.5">
+          {[
+            { id: 'samples', label: 'Archetypes', icon: Sparkles },
+            { id: 'variants', label: 'Variants', icon: Layers },
+            { id: 'theme', label: 'Colors', icon: Palette },
+            { id: 'effects', label: 'Effects', icon: Zap },
+            { id: 'dimensions', label: 'Spacing', icon: Maximize },
+            { id: 'typography', label: 'Type', icon: Type },
+            { id: 'states', label: 'States', icon: Activity },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeSection === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  sound.playHover();
+                  setActiveSection(tab.id as any);
+                }}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all shrink-0 ${
+                  isActive 
+                    ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/50 shadow-glow-cyan' 
+                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Main Controls Content Container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs text-slate-300">
+        {/* 0. FUTURISTIC SAMPLES ARSENAL (ARCHETYPES) SECTION */}
+        {activeSection === 'samples' && (
+          <div className="space-y-4">
+            {/* Section Header */}
+            <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-950/40 via-slate-900 to-indigo-950/40 border border-cyan-500/30 shadow-glow-cyan">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-xs font-bold text-white tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>SAMPLES ARSENAL</span>
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">
+                  6 ARCHETYPES
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 font-mono">
+                Click any sample to adapt live studio atmosphere, lighting & decals:
+              </p>
+            </div>
+
+            {/* Archetype Cards Stack */}
+            <div className="space-y-2.5">
+              {FUTURISTIC_SAMPLES.map((sample) => {
+                const isSelected = selectedSampleId === sample.id || customizations.theme === sample.themeId;
+                return (
+                  <div
+                    key={sample.id}
+                    onClick={() => handleApplySample(sample)}
+                    className={`p-3 rounded-xl border cursor-pointer transition-all relative overflow-hidden group ${
+                      isSelected
+                        ? 'border-cyan-400 bg-cyan-950/40 shadow-glow-cyan ring-1 ring-cyan-400/50'
+                        : 'border-white/10 bg-slate-950/70 hover:border-cyan-500/40 hover:bg-slate-900/80'
+                    }`}
+                  >
+                    {/* Lateral Spotlight Glow Flare Preview */}
+                    <div 
+                      className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-40 group-hover:opacity-80 transition-opacity pointer-events-none"
+                      style={{ backgroundColor: sample.flareColor }}
+                    />
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span 
+                          className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase border"
+                          style={{
+                            backgroundColor: `${sample.primaryColor}20`,
+                            color: sample.primaryColor,
+                            borderColor: `${sample.primaryColor}50`
+                          }}
+                        >
+                          {sample.badge}
+                        </span>
+                        {isSelected && (
+                          <span className="flex items-center gap-1 text-[9px] font-mono text-cyan-300 font-bold bg-cyan-500/20 px-1.5 py-0.5 rounded border border-cyan-400/40">
+                            <Check className="w-2.5 h-2.5" /> ACTIVE
+                          </span>
+                        )}
+                      </div>
+
+                      <h4 className="font-bold text-xs text-white tracking-tight line-clamp-1 mb-0.5">
+                        {sample.title}
+                      </h4>
+                      <p className="text-[10px] text-slate-400 line-clamp-1 mb-2 font-mono">
+                        {sample.tagline}
+                      </p>
+
+                      {/* 6-Color Palette Mini Capsule Swatch */}
+                      <div className="flex items-center gap-1 p-1 rounded-lg bg-black/60 border border-white/10 mb-2">
+                        {sample.colors.map((hex, i) => (
+                          <div
+                            key={i}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              sound.playBlip(1600);
+                              navigator.clipboard?.writeText(hex);
+                              updateCustomizations({ primaryColor: hex });
+                            }}
+                            className="flex-1 h-3.5 rounded-sm transition-transform hover:scale-125 cursor-pointer"
+                            style={{ backgroundColor: hex }}
+                            title={`Click to copy & apply ${hex} as primary`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1.5 border-t border-white/5">
+                      <span className="group-hover:text-cyan-300 transition-colors">
+                        {isSelected ? 'Ready to Arrange' : 'Click to Load'}
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Arrange & Customize Fine-Tuning Drawer / Box */}
+            <div className="p-3 rounded-xl border border-white/10 bg-slate-950/80 space-y-3">
+              <div 
+                onClick={() => {
+                  sound.playBlip(1200);
+                  setShowArranger(!showArranger);
+                }}
+                className="flex items-center justify-between cursor-pointer select-none"
+              >
+                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-cyan-300">
+                  <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Arrange & Customize</span>
+                </div>
+                <button className="text-slate-400 hover:text-white">
+                  {showArranger ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              {showArranger && (
+                <div className="space-y-3 pt-2 border-t border-white/5 text-xs font-mono animate-in slide-in-from-top-1">
+                  {/* 1. Shadow & Flare Glow */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1 text-[10px]">
+                      <span className="text-slate-400">SHADOW & FLARE GLOW</span>
+                      <span className="text-cyan-300 font-bold uppercase">{customizations.shadowStyle}</span>
+                    </div>
+                    <div className="grid grid-cols-5 gap-1">
+                      {(['none', 'soft', 'glow', 'neon', 'dramatic'] as const).map((style) => (
+                        <button
+                          key={style}
+                          onClick={() => updateCustomizations({ shadowStyle: style })}
+                          className={`py-1 rounded text-[9px] border capitalize transition-all ${
+                            customizations.shadowStyle === style
+                              ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200'
+                              : 'bg-black/40 border-white/10 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {style}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 2. Glass Blur */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1 text-[10px]">
+                      <span className="text-slate-400">GLASS BLUR</span>
+                      <span className="text-cyan-300 font-bold">{customizations.blurIntensity}px</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="40"
+                      value={customizations.blurIntensity}
+                      onChange={(e) => updateCustomizations({ blurIntensity: Number(e.target.value) })}
+                      className="w-full accent-cyan-400 cursor-pointer"
+                    />
+                  </div>
+
+                  {/* 3. Corner Radius Geometry */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1 text-[10px]">
+                      <span className="text-slate-400">CORNER GEOMETRY</span>
+                      <span className="text-cyan-300 font-bold">{customizations.borderRadius}px</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1">
+                      {[
+                        { label: 'HUD Sharp', val: 0 },
+                        { label: 'Cyber', val: 8 },
+                        { label: 'Soft', val: 16 },
+                        { label: 'Pill', val: 32 }
+                      ].map((rad) => (
+                        <button
+                          key={rad.label}
+                          onClick={() => updateCustomizations({ borderRadius: rad.val })}
+                          className={`py-1 rounded text-[9px] border transition-all ${
+                            customizations.borderRadius === rad.val
+                              ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200'
+                              : 'bg-black/40 border-white/10 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {rad.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 4. HUD Reticle Decal Toggle */}
+                  <div className="p-2 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">HUD RETICLE DECAL</span>
+                      <span className="text-[9px] text-cyan-300">
+                        {hudMode === 'tactical' ? 'BRACKETS ACTIVE' : 'CLEAN VIEW'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        sound.playScan();
+                        setHudMode(hudMode === 'tactical' ? 'standard' : 'tactical');
+                      }}
+                      className={`px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${
+                        hudMode === 'tactical'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-glow-cyan'
+                          : 'bg-black/60 border-white/10 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {hudMode === 'tactical' ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+
+                  {/* 5. CRT Monitor Effect Toggle */}
+                  <div className="p-2 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">CRT SCANLINE EFFECT</span>
+                      <span className="text-[9px] text-cyan-300">
+                        {crtEnabled ? 'SCANLINES ACTIVE' : 'OFF'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        sound.playScan();
+                        setCrtEnabled(!crtEnabled);
+                      }}
+                      className={`px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${
+                        crtEnabled
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-glow-cyan'
+                          : 'bg-black/60 border-white/10 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {crtEnabled ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         {/* 1. VARIANTS SECTION */}
         {activeSection === 'variants' && (
           <div className="space-y-4">
@@ -162,6 +434,21 @@ export const Inspector: React.FC = () => {
         {/* 2. THEME & COLORS SECTION */}
         {activeSection === 'theme' && (
           <div className="space-y-5">
+            {/* Quick Archetype Showcase Jump */}
+            <div 
+              onClick={() => {
+                sound.playHover();
+                setActiveSection('samples');
+              }}
+              className="p-2.5 rounded-xl bg-gradient-to-r from-cyan-950/40 via-slate-900 to-indigo-950/40 border border-cyan-500/30 hover:border-cyan-400 cursor-pointer transition-all flex items-center justify-between group shadow-glow-cyan"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+                <span className="text-xs font-mono font-bold text-white">6 Futuristic Archetypes Arsenal</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-x-1 transition-transform" />
+            </div>
+
             {/* Curated Atmospheric Color Palettes (Inspired by @uiuxaadi showcases) */}
             <div>
               <div className="flex items-center justify-between mb-2">

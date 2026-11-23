@@ -14,12 +14,12 @@ import { ThemePreset } from '../../types/studio';
 import { sound } from '../../utils/soundEngine';
 
 interface TopNavbarProps {
-  onOpenSavePreset: () => void;
-  onOpenExport: () => void;
-  onOpenStyleSamples: () => void;
+  onOpenSavePreset?: () => void;
+  onOpenExport?: () => void;
+  onOpenStyleSamples?: () => void;
 }
 
-export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport, onOpenStyleSamples }) => {
+export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
   const { 
     activeComponent, 
     activeTab, 
@@ -165,24 +165,11 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport, onOpenStyleS
           )}
         </div>
 
-        {/* Minimal Samples Button */}
-        <button
-          onClick={() => {
-            sound.playScan();
-            onOpenStyleSamples();
-          }}
-          className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium text-cyan-300 hover:text-cyan-200 bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/20 transition-all font-mono shrink-0"
-          title="Futuristic Style Samples Showcase"
-        >
-          <Sparkles className="w-3 h-3 text-cyan-400" />
-          <span className="hidden sm:inline text-xs">Samples</span>
-        </button>
-
         {/* Clean Export Button */}
         <button
           onClick={() => {
             sound.playHover();
-            onOpenExport();
+            onOpenExport?.();
           }}
           className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-mono shrink-0"
           title="Export Component"
