@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useStudio } from '../../context/StudioContext';
+import { useStudio, ALL_COMPONENTS } from '../../context/StudioContext';
 import { 
   Search, 
   Sparkles, 
@@ -10,7 +10,6 @@ import {
   Command,
   ArrowRight
 } from 'lucide-react';
-import { NAVIGATION_COMPONENTS } from '../../data/navigationComponents';
 import { THEME_PRESETS } from '../../data/themePresets';
 import { ThemePreset } from '../../types/studio';
 
@@ -29,8 +28,8 @@ export const CommandPalette: React.FC = () => {
 
   if (!isCommandPaletteOpen) return null;
 
-  // Filter commands and components
-  const matchingComponents = NAVIGATION_COMPONENTS.filter(
+  // Filter commands and components across ALL 307 studio components
+  const matchingComponents = ALL_COMPONENTS.filter(
     (c) => c.name.toLowerCase().includes(query.toLowerCase()) || 
            c.subcategory.toLowerCase().includes(query.toLowerCase()) ||
            c.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))

@@ -32,6 +32,16 @@ import { CARD_COMPONENTS } from '../../data/cardComponents';
 import { FORM_COMPONENTS } from '../../data/formComponents';
 import { OVERLAY_COMPONENTS } from '../../data/overlayComponents';
 import { PROGRESS_COMPONENTS } from '../../data/progressComponents';
+import { NOTIFICATION_FEEDBACK_COMPONENTS } from '../../data/notificationFeedbackComponents';
+import { DATA_VIZ_COMPONENTS } from '../../data/dataVizComponents';
+import { TABLE_COMPONENTS } from '../../data/tableComponents';
+import { USER_PROFILE_COMPONENTS } from '../../data/userProfileComponents';
+import { MEDIA_COMPONENTS } from '../../data/mediaComponents';
+import { FOOTER_COMPONENTS } from '../../data/footerComponents';
+import { ANIMATION_COMPONENTS } from '../../data/animationComponents';
+import { LAYOUT_COMPONENTS } from '../../data/layoutComponents';
+import { ECOMMERCE_COMPONENTS } from '../../data/ecommerceComponents';
+import { SPECIAL_COMPONENTS } from '../../data/specialComponents';
 import { ATMOSPHERIC_PALETTES } from '../../data/themePresets';
 import { sound } from '../../utils/soundEngine';
 import { ThemePreset } from '../../types/studio';
@@ -80,6 +90,16 @@ export const Sidebar: React.FC = () => {
       case 'category-04': return FORM_COMPONENTS;
       case 'category-05': return OVERLAY_COMPONENTS;
       case 'category-06': return PROGRESS_COMPONENTS;
+      case 'category-07': return NOTIFICATION_FEEDBACK_COMPONENTS;
+      case 'category-08': return DATA_VIZ_COMPONENTS;
+      case 'category-09': return TABLE_COMPONENTS;
+      case 'category-10': return USER_PROFILE_COMPONENTS;
+      case 'category-11': return MEDIA_COMPONENTS;
+      case 'category-12': return FOOTER_COMPONENTS;
+      case 'category-13': return ANIMATION_COMPONENTS;
+      case 'category-14': return LAYOUT_COMPONENTS;
+      case 'category-15': return ECOMMERCE_COMPONENTS;
+      case 'category-16': return SPECIAL_COMPONENTS;
       default: return NAVIGATION_COMPONENTS;
     }
   };
@@ -114,6 +134,52 @@ export const Sidebar: React.FC = () => {
     'spinners-rings': 'Spinners & Indicators',
     'progress-bars': 'Progress Bars & Timelines',
     'skeletons-loaders': 'Skeletons & System Loaders',
+    // 07 Notifications
+    'alerts-toasts': 'Alerts & System Toasts',
+    'messages-banners': 'Messages & Banners',
+    'indicators-status': 'Indicators & Status Feeds',
+    // 08 DataViz
+    'charts-telemetry': 'Charts & Telemetry',
+    'metrics-kpi': 'Metrics & KPI Cards',
+    'tracking-activity': 'Tracking & Heatmaps',
+    // 09 Tables
+    'tables-grids': 'Tables & Data Grids',
+    'lists-views': 'Lists & Virtual Views',
+    'actions-toolbars': 'Actions & Toolbars',
+    // 10 UserProfile
+    'avatars-presence': 'Avatars & Online Presence',
+    'account-settings': 'Account Settings & Forms',
+    'security-auth': 'Security & Two-Factor Auth',
+    'activity-social': 'Activity Feeds & Social Links',
+    // 11 Media
+    'galleries-sliders': 'Galleries & Sliders',
+    'media-players': 'Cyber Media Players',
+    'interactive-tools': 'Interactive Visual Tools',
+    // 12 Footer
+    footers: 'Full-Width Footers',
+    elements: 'Footer Elements & Inputs',
+    legal: 'Copyright & Compliance',
+    // 13 Animation
+    triggers: 'Interactive Triggers & Cursor',
+    cursors: 'Custom Reticle Cursors',
+    scrolling: 'Smooth Scroll & Parallax',
+    transitions: 'Directional Transitions',
+    specialized: 'Physics & SVG Morphing',
+    lighting: 'Atmospheric Glows & Particles',
+    // 14 Layout
+    sections: 'Hero & Split Viewports',
+    grids: 'Bento & CSS Grids',
+    containers: 'Containers & Floating Pods',
+    dividers: 'Laser Dividers & Spacers',
+    // 15 Ecommerce
+    display: 'Product Dossiers & Specs',
+    actions: 'Cart Actions & Steppers',
+    checkout: 'Checkout & Receipts',
+    reviews: 'Ratings & Feedback',
+    // 16 Special
+    futuristic: 'Cyberpunk HUDs & Glass',
+    workspace: 'Terminals & AI Workspaces',
+    advanced: 'Split Panes & Widgets',
   };
 
   const uniqueSubcatIds = Array.from(new Set(currentCategoryComponents.map(c => c.subcategory)));
@@ -315,15 +381,15 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Active Protocols Grid (Categories 01 to 06) */}
+      {/* 4. Active Protocols Grid (Categories 01 to 16) */}
       <div className="p-3 pb-0 space-y-2">
         <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold flex items-center justify-between px-1">
-          <span>ACTIVE PROTOCOLS (01–06)</span>
-          <span className="text-[9px] text-cyan-400 font-bold">133 LIVE NODES</span>
+          <span>ACTIVE PROTOCOLS (01–16)</span>
+          <span className="text-[9px] text-cyan-400 font-bold">307 LIVE NODES</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-1.5">
-          {CATEGORIES.slice(0, 6).map((cat) => {
+        <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
+          {CATEGORIES.map((cat) => {
             const isSelected = activeCategory.id === cat.id;
             const shortName = cat.name.split(' ')[0];
             return (
@@ -340,7 +406,7 @@ export const Sidebar: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center justify-between text-xs mb-0.5">
-                  <span className={`font-mono font-bold text-[10px] ${isSelected ? 'text-cyan-300' : 'text-slate-300'}`}>
+                  <span className={`font-mono font-bold text-[10px] truncate ${isSelected ? 'text-cyan-300' : 'text-slate-300'}`}>
                     {cat.number}. {shortName.toUpperCase()}
                   </span>
                   {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />}
@@ -434,32 +500,7 @@ export const Sidebar: React.FC = () => {
           );
         })}
 
-        {/* 6. Future Categories 07–16 (Encrypted Classified Pods) */}
-        <div className="pt-4 border-t border-cyan-500/20 space-y-2">
-          <div className="px-2 text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold flex items-center justify-between">
-            <span>CLASSIFIED PROTOCOLS (07–16)</span>
-            <Lock className="w-3 h-3 text-slate-600" />
-          </div>
 
-          <div className="space-y-1">
-            {CATEGORIES.slice(6).map((cat) => (
-              <div
-                key={cat.id}
-                className="group flex items-center justify-between px-3 py-2 rounded-xl text-xs text-slate-500 border border-dashed border-white/10 bg-white/[0.01] hover:bg-cyan-950/20 hover:border-cyan-500/30 transition-all font-mono"
-              >
-                <div className="flex items-center gap-2.5 truncate">
-                  <span className="text-[10px] opacity-40 text-cyan-400">{cat.number}</span>
-                  <span className="truncate group-hover:text-slate-300 transition-colors">{cat.name}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/60 text-slate-500 group-hover:text-cyan-400 uppercase border border-white/5 shrink-0">
-                    LOCKED // LVL-2
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* 7. Footer Telemetry */}

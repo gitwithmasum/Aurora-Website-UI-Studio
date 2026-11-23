@@ -7,6 +7,16 @@ import { generateCardCode } from '../../categories/cards/codeGenerators/cardCode
 import { generateFormCode } from '../../categories/forms/codeGenerators/formCodeGenerator';
 import { generateOverlayCode } from '../../categories/overlays/codeGenerators/overlayCodeGenerator';
 import { generateProgressCode } from '../../categories/progress/codeGenerators/progressCodeGenerator';
+import { generateNotificationFeedbackCode } from '../../categories/notifications/codeGenerators/notificationFeedbackCodeGenerator';
+import { generateDataVizCode } from '../../categories/dataviz/codeGenerators/dataVizCodeGenerator';
+import { generateTableCode } from '../../categories/tables/codeGenerators/tableCodeGenerator';
+import { generateUserProfileCode } from '../../categories/profile/codeGenerators/userProfileCodeGenerator';
+import { generateMediaCode } from '../../categories/media/codeGenerators/mediaCodeGenerator';
+import { generateFooterCode } from '../../categories/footer/codeGenerators/footerCodeGenerator';
+import { generateAnimationCode } from '../../categories/animations/codeGenerators/animationCodeGenerator';
+import { generateLayoutCode } from '../../categories/layout/codeGenerators/layoutCodeGenerator';
+import { generateEcommerceCode } from '../../categories/ecommerce/codeGenerators/ecommerceCodeGenerator';
+import { generateSpecialCode } from '../../categories/special/codeGenerators/specialCodeGenerator';
 
 export const CodePlayground: React.FC = () => {
   const { activeComponent, activeVariantId, customizations } = useStudio();
@@ -29,6 +39,36 @@ export const CodePlayground: React.FC = () => {
     }
     if (catId === 'category-06') {
       return generateProgressCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-07') {
+      return generateNotificationFeedbackCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-08') {
+      return generateDataVizCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-09') {
+      return generateTableCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-10') {
+      return generateUserProfileCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-11') {
+      return generateMediaCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-12') {
+      return generateFooterCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-13') {
+      return generateAnimationCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-14') {
+      return generateLayoutCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-15') {
+      return generateEcommerceCode(activeComponent, activeVariantId, customizations);
+    }
+    if (catId === 'category-16') {
+      return generateSpecialCode(activeComponent, activeVariantId, customizations);
     }
     return generateComponentCode(activeComponent, activeVariantId, customizations);
   };

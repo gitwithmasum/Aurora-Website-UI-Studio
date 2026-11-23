@@ -15,6 +15,16 @@ import { CARD_COMPONENTS } from '../data/cardComponents';
 import { FORM_COMPONENTS } from '../data/formComponents';
 import { OVERLAY_COMPONENTS } from '../data/overlayComponents';
 import { PROGRESS_COMPONENTS } from '../data/progressComponents';
+import { NOTIFICATION_FEEDBACK_COMPONENTS } from '../data/notificationFeedbackComponents';
+import { DATA_VIZ_COMPONENTS } from '../data/dataVizComponents';
+import { TABLE_COMPONENTS } from '../data/tableComponents';
+import { USER_PROFILE_COMPONENTS } from '../data/userProfileComponents';
+import { MEDIA_COMPONENTS } from '../data/mediaComponents';
+import { FOOTER_COMPONENTS } from '../data/footerComponents';
+import { ANIMATION_COMPONENTS } from '../data/animationComponents';
+import { LAYOUT_COMPONENTS } from '../data/layoutComponents';
+import { ECOMMERCE_COMPONENTS } from '../data/ecommerceComponents';
+import { SPECIAL_COMPONENTS } from '../data/specialComponents';
 import { DEFAULT_CUSTOMIZATION, THEME_PRESETS } from '../data/themePresets';
 import { sound } from '../utils/soundEngine';
 
@@ -25,6 +35,16 @@ export const ALL_COMPONENTS: ComponentItem[] = [
   ...FORM_COMPONENTS,
   ...OVERLAY_COMPONENTS,
   ...PROGRESS_COMPONENTS,
+  ...NOTIFICATION_FEEDBACK_COMPONENTS,
+  ...DATA_VIZ_COMPONENTS,
+  ...TABLE_COMPONENTS,
+  ...USER_PROFILE_COMPONENTS,
+  ...MEDIA_COMPONENTS,
+  ...FOOTER_COMPONENTS,
+  ...ANIMATION_COMPONENTS,
+  ...LAYOUT_COMPONENTS,
+  ...ECOMMERCE_COMPONENTS,
+  ...SPECIAL_COMPONENTS,
 ];
 
 export type CanvasBackgroundType = 'grid' | 'dots' | 'radar' | 'mesh' | 'dark' | 'light';
@@ -242,6 +262,16 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     else if (cat.id === 'category-04') targetFirstComp = FORM_COMPONENTS[0];
     else if (cat.id === 'category-05') targetFirstComp = OVERLAY_COMPONENTS[0];
     else if (cat.id === 'category-06') targetFirstComp = PROGRESS_COMPONENTS[0];
+    else if (cat.id === 'category-07') targetFirstComp = NOTIFICATION_FEEDBACK_COMPONENTS[0];
+    else if (cat.id === 'category-08') targetFirstComp = DATA_VIZ_COMPONENTS[0];
+    else if (cat.id === 'category-09') targetFirstComp = TABLE_COMPONENTS[0];
+    else if (cat.id === 'category-10') targetFirstComp = USER_PROFILE_COMPONENTS[0];
+    else if (cat.id === 'category-11') targetFirstComp = MEDIA_COMPONENTS[0];
+    else if (cat.id === 'category-12') targetFirstComp = FOOTER_COMPONENTS[0];
+    else if (cat.id === 'category-13') targetFirstComp = ANIMATION_COMPONENTS[0];
+    else if (cat.id === 'category-14') targetFirstComp = LAYOUT_COMPONENTS[0];
+    else if (cat.id === 'category-15') targetFirstComp = ECOMMERCE_COMPONENTS[0];
+    else if (cat.id === 'category-16') targetFirstComp = SPECIAL_COMPONENTS[0];
 
     setActiveComponentState(targetFirstComp);
     setActiveVariantId(targetFirstComp.variations[0]?.id || 'standard');

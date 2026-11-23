@@ -12,6 +12,16 @@ import { CardRenderer } from '../../categories/cards/CardRenderer';
 import { FormRenderer } from '../../categories/forms/FormRenderer';
 import { OverlayRenderer } from '../../categories/overlays/OverlayRenderer';
 import { ProgressRenderer } from '../../categories/progress/ProgressRenderer';
+import { NotificationFeedbackRenderer } from '../../categories/notifications/NotificationFeedbackRenderer';
+import { DataVizRenderer } from '../../categories/dataviz/DataVizRenderer';
+import { TableRenderer } from '../../categories/tables/TableRenderer';
+import { UserProfileRenderer } from '../../categories/profile/UserProfileRenderer';
+import { MediaRenderer } from '../../categories/media/MediaRenderer';
+import { FooterRenderer } from '../../categories/footer/FooterRenderer';
+import { AnimationRenderer } from '../../categories/animations/AnimationRenderer';
+import { LayoutRenderer } from '../../categories/layout/LayoutRenderer';
+import { EcommerceRenderer } from '../../categories/ecommerce/EcommerceRenderer';
+import { SpecialRenderer } from '../../categories/special/SpecialRenderer';
 import { CodePlayground } from '../shared/CodePlayground';
 import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
@@ -264,6 +274,16 @@ export const StudioLayout: React.FC = () => {
                           if (catId === 'category-04') return <FormRenderer />;
                           if (catId === 'category-05') return <OverlayRenderer />;
                           if (catId === 'category-06') return <ProgressRenderer />;
+                          if (catId === 'category-07') return <NotificationFeedbackRenderer />;
+                          if (catId === 'category-08') return <DataVizRenderer />;
+                          if (catId === 'category-09') return <TableRenderer />;
+                          if (catId === 'category-10') return <UserProfileRenderer />;
+                          if (catId === 'category-11') return <MediaRenderer />;
+                          if (catId === 'category-12') return <FooterRenderer />;
+                          if (catId === 'category-13') return <AnimationRenderer />;
+                          if (catId === 'category-14') return <LayoutRenderer />;
+                          if (catId === 'category-15') return <EcommerceRenderer />;
+                          if (catId === 'category-16') return <SpecialRenderer />;
                           return <NavigationRenderer />;
                         })()}
                       </div>

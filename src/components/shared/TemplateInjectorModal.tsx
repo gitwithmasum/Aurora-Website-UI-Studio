@@ -151,8 +151,8 @@ export const TemplateInjectorModal: React.FC = () => {
 
   if (!isTemplateInjectorOpen) return null;
 
-  // Active available categories (01 through 06)
-  const availableCategories = CATEGORIES.slice(0, 6);
+  // Active available categories (All 16 Categories)
+  const availableCategories = CATEGORIES;
 
   // Components belonging to the currently selected category
   const availableComponents = ALL_COMPONENTS.filter(
