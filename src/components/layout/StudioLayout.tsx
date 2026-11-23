@@ -105,61 +105,82 @@ export const StudioLayout: React.FC = () => {
             {/* Main Stage */}
             <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
               {/* Component Header & Variant Switcher */}
-              <div className="px-3 sm:px-6 py-2 border-b border-[#253745]/60 bg-[#11212D]/90 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-2 shrink-0 min-w-0 w-full">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                    <h1 className="text-sm font-extrabold tracking-tight text-white flex items-center gap-2 truncate">
-                      <span>{activeComponent.name}</span>
-                    </h1>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 capitalize shrink-0">
-                      {activeComponent.subcategory}
-                    </span>
-                    <span className="hidden lg:inline text-[10px] font-mono text-slate-500 shrink-0">
-                      // ID: {activeComponent.id}
-                    </span>
+              <div className="px-3 sm:px-6 py-2.5 border-b border-[#253745]/70 bg-gradient-to-r from-[#06141B]/95 via-[#11212D]/90 to-[#0A1622]/95 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0 min-w-0 w-full relative">
+                {/* Holographic Top Laser Hairline Accent */}
+                <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
+
+                {/* Left: Component Identity & Node Telemetry */}
+                <div className="min-w-0 flex items-center gap-3">
+                  <div className="w-1.5 h-8 rounded-full bg-gradient-to-b from-cyan-400 via-teal-400 to-blue-500 shadow-glow-cyan shrink-0 hidden sm:block" />
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                      <h1 className="text-base sm:text-lg font-black tracking-tight text-white font-mono flex items-center gap-2 truncate">
+                        <span>{activeComponent.name}</span>
+                      </h1>
+                      {/* Futuristic Subcategory Tag */}
+                      <span className="text-[9px] font-mono font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-400/30 uppercase flex items-center gap-1.5 shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-glow-cyan" />
+                        <span>{activeComponent.subcategory}</span>
+                      </span>
+                      {/* Telemetry Node Identifier */}
+                      <span className="hidden xl:inline-flex items-center gap-1 text-[10px] font-mono text-slate-400">
+                        <span className="text-slate-600">//</span>
+                        <span>NODE:</span>
+                        <span className="text-cyan-400/90 font-bold">#{activeComponent.id.toUpperCase()}</span>
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5 max-w-2xl line-clamp-1 truncate font-sans">
+                      {activeComponent.description}
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-0.5 max-w-2xl line-clamp-1 truncate">
-                    {activeComponent.description}
-                  </p>
                 </div>
 
-                {/* Design Variant Pills */}
-                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 max-w-full min-w-0">
-                  <span className="text-[9px] font-mono uppercase text-cyan-500/60 font-bold shrink-0 mr-1 hidden sm:inline">
-                    TEMPLATES:
-                  </span>
-                  {activeComponent.variations.map((v) => {
-                    const isSelected = activeVariantId === v.id;
-                    return (
-                      <button
-                        key={v.id}
-                        onClick={() => {
-                          sound.playBlip(1400);
-                          setActiveVariantId(v.id);
-                        }}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
-                          isSelected
-                            ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-300 font-semibold border border-cyan-500/50 shadow-glow-cyan'
-                            : 'bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-                        }`}
-                      >
-                        {v.name}
-                      </button>
-                    );
-                  })}
+                {/* Right: Futuristic HUD Template & Variant Dock */}
+                <div className="flex items-center gap-2 shrink-0 max-w-full min-w-0">
+                  <div className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg min-w-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <div className="flex items-center gap-1.5 px-2 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
+                      <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                      <span className="hidden sm:inline">Templates:</span>
+                    </div>
 
-                  {/* Quick Blueprint Injector Button */}
-                  <button
-                    onClick={() => {
-                      sound.playScan();
-                      setIsTemplateInjectorOpen(true);
-                    }}
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-dashed border-cyan-500/30 text-xs transition-colors shrink-0"
-                    title="Inject a custom template or blueprint for this component"
-                  >
-                    <Plus className="w-3 h-3" />
-                    <span>Custom</span>
-                  </button>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {activeComponent.variations.map((v) => {
+                        const isSelected = activeVariantId === v.id;
+                        return (
+                          <button
+                            key={v.id}
+                            onClick={() => {
+                              sound.playBlip(1400);
+                              setActiveVariantId(v.id);
+                            }}
+                            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+                              isSelected
+                                ? 'bg-gradient-to-r from-cyan-500/30 via-sky-500/20 to-blue-500/30 text-cyan-200 font-bold border border-cyan-400/60 shadow-glow-cyan'
+                                : 'text-slate-400 hover:text-white hover:bg-white/10 border border-transparent'
+                            }`}
+                          >
+                            {isSelected && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-glow-cyan animate-pulse shrink-0" />
+                            )}
+                            <span>{v.name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Quick Blueprint Injector Button */}
+                    <button
+                      onClick={() => {
+                        sound.playScan();
+                        setIsTemplateInjectorOpen(true);
+                      }}
+                      className="ml-1 px-2.5 py-1 rounded-lg bg-cyan-950/40 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-100 border border-dashed border-cyan-400/40 hover:border-cyan-400 text-xs font-mono font-medium flex items-center gap-1 transition-all shrink-0 group"
+                      title="Inject a custom template or blueprint for this component"
+                    >
+                      <Plus className="w-3 h-3 group-hover:rotate-90 transition-transform text-cyan-400" />
+                      <span className="hidden md:inline">Inject</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -168,15 +189,16 @@ export const StudioLayout: React.FC = () => {
                 {activeTab === 'preview' && (
                   <div className="flex-1 flex flex-col overflow-hidden min-w-0 w-full">
                     {/* Canvas Viewport Toolbar */}
-                    <div className="px-3 sm:px-6 py-1.5 border-b border-white/5 bg-[#070b16]/70 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-xs text-slate-400 shrink-0 min-w-0 w-full overflow-x-auto">
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                        {/* Device Mode Selector */}
-                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10 shrink-0">
+                    <div className="px-3 sm:px-6 py-2 border-b border-white/5 bg-[#06141B]/95 backdrop-blur-md flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0 min-w-0 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                      {/* Left: Device Mode Dock & Stage Telemetry */}
+                      <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 shrink-0">
+                        {/* Device Mode Selector Dock */}
+                        <div className="flex items-center bg-black/60 p-0.5 rounded-xl border border-white/10 shadow-inner shrink-0">
                           {[
-                            { id: 'desktop', label: 'Desktop', icon: Monitor },
-                            { id: 'laptop', label: 'Laptop', icon: Laptop },
-                            { id: 'tablet', label: 'Tablet', icon: Tablet },
-                            { id: 'mobile', label: 'Mobile', icon: Smartphone },
+                            { id: 'desktop', label: 'Desktop (1440×900)', icon: Monitor },
+                            { id: 'laptop', label: 'Laptop (1024×768)', icon: Laptop },
+                            { id: 'tablet', label: 'Tablet (768×1024)', icon: Tablet },
+                            { id: 'mobile', label: 'Mobile (390×844)', icon: Smartphone },
                           ].map((dm) => {
                             const Icon = dm.icon;
                             const isActive = deviceMode === dm.id;
@@ -187,8 +209,10 @@ export const StudioLayout: React.FC = () => {
                                   sound.playBlip(1400);
                                   setDeviceMode(dm.id as any);
                                 }}
-                                className={`p-1 rounded text-xs transition-all ${
-                                  isActive ? 'bg-[#253745]/80 text-[#CCD0CF]' : 'text-slate-500 hover:text-slate-300'
+                                className={`p-1.5 rounded-lg transition-all ${
+                                  isActive 
+                                    ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 shadow-glow-cyan' 
+                                    : 'text-slate-500 hover:text-slate-200 hover:bg-white/5 border border-transparent'
                                 }`}
                                 title={dm.label}
                               >
@@ -198,19 +222,23 @@ export const StudioLayout: React.FC = () => {
                           })}
                         </div>
 
-                        <span className="font-mono text-[10px] text-cyan-400 hidden sm:inline truncate">
-                          {deviceMode.toUpperCase()} ({deviceWidthMap[deviceMode]})
-                        </span>
-                        <span className="hidden md:inline text-slate-700">|</span>
-                        <span className="hidden md:inline font-mono text-[10px] text-slate-400 truncate">
-                          THEME: {customizations.theme.toUpperCase()}
-                        </span>
+                        {/* Tactical Telemetry Badge */}
+                        <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] shrink-0">
+                          <span className="px-2.5 py-1 rounded-lg bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 font-bold flex items-center gap-1.5 shadow-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>{deviceMode.toUpperCase()} ({deviceWidthMap[deviceMode]})</span>
+                          </span>
+                          <span className="text-slate-600 hidden md:inline">•</span>
+                          <span className="text-slate-400 hidden md:inline truncate">
+                            THEME: <span className="text-cyan-400 font-bold">{customizations.theme.toUpperCase()}</span>
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Canvas Background and Zoom Controls */}
-                      <div className="flex items-center gap-2 shrink-0">
-                        {/* Background switcher */}
-                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10 overflow-x-auto">
+                      {/* Right: Canvas Background and Zoom Controls */}
+                      <div className="flex items-center gap-2.5 shrink-0">
+                        {/* Background Matrix Switcher */}
+                        <div className="flex items-center bg-black/60 p-0.5 rounded-xl border border-white/10 shadow-inner overflow-x-auto [&::-webkit-scrollbar]:hidden shrink-0">
                           {(['radar', 'grid', 'dots', 'mesh', 'dark', 'light'] as CanvasBackgroundType[]).map((bg) => (
                             <button
                               key={bg}
@@ -218,8 +246,10 @@ export const StudioLayout: React.FC = () => {
                                 sound.playBlip(1100);
                                 setCanvasBg(bg);
                               }}
-                              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono capitalize transition-all ${
-                                canvasBg === bg ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
+                              className={`px-2 py-0.5 rounded-lg text-[10px] font-mono capitalize transition-all whitespace-nowrap ${
+                                canvasBg === bg 
+                                  ? 'bg-cyan-500/25 text-cyan-200 font-bold border border-cyan-400/40 shadow-glow-cyan' 
+                                  : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                               }`}
                             >
                               {bg}
@@ -227,26 +257,35 @@ export const StudioLayout: React.FC = () => {
                           ))}
                         </div>
 
-                        {/* Zoom Controls */}
-                        <div className="flex items-center bg-white/5 rounded-lg border border-white/10 p-0.5">
+                        {/* Precision HUD Zoom Controls */}
+                        <div className="flex items-center bg-black/60 rounded-xl border border-white/10 p-0.5 shadow-inner shrink-0">
                           <button 
                             onClick={() => {
                               sound.playHover();
                               setZoom((z) => Math.max(50, z - 10));
                             }}
-                            className="p-1 hover:bg-white/10 rounded text-slate-400 hover:text-white"
-                            title="Zoom Out"
+                            className="p-1 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                            title="Zoom Out (Min 50%)"
                           >
                             <ZoomOut className="w-3.5 h-3.5" />
                           </button>
-                          <span className="text-[10px] font-mono px-1 sm:px-1.5 text-slate-300">{zoom}%</span>
+                          <button
+                            onClick={() => {
+                              sound.playHover();
+                              setZoom(100);
+                            }}
+                            className="text-[10px] font-mono px-1.5 text-cyan-300 font-bold hover:text-white transition-colors"
+                            title="Click to reset zoom to 100%"
+                          >
+                            {zoom}%
+                          </button>
                           <button 
                             onClick={() => {
                               sound.playHover();
                               setZoom((z) => Math.min(150, z + 10));
                             }}
-                            className="p-1 hover:bg-white/10 rounded text-slate-400 hover:text-white"
-                            title="Zoom In"
+                            className="p-1 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                            title="Zoom In (Max 150%)"
                           >
                             <ZoomIn className="w-3.5 h-3.5" />
                           </button>
