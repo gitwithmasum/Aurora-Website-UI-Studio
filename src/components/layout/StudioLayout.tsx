@@ -109,30 +109,19 @@ export const StudioLayout: React.FC = () => {
                 {/* Holographic Top Laser Hairline Accent */}
                 <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
 
-                {/* Left: Component Identity & Node Telemetry */}
-                <div className="min-w-0 flex items-center gap-3">
-                  <div className="w-1.5 h-8 rounded-full bg-gradient-to-b from-cyan-400 via-teal-400 to-blue-500 shadow-glow-cyan shrink-0 hidden sm:block" />
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-                      <h1 className="text-base sm:text-lg font-black tracking-tight text-white font-mono flex items-center gap-2 truncate">
-                        <span>{activeComponent.name}</span>
-                      </h1>
-                      {/* Futuristic Subcategory Tag */}
-                      <span className="text-[9px] font-mono font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-400/30 uppercase flex items-center gap-1.5 shadow-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-glow-cyan" />
-                        <span>{activeComponent.subcategory}</span>
-                      </span>
-                      {/* Telemetry Node Identifier */}
-                      <span className="hidden xl:inline-flex items-center gap-1 text-[10px] font-mono text-slate-400">
-                        <span className="text-slate-600">//</span>
-                        <span>NODE:</span>
-                        <span className="text-cyan-400/90 font-bold">#{activeComponent.id.toUpperCase()}</span>
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-400 mt-0.5 max-w-2xl line-clamp-1 truncate font-sans">
-                      {activeComponent.description}
-                    </p>
+                {/* Left: Clean Minimalist Component Identity */}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <h1 className="text-sm sm:text-base font-bold tracking-tight text-white truncate">
+                      {activeComponent.name}
+                    </h1>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
+                      {activeComponent.subcategory}
+                    </span>
                   </div>
+                  <p className="text-xs text-slate-400 mt-0.5 max-w-xl truncate">
+                    {activeComponent.description}
+                  </p>
                 </div>
 
                 {/* Right: Futuristic HUD Template & Variant Dock */}
