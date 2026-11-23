@@ -37,6 +37,7 @@ export const StudioLayout: React.FC = () => {
     setActiveVariantId, 
     activeTab, 
     deviceMode,
+    setDeviceMode,
     canvasBg,
     setCanvasBg,
     customizations,
@@ -156,9 +157,37 @@ export const StudioLayout: React.FC = () => {
                   <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Canvas Viewport Toolbar */}
                     <div className="px-6 py-1.5 border-b border-white/5 bg-[#070b16]/70 flex items-center justify-between text-xs text-slate-400 shrink-0">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
+                        {/* Device Mode Selector */}
+                        <div className="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10">
+                          {[
+                            { id: 'desktop', label: 'Desktop', icon: Monitor },
+                            { id: 'laptop', label: 'Laptop', icon: Laptop },
+                            { id: 'tablet', label: 'Tablet', icon: Tablet },
+                            { id: 'mobile', label: 'Mobile', icon: Smartphone },
+                          ].map((dm) => {
+                            const Icon = dm.icon;
+                            const isActive = deviceMode === dm.id;
+                            return (
+                              <button
+                                key={dm.id}
+                                onClick={() => {
+                                  sound.playBlip(1400);
+                                  setDeviceMode(dm.id as any);
+                                }}
+                                className={`p-1 rounded text-xs transition-all ${
+                                  isActive ? 'bg-[#253745]/80 text-[#CCD0CF]' : 'text-slate-500 hover:text-slate-300'
+                                }`}
+                                title={dm.label}
+                              >
+                                <Icon className="w-3.5 h-3.5" />
+                              </button>
+                            );
+                          })}
+                        </div>
+
                         <span className="font-mono text-[10px] text-cyan-400">
-                          VIEWPORT: {deviceMode.toUpperCase()} ({deviceWidthMap[deviceMode]})
+                          {deviceMode.toUpperCase()} ({deviceWidthMap[deviceMode]})
                         </span>
                         <span className="hidden sm:inline text-slate-700">|</span>
                         <span className="hidden sm:inline font-mono text-[10px] text-slate-400">
