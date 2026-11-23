@@ -45,7 +45,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport, onOpenStyleS
             sound.playBlip(1200);
             setIsSidebarOpen(!isSidebarOpen);
           }}
-          className="lg:hidden p-1.5 rounded-md text-cyan-400 hover:text-white hover:bg-white/10 shrink-0"
+          className="md:hidden p-1.5 rounded-md text-cyan-400 hover:text-white hover:bg-white/10 shrink-0"
           title="Toggle Navigation Menu"
         >
           <Menu className="w-4 h-4" />

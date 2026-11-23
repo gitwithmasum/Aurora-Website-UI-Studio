@@ -204,7 +204,7 @@ export const Sidebar: React.FC = () => {
 
   if (!isSidebarOpen) {
     return (
-      <div className="hidden lg:flex h-full border-r border-cyan-500/20 bg-[#04060c] p-2 flex-col items-center justify-between z-30 select-none shrink-0">
+      <div className="hidden md:flex h-full border-r border-cyan-500/20 bg-[#04060c] p-2 flex-col items-center justify-between z-20 select-none shrink-0">
         <button
           onClick={() => {
             sound.playBlip(1200);
@@ -225,16 +225,16 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile / Tablet Backdrop */}
+      {/* Mobile only backdrop (hidden on desktop and laptop) */}
       <div 
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+        className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
         onClick={() => {
           sound.playHover();
           setIsSidebarOpen(false);
         }}
       />
 
-      <aside className="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 max-w-[85vw] h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none shrink-0 font-sans shadow-2xl lg:shadow-none transition-transform duration-300">
+      <aside className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-72 xl:w-80 max-w-[85vw] h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none shrink-0 font-sans shadow-2xl md:shadow-none transition-transform duration-300">
       {/* 1. Cybernetic Brand Header */}
       <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 relative">
         <div className="flex items-center justify-between mb-2">
