@@ -91,6 +91,7 @@ export interface SavedPreset {
 export interface CustomTemplate {
   id: string;
   name: string;
+  categoryId?: string;
   componentId: string;
   description: string;
   codeSnippet: string;

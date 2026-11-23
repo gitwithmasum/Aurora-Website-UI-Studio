@@ -354,9 +354,9 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const applyCustomTemplate = (template: CustomTemplate) => {
     sound.playScan();
-    const targetComp = components.find((c) => c.id === template.componentId);
+    const targetComp = ALL_COMPONENTS.find((c) => c.id === template.componentId);
     if (targetComp) {
-      setActiveComponentState(targetComp);
+      setActiveComponent(targetComp);
     }
     setCustomizations({ ...template.settings });
   };
