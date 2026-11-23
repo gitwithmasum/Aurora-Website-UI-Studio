@@ -11,6 +11,8 @@ import { CodePlayground } from '../shared/CodePlayground';
 import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
 import { ExportModal } from '../shared/ExportModal';
+import { StyleSamplesModal } from '../shared/StyleSamplesModal';
+import { FuturisticSampleBar } from '../shared/FuturisticSampleBar';
 import { 
   Sparkles, 
   Layers, 
@@ -45,6 +47,7 @@ export const StudioLayout: React.FC = () => {
 
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isStyleSamplesOpen, setIsStyleSamplesOpen] = useState(false);
   const [zoom, setZoom] = useState(100);
 
   // Viewport width mapping
@@ -78,12 +81,16 @@ export const StudioLayout: React.FC = () => {
           <TopNavbar 
             onOpenSavePreset={() => setIsSaveModalOpen(true)}
             onOpenExport={() => setIsExportModalOpen(true)}
+            onOpenStyleSamples={() => setIsStyleSamplesOpen(true)}
           />
 
           {/* Workspace Body */}
           <div className="flex-1 flex overflow-hidden relative">
             {/* Main Stage */}
             <main className="flex-1 flex flex-col h-full overflow-hidden">
+              {/* Futuristic Samples Arsenal & Arranger Bar */}
+              <FuturisticSampleBar />
+
               {/* Component Header & Variant Switcher */}
               <div className="px-6 py-2.5 border-b border-cyan-500/15 bg-[#050811]/90 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                 <div>
@@ -251,6 +258,12 @@ export const StudioLayout: React.FC = () => {
       <ExportModal 
         isOpen={isExportModalOpen} 
         onClose={() => setIsExportModalOpen(false)} 
+      />
+
+      {/* Futuristic Style Samples Showcase Modal */}
+      <StyleSamplesModal 
+        isOpen={isStyleSamplesOpen} 
+        onClose={() => setIsStyleSamplesOpen(false)} 
       />
     </div>
   );

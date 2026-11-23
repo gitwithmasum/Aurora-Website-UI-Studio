@@ -29,9 +29,10 @@ import { ThemePreset } from '../../types/studio';
 interface TopNavbarProps {
   onOpenSavePreset: () => void;
   onOpenExport: () => void;
+  onOpenStyleSamples: () => void;
 }
 
-export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenSavePreset, onOpenExport }) => {
+export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenSavePreset, onOpenExport, onOpenStyleSamples }) => {
   const { 
     activeComponent, 
     activeTab, 
@@ -213,10 +214,20 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenSavePreset, onOpenEx
           <Bookmark className="w-3.5 h-3.5" />
         </button>
 
+        {/* Style Samples Showcase Button */}
+        <button
+          onClick={onOpenStyleSamples}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold shadow-glow-cyan font-mono"
+          title="Explore Futuristic Visual Style Samples"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Samples</span>
+        </button>
+
         {/* Export / Share Modal Button */}
         <button
           onClick={onOpenExport}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold shadow-glow-cyan"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold"
         >
           <Share2 className="w-3.5 h-3.5" />
           <span>Export</span>
