@@ -11,7 +11,6 @@ import {
   ChevronRight, 
   ChevronDown, 
   Sparkles, 
-  X,
   PanelLeftClose,
   PanelLeftOpen,
   Boxes,
@@ -20,9 +19,7 @@ import {
   Lock,
   Radio,
   Activity,
-  Terminal,
   Shield,
-  Palette,
   MousePointerClick
 } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
@@ -42,9 +39,7 @@ import { ANIMATION_COMPONENTS } from '../../data/animationComponents';
 import { LAYOUT_COMPONENTS } from '../../data/layoutComponents';
 import { ECOMMERCE_COMPONENTS } from '../../data/ecommerceComponents';
 import { SPECIAL_COMPONENTS } from '../../data/specialComponents';
-import { ATMOSPHERIC_PALETTES } from '../../data/themePresets';
 import { sound } from '../../utils/soundEngine';
-import { ThemePreset } from '../../types/studio';
 
 export const Sidebar: React.FC = () => {
   const { 
@@ -54,17 +49,14 @@ export const Sidebar: React.FC = () => {
     activeComponent, 
     setActiveComponent, 
     searchQuery, 
-    setSearchQuery,
     favorites,
     toggleFavorite,
     isFavorite,
     customTemplates,
     activeFilter,
-    setActiveFilter,
     isSidebarOpen,
     setIsSidebarOpen,
     setIsTemplateInjectorOpen,
-    applyTheme,
     customizations
   } = useStudio();
 
@@ -237,7 +229,7 @@ export const Sidebar: React.FC = () => {
       <aside className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-72 xl:w-80 max-w-[85vw] h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none shrink-0 font-sans shadow-2xl md:shadow-none transition-transform duration-300">
       {/* 1. Cybernetic Brand Header */}
       <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 relative">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
               <div 
@@ -286,37 +278,10 @@ export const Sidebar: React.FC = () => {
             <PanelLeftClose className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Quick Style Samples / Palette Bar */}
-        <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between">
-          <span className="text-[9px] font-mono uppercase text-slate-500 font-bold flex items-center gap-1">
-            <Palette className="w-3 h-3 text-cyan-400" />
-            <span>Styles:</span>
-          </span>
-          <div className="flex items-center gap-1.5">
-            {ATMOSPHERIC_PALETTES.map((pal) => {
-              const isSelected = customizations.theme === pal.themeId;
-              return (
-                <button
-                  key={pal.id}
-                  onClick={() => {
-                    sound.playScan();
-                    applyTheme(pal.themeId as ThemePreset);
-                  }}
-                  className={`w-5 h-5 rounded-md border transition-all ${
-                    isSelected ? 'scale-125 border-white shadow-lg ring-1 ring-cyan-400' : 'border-white/20 opacity-70 hover:opacity-100 hover:scale-110'
-                  }`}
-                  style={{ backgroundColor: pal.primary }}
-                  title={`${pal.name} (Click to apply atmospheric sample)`}
-                />
-              );
-            })}
-          </div>
-        </div>
       </div>
 
       {/* 2. Tactical Blueprint Arsenal Card */}
-      <div className="p-3 pb-0">
+      <div className="p-3 pb-2 border-b border-white/5">
         <div 
           onClick={() => {
             sound.playScan();
@@ -343,51 +308,6 @@ export const Sidebar: React.FC = () => {
           <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
             <Plus className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-90 transition-transform" />
           </div>
-        </div>
-      </div>
-
-      {/* 3. Search Protocol Matrix */}
-      <div className="p-3 border-b border-white/5">
-        <div className="relative flex items-center">
-          <Terminal className="w-3.5 h-3.5 text-cyan-400 absolute left-3 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="> QUERY_PROTOCOL_MATRIX (⌘K)"
-            className="w-full pl-8 pr-7 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-cyan-300 placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-mono"
-          />
-          {searchQuery && (
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 p-0.5 rounded hover:bg-white/10 text-slate-400"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1 mt-2.5 overflow-x-auto scrollbar-none pb-0.5">
-          {[
-            { id: 'all', label: `ALL (${currentCategoryComponents.length})` },
-            { id: 'favorites', label: `★ FAV (${favorites.length})` },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                sound.playHover();
-                setActiveFilter(tab.id as any);
-              }}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium whitespace-nowrap transition-all ${
-                activeFilter === tab.id
-                  ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/50 shadow-glow-cyan'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -512,17 +432,6 @@ export const Sidebar: React.FC = () => {
             </div>
           );
         })}
-
-
-      </div>
-
-      {/* 7. Footer Telemetry */}
-      <div className="p-3 border-t border-cyan-500/20 bg-black/60 flex items-center justify-between text-[10px] font-mono text-slate-400">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>AURORA v2.0 ONLINE</span>
-        </div>
-        <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-cyan-400">⌘K</kbd>
       </div>
     </aside>
   </>
