@@ -16,8 +16,8 @@ export const CATEGORIES: CategoryItem[] = [
     name: 'Buttons & Action Elements',
     description: 'Interactive buttons, icon triggers, split buttons, magnetic buttons, and futuristic CTA elements.',
     iconName: 'MousePointerClick',
-    count: 28,
-    status: 'coming-soon',
+    count: 20,
+    status: 'available',
   },
   {
     id: 'category-03',

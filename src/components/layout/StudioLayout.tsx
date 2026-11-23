@@ -7,6 +7,7 @@ import { CommandPalette } from './CommandPalette';
 import { TelemetryBar } from './TelemetryBar';
 import { TemplateInjectorModal } from '../shared/TemplateInjectorModal';
 import { NavigationRenderer } from '../../categories/navigation/NavigationRenderer';
+import { ButtonRenderer } from '../../categories/buttons/ButtonRenderer';
 import { CodePlayground } from '../shared/CodePlayground';
 import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
@@ -32,6 +33,7 @@ import { sound } from '../../utils/soundEngine';
 
 export const StudioLayout: React.FC = () => {
   const { 
+    activeCategory,
     activeComponent, 
     activeVariantId, 
     setActiveVariantId, 
@@ -251,7 +253,11 @@ export const StudioLayout: React.FC = () => {
                         className={`w-full transition-all duration-300 flex items-center justify-center relative z-10 ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-4' : ''}`}
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
                       >
-                        <NavigationRenderer />
+                        {activeCategory.id === 'category-02' || activeComponent.categoryId === 'category-02' ? (
+                          <ButtonRenderer />
+                        ) : (
+                          <NavigationRenderer />
+                        )}
                       </div>
                     </div>
                   </div>

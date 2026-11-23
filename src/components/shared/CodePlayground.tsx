@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { useStudio } from '../../context/StudioContext';
 import { Copy, Check, Download, FileCode, Code, Layers, Sparkles } from 'lucide-react';
 import { generateComponentCode } from '../../categories/navigation/codeGenerators/navigationCodeGenerator';
+import { generateButtonCode } from '../../categories/buttons/codeGenerators/buttonCodeGenerator';
 
 export const CodePlayground: React.FC = () => {
   const { activeComponent, activeVariantId, customizations } = useStudio();
   const [activeLang, setActiveLang] = useState<'react' | 'html' | 'css' | 'tailwind'>('react');
   const [copied, setCopied] = useState(false);
 
-  const codeSnippets = generateComponentCode(activeComponent, activeVariantId, customizations);
+  const codeSnippets = activeComponent.categoryId === 'category-02'
+    ? generateButtonCode(activeComponent, activeVariantId, customizations)
+    : generateComponentCode(activeComponent, activeVariantId, customizations);
   const currentCode = codeSnippets[activeLang];
 
   const handleCopy = () => {

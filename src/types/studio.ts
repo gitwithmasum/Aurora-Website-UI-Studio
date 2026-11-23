@@ -58,12 +58,13 @@ export interface ComponentVariation {
 export interface ComponentItem {
   id: string;
   name: string;
-  category: string;
-  categoryId: string;
-  subcategory: 'header' | 'navigation' | 'profile-actions' | 'effects';
+  category?: string;
+  categoryNumber?: string;
+  categoryId?: string;
+  subcategory: string;
   description: string;
   tags: string[];
-  status: 'ready' | 'beta' | 'coming-soon';
+  status?: 'ready' | 'beta' | 'coming-soon';
   variations: ComponentVariation[];
   defaultSettings?: Partial<CustomizationSettings>;
 }

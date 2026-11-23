@@ -10,8 +10,11 @@ import {
 } from '../types/studio';
 import { CATEGORIES } from '../data/categories';
 import { NAVIGATION_COMPONENTS } from '../data/navigationComponents';
+import { BUTTON_COMPONENTS } from '../data/buttonComponents';
 import { DEFAULT_CUSTOMIZATION, THEME_PRESETS } from '../data/themePresets';
 import { sound } from '../utils/soundEngine';
+
+export const ALL_COMPONENTS: ComponentItem[] = [...NAVIGATION_COMPONENTS, ...BUTTON_COMPONENTS];
 
 export type CanvasBackgroundType = 'grid' | 'dots' | 'radar' | 'mesh' | 'dark' | 'light';
 export type FilterType = 'all' | 'header' | 'navigation' | 'profile-actions' | 'effects' | 'favorites' | 'custom-templates';
@@ -79,8 +82,8 @@ const STORAGE_KEY_RECENT = 'aurora_recent';
 
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [categories] = useState<CategoryItem[]>(CATEGORIES);
-  const [activeCategory, setActiveCategory] = useState<CategoryItem>(CATEGORIES[0]);
-  const [components] = useState<ComponentItem[]>(NAVIGATION_COMPONENTS);
+  const [activeCategory, setActiveCategoryState] = useState<CategoryItem>(CATEGORIES[0]);
+  const [components] = useState<ComponentItem[]>(ALL_COMPONENTS);
   const [activeComponent, setActiveComponentState] = useState<ComponentItem>(NAVIGATION_COMPONENTS[0]);
   const [activeVariantId, setActiveVariantId] = useState<string>(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
   const [activeTab, setActiveTabState] = useState<StudioTab>('preview');
@@ -219,10 +222,29 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {}
   }, [recentlyViewed]);
 
+  const handleSelectCategory = (cat: CategoryItem) => {
+    sound.playConfirm();
+    setActiveCategoryState(cat);
+    if (cat.id === 'category-02') {
+      setActiveComponentState(BUTTON_COMPONENTS[0]);
+      setActiveVariantId(BUTTON_COMPONENTS[0].variations[0]?.id || 'standard');
+    } else {
+      setActiveComponentState(NAVIGATION_COMPONENTS[0]);
+      setActiveVariantId(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
+    }
+  };
+
   const setActiveComponent = (comp: ComponentItem) => {
     sound.playBlip(1300);
     setActiveComponentState(comp);
     setActiveVariantId(comp.variations[0]?.id || 'standard');
+
+    if (comp.categoryId) {
+      const parentCat = CATEGORIES.find((c) => c.id === comp.categoryId);
+      if (parentCat && parentCat.id !== activeCategory.id) {
+        setActiveCategoryState(parentCat);
+      }
+    }
 
     setRecentlyViewed((prev) => {
       const filtered = prev.filter((id) => id !== comp.id);
@@ -331,7 +353,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{
         categories,
         activeCategory,
-        setActiveCategory,
+        setActiveCategory: handleSelectCategory,
         components,
         activeComponent,
         setActiveComponent,
