@@ -186,7 +186,7 @@ export const TemplateInjectorModal: React.FC = () => {
     if (!templateName.trim()) return;
 
     const tags = tagsInput.split(',').map((t) => t.trim()).filter(Boolean);
-    addCustomTemplate({
+    const newTemplate = addCustomTemplate({
       name: templateName.trim(),
       categoryId: selectedCatId,
       componentId: selectedCompId,
@@ -197,11 +197,14 @@ export const TemplateInjectorModal: React.FC = () => {
       isUserCreated: true,
     });
 
+    // Immediately activate and simulate the injected template live
+    applyCustomTemplate(newTemplate);
+
     setSavedSuccess(true);
     setTimeout(() => {
       setSavedSuccess(false);
-      setActiveTab('vault');
-    }, 800);
+      setIsTemplateInjectorOpen(false);
+    }, 700);
   };
 
   const handleExportAll = () => {

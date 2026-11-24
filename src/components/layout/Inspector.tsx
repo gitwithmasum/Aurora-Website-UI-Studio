@@ -18,7 +18,9 @@ import {
   Layers,
   Shield,
   Zap,
-  Eye
+  Eye,
+  Trash2,
+  Plus
 } from 'lucide-react';
 import { THEME_PRESETS, ATMOSPHERIC_PALETTES, AtmosphericPalette } from '../../data/themePresets';
 import { ThemePreset, InteractionState } from '../../types/studio';
@@ -30,6 +32,12 @@ export const Inspector: React.FC = () => {
     activeComponent, 
     activeVariantId, 
     setActiveVariantId,
+    customTemplates,
+    activeCustomTemplateId,
+    setActiveCustomTemplateId,
+    applyCustomTemplate,
+    deleteCustomTemplate,
+    setIsTemplateInjectorOpen,
     customizations, 
     updateCustomizations, 
     applyTheme, 
@@ -383,53 +391,124 @@ export const Inspector: React.FC = () => {
           </div>
         )}
         {/* 1. VARIANTS SECTION */}
-        {activeSection === 'variants' && (
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-2 font-bold">
-                Design Variations ({activeComponent.variations.length})
-              </label>
-              <div className="space-y-2">
-                {activeComponent.variations.map((v) => {
-                  const isSelected = activeVariantId === v.id;
-                  return (
-                    <div
-                      key={v.id}
-                      onClick={() => setActiveVariantId(v.id)}
-                      className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                        isSelected 
-                          ? 'bg-cyan-950/30 border-cyan-400 text-white shadow-glow-cyan' 
-                          : 'bg-white/5 border-white/5 hover:border-white/15'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-xs text-white">{v.name}</span>
-                        {isSelected && <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-glow-cyan" />}
-                      </div>
-                      <p className="text-[11px] opacity-70 mt-1 leading-snug">
-                        {v.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+        {activeSection === 'variants' && (() => {
+          const componentCustomTemplates = customTemplates.filter(
+            (t) => t.componentId === activeComponent.id
+          );
 
-            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-              <span className="font-semibold text-white block mb-1">Component Information</span>
-              <p className="text-[11px] opacity-70 leading-relaxed mb-2">
-                {activeComponent.description}
-              </p>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {activeComponent.tags.map((tag) => (
-                  <span key={tag} className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono text-cyan-300">
-                    #{tag}
-                  </span>
-                ))}
+          return (
+            <div className="space-y-4">
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-2 font-bold">
+                  Design Variations ({activeComponent.variations.length})
+                </label>
+                <div className="space-y-2">
+                  {activeComponent.variations.map((v) => {
+                    const isSelected = !activeCustomTemplateId && activeVariantId === v.id;
+                    return (
+                      <div
+                        key={v.id}
+                        onClick={() => {
+                          setActiveVariantId(v.id);
+                          setActiveCustomTemplateId(null);
+                        }}
+                        className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                          isSelected 
+                            ? 'bg-cyan-950/30 border-cyan-400 text-white shadow-glow-cyan' 
+                            : 'bg-white/5 border-white/5 hover:border-white/15'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-white">{v.name}</span>
+                          {isSelected && <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-glow-cyan" />}
+                        </div>
+                        <p className="text-[11px] opacity-70 mt-1 leading-snug">
+                          {v.description}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom Blueprints for this Component */}
+              {componentCustomTemplates.length > 0 && (
+                <div className="pt-3 border-t border-white/10">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 block font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-cyan-400" />
+                      <span>Custom Blueprints ({componentCustomTemplates.length})</span>
+                    </label>
+                    <button 
+                      onClick={() => setIsTemplateInjectorOpen(true)}
+                      className="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                    >
+                      <Plus className="w-2.5 h-2.5" />
+                      <span>New</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {componentCustomTemplates.map((tmpl) => {
+                      const isSelected = activeCustomTemplateId === tmpl.id;
+                      return (
+                        <div
+                          key={tmpl.id}
+                          onClick={() => applyCustomTemplate(tmpl)}
+                          className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                            isSelected 
+                              ? 'bg-gradient-to-r from-cyan-950/40 to-teal-950/40 border-cyan-400 text-white shadow-glow-cyan ring-1 ring-cyan-400/30' 
+                              : 'bg-white/5 border-white/5 hover:border-white/15'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-xs text-white">{tmpl.name}</span>
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold">
+                                BLUEPRINT
+                              </span>
+                            </div>
+                            {isSelected && <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-glow-cyan" />}
+                          </div>
+                          <p className="text-[11px] opacity-70 mt-1 leading-snug">
+                            {tmpl.description}
+                          </p>
+                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5 text-[10px] font-mono text-slate-400">
+                            <span>{tmpl.createdAt}</span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteCustomTemplate(tmpl.id);
+                              }}
+                              className="hover:text-rose-400 text-slate-500 transition-colors p-1"
+                              title="Delete Blueprint"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+                <span className="font-semibold text-white block mb-1">Component Information</span>
+                <p className="text-[11px] opacity-70 leading-relaxed mb-2">
+                  {activeComponent.description}
+                </p>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {activeComponent.tags.map((tag) => (
+                    <span key={tag} className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono text-cyan-300">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* 2. THEME & COLORS SECTION */}
         {activeSection === 'theme' && (

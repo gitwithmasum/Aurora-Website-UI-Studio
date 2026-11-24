@@ -19,11 +19,20 @@ import { generateEcommerceCode } from '../../categories/ecommerce/codeGenerators
 import { generateSpecialCode } from '../../categories/special/codeGenerators/specialCodeGenerator';
 
 export const CodePlayground: React.FC = () => {
-  const { activeComponent, activeVariantId, customizations } = useStudio();
+  const { activeComponent, activeVariantId, customizations, activeCustomTemplate } = useStudio();
   const [activeLang, setActiveLang] = useState<'react' | 'html' | 'css' | 'tailwind'>('react');
   const [copied, setCopied] = useState(false);
 
   const getCodeSnippets = () => {
+    if (activeCustomTemplate && activeCustomTemplate.codeSnippet) {
+      return {
+        react: activeCustomTemplate.codeSnippet,
+        html: `<!-- Custom Blueprint: ${activeCustomTemplate.name} -->\n<div class="aurora-custom-blueprint font-mono">\n  ${activeCustomTemplate.codeSnippet}\n</div>`,
+        css: `/* Custom Blueprint: ${activeCustomTemplate.name} */\n:root {\n  --primary: ${customizations.primaryColor};\n  --accent: ${customizations.accentColor};\n  --radius: ${customizations.borderRadius}px;\n}`,
+        tailwind: `<!-- Custom Blueprint: ${activeCustomTemplate.name} -->\n<div className="w-full relative font-mono text-cyan-300">\n  ${activeCustomTemplate.codeSnippet}\n</div>`,
+      };
+    }
+
     const catId = activeComponent.categoryId;
     if (catId === 'category-02') {
       return generateButtonCode(activeComponent, activeVariantId, customizations);
@@ -105,11 +114,18 @@ export const CodePlayground: React.FC = () => {
       {/* Code Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-bold text-sm text-white">{activeComponent.name} Code Export</h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-              DYNAMIC COMPILATION
-            </span>
+            {activeCustomTemplate ? (
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold flex items-center gap-1 shadow-glow-cyan">
+                <Sparkles className="w-3 h-3 text-emerald-400" />
+                <span>BLUEPRINT: {activeCustomTemplate.name}</span>
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                DYNAMIC COMPILATION
+              </span>
+            )}
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
             Realtime generated code reflecting active customizations, colors, and layout properties.

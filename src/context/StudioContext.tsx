@@ -82,7 +82,10 @@ interface StudioContextType {
   deletePreset: (id: string) => void;
   applyPreset: (preset: SavedPreset) => void;
   customTemplates: CustomTemplate[];
-  addCustomTemplate: (template: Omit<CustomTemplate, 'id' | 'createdAt'>) => void;
+  activeCustomTemplateId: string | null;
+  setActiveCustomTemplateId: (id: string | null) => void;
+  activeCustomTemplate: CustomTemplate | null;
+  addCustomTemplate: (template: Omit<CustomTemplate, 'id' | 'createdAt'>) => CustomTemplate;
   deleteCustomTemplate: (id: string) => void;
   applyCustomTemplate: (template: CustomTemplate) => void;
   isTemplateInjectorOpen: boolean;
@@ -116,7 +119,8 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [activeCategory, setActiveCategoryState] = useState<CategoryItem>(CATEGORIES[0]);
   const [components] = useState<ComponentItem[]>(ALL_COMPONENTS);
   const [activeComponent, setActiveComponentState] = useState<ComponentItem>(NAVIGATION_COMPONENTS[0]);
-  const [activeVariantId, setActiveVariantId] = useState<string>(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
+  const [activeVariantId, setActiveVariantIdState] = useState<string>(NAVIGATION_COMPONENTS[0].variations[0]?.id || 'standard');
+  const [activeCustomTemplateId, setActiveCustomTemplateId] = useState<string | null>(null);
   const [activeTab, setActiveTabState] = useState<StudioTab>('preview');
   const [deviceMode, setDeviceModeState] = useState<DeviceMode>('desktop');
   const [canvasBg, setCanvasBgState] = useState<CanvasBackgroundType>('radar');
@@ -284,13 +288,15 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     else if (cat.id === 'category-16') targetFirstComp = SPECIAL_COMPONENTS[0];
 
     setActiveComponentState(targetFirstComp);
-    setActiveVariantId(targetFirstComp.variations[0]?.id || 'standard');
+    setActiveVariantIdState(targetFirstComp.variations[0]?.id || 'standard');
+    setActiveCustomTemplateId(null);
   };
 
   const setActiveComponent = (comp: ComponentItem) => {
     sound.playBlip(1300);
     setActiveComponentState(comp);
-    setActiveVariantId(comp.variations[0]?.id || 'standard');
+    setActiveVariantIdState(comp.variations[0]?.id || 'standard');
+    setActiveCustomTemplateId(null);
 
     if (comp.categoryId) {
       const parentCat = CATEGORIES.find((c) => c.id === comp.categoryId);
@@ -310,6 +316,11 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         ...comp.defaultSettings,
       }));
     }
+  };
+
+  const setActiveVariantId = (vId: string) => {
+    setActiveVariantIdState(vId);
+    setActiveCustomTemplateId(null);
   };
 
   const updateCustomizations = (partial: Partial<CustomizationSettings>) => {
@@ -376,8 +387,12 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setCustomizations({ ...preset.settings });
   };
 
+  const activeCustomTemplate = activeCustomTemplateId 
+    ? customTemplates.find((t) => t.id === activeCustomTemplateId) || null 
+    : null;
+
   // Custom Template actions
-  const addCustomTemplate = (templateData: Omit<CustomTemplate, 'id' | 'createdAt'>) => {
+  const addCustomTemplate = (templateData: Omit<CustomTemplate, 'id' | 'createdAt'>): CustomTemplate => {
     sound.playConfirm();
     const newTemplate: CustomTemplate = {
       ...templateData,
@@ -385,10 +400,15 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
     };
     setCustomTemplates((prev) => [newTemplate, ...prev]);
+    return newTemplate;
   };
 
   const deleteCustomTemplate = (id: string) => {
     sound.playBlip(500);
+    if (activeCustomTemplateId === id) {
+      setActiveCustomTemplateId(null);
+      setActiveVariantIdState(activeComponent.variations[0]?.id || 'standard');
+    }
     setCustomTemplates((prev) => prev.filter((t) => t.id !== id));
   };
 
@@ -396,9 +416,23 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     sound.playScan();
     const targetComp = ALL_COMPONENTS.find((c) => c.id === template.componentId);
     if (targetComp) {
-      setActiveComponent(targetComp);
+      setActiveComponentState(targetComp);
+      if (targetComp.categoryId) {
+        const parentCat = CATEGORIES.find((cat) => cat.id === targetComp.categoryId);
+        if (parentCat && parentCat.id !== activeCategory.id) {
+          setActiveCategoryState(parentCat);
+        }
+      }
+      setRecentlyViewed((prev) => {
+        const filtered = prev.filter((id) => id !== targetComp.id);
+        return [targetComp.id, ...filtered].slice(0, 8);
+      });
     }
-    setCustomizations({ ...template.settings });
+    setActiveCustomTemplateId(template.id);
+    setActiveVariantIdState('');
+    if (template.settings) {
+      setCustomizations({ ...template.settings });
+    }
   };
 
   return (
@@ -434,6 +468,9 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         deletePreset,
         applyPreset,
         customTemplates,
+        activeCustomTemplateId,
+        setActiveCustomTemplateId,
+        activeCustomTemplate,
         addCustomTemplate,
         deleteCustomTemplate,
         applyCustomTemplate,

@@ -39,7 +39,8 @@ import {
   Monitor, 
   Tablet,
   Check,
-  Plus
+  Plus,
+  X
 } from 'lucide-react';
 import { CanvasBackgroundType } from '../../context/StudioContext';
 import { sound } from '../../utils/soundEngine';
@@ -50,6 +51,12 @@ export const StudioLayout: React.FC = () => {
     activeComponent, 
     activeVariantId, 
     setActiveVariantId, 
+    customTemplates,
+    activeCustomTemplateId,
+    setActiveCustomTemplateId,
+    activeCustomTemplate,
+    deleteCustomTemplate,
+    applyCustomTemplate,
     activeTab, 
     deviceMode,
     setDeviceMode,
@@ -65,6 +72,10 @@ export const StudioLayout: React.FC = () => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isStyleSamplesOpen, setIsStyleSamplesOpen] = useState(false);
   const [zoom, setZoom] = useState(100);
+
+  const componentCustomTemplates = customTemplates.filter(
+    (t) => t.componentId === activeComponent.id
+  );
 
   // Viewport width mapping
   const deviceWidthMap = {
@@ -117,25 +128,33 @@ export const StudioLayout: React.FC = () => {
                   <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
                     {activeComponent.subcategory}
                   </span>
+                  {activeCustomTemplate && (
+                    <span className="text-[10px] font-mono tracking-wider text-cyan-300 bg-cyan-950/70 px-2.5 py-0.5 rounded-md border border-cyan-400/50 flex items-center gap-1.5 shadow-glow-cyan animate-pulse">
+                      <Sparkles className="w-3 h-3 text-cyan-400" />
+                      <span className="font-bold">ACTIVE: {activeCustomTemplate.name}</span>
+                    </span>
+                  )}
                 </div>
 
                 {/* 2. Centered Futuristic HUD Template & Variant Dock Underneath */}
-                <div className="flex items-center justify-center max-w-full min-w-0">
-                  <div className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg min-w-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                <div className="w-full flex items-center justify-center min-w-0 px-2 overflow-hidden">
+                  <div className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div className="flex items-center gap-1.5 px-2 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
                       <Layers className="w-3.5 h-3.5 text-cyan-400" />
                       <span className="hidden sm:inline">Templates:</span>
                     </div>
 
                     <div className="flex items-center gap-1 shrink-0">
+                      {/* Standard Built-in Variations */}
                       {activeComponent.variations.map((v) => {
-                        const isSelected = activeVariantId === v.id;
+                        const isSelected = !activeCustomTemplateId && activeVariantId === v.id;
                         return (
                           <button
                             key={v.id}
                             onClick={() => {
                               sound.playBlip(1400);
                               setActiveVariantId(v.id);
+                              setActiveCustomTemplateId(null);
                             }}
                             className={`px-3 py-1 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
                               isSelected
@@ -150,6 +169,51 @@ export const StudioLayout: React.FC = () => {
                           </button>
                         );
                       })}
+
+                      {/* Custom User Blueprints / Templates for this Component */}
+                      {componentCustomTemplates.length > 0 && (
+                        <>
+                          <div className="h-4 w-[1px] bg-cyan-500/20 mx-1 shrink-0" />
+                          {componentCustomTemplates.map((tmpl) => {
+                            const isSelected = activeCustomTemplateId === tmpl.id;
+                            return (
+                              <div key={tmpl.id} className="relative group shrink-0 flex items-center">
+                                <button
+                                  onClick={() => {
+                                    applyCustomTemplate(tmpl);
+                                  }}
+                                  className={`px-3 py-1 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+                                    isSelected
+                                      ? 'bg-gradient-to-r from-cyan-500/30 via-emerald-500/20 to-teal-500/30 text-cyan-200 font-bold border border-cyan-400/70 shadow-glow-cyan ring-1 ring-cyan-400/30'
+                                      : 'text-cyan-300/80 hover:text-white hover:bg-cyan-500/10 border border-cyan-500/20'
+                                  }`}
+                                  title={`Custom Blueprint: ${tmpl.name}`}
+                                >
+                                  {isSelected ? (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-glow-cyan animate-pulse shrink-0" />
+                                  ) : (
+                                    <Sparkles className="w-3 h-3 text-cyan-400 shrink-0" />
+                                  )}
+                                  <span className="max-w-[130px] truncate">{tmpl.name}</span>
+                                  <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                                    BLUEPRINT
+                                  </span>
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteCustomTemplate(tmpl.id);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 text-slate-500 transition-opacity ml-0.5"
+                                  title="Delete this custom blueprint"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </>
+                      )}
                     </div>
 
                     {/* Quick Blueprint Injector Button */}
@@ -279,9 +343,16 @@ export const StudioLayout: React.FC = () => {
 
                     {/* Interactive Live Canvas with Atmospheric Stage & Reticle Framing */}
                     <div 
-                      className={`flex-1 overflow-auto p-2 sm:p-4 md:p-8 flex items-center justify-center transition-all atmospheric-stage min-w-0 w-full ${canvasBgClassMap[canvasBg]}`}
+                      className={`flex-1 overflow-auto p-2 sm:p-4 md:p-8 flex items-center justify-center transition-all atmospheric-stage min-w-0 w-full relative ${canvasBgClassMap[canvasBg]}`}
                       style={{ '--stage-flare': `${customizations.primaryColor}80` } as React.CSSProperties}
                     >
+                      {activeCustomTemplate && (
+                        <div className="absolute top-3 left-4 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-black/80 border border-cyan-500/50 backdrop-blur-md text-[10px] font-mono text-cyan-300 shadow-glow-cyan animate-in fade-in">
+                          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                          <span className="font-bold uppercase tracking-wider text-slate-400">SIMULATING BLUEPRINT:</span>
+                          <span className="text-white font-bold">{activeCustomTemplate.name}</span>
+                        </div>
+                      )}
                       <div 
                         className={`w-full max-w-full transition-all duration-300 flex items-center justify-center relative z-10 min-w-0 overflow-x-auto ${deviceWidthMap[deviceMode]} ${hudMode === 'tactical' ? 'cyber-box p-2 sm:p-4' : ''}`}
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
