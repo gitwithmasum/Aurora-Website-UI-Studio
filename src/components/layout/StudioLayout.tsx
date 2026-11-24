@@ -22,6 +22,7 @@ import { AnimationRenderer } from '../../categories/animations/AnimationRenderer
 import { LayoutRenderer } from '../../categories/layout/LayoutRenderer';
 import { EcommerceRenderer } from '../../categories/ecommerce/EcommerceRenderer';
 import { SpecialRenderer } from '../../categories/special/SpecialRenderer';
+import { CustomBlueprintRenderer } from '../shared/CustomBlueprintRenderer';
 import { CodePlayground } from '../shared/CodePlayground';
 import { InteractionMatrix } from '../shared/InteractionMatrix';
 import { SavePresetModal } from '../shared/SavePresetModal';
@@ -138,7 +139,10 @@ export const StudioLayout: React.FC = () => {
 
                 {/* 2. Centered Futuristic HUD Template & Variant Dock Underneath */}
                 <div className="w-full flex items-center justify-center min-w-0 px-2 overflow-hidden">
-                  <div className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                  <div 
+                    onWheel={(e) => { e.currentTarget.scrollLeft += e.deltaY; }}
+                    className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth"
+                  >
                     <div className="flex items-center gap-1.5 px-2 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
                       <Layers className="w-3.5 h-3.5 text-cyan-400" />
                       <span className="hidden sm:inline">Templates:</span>
@@ -358,6 +362,10 @@ export const StudioLayout: React.FC = () => {
                         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}
                       >
                         {(() => {
+                          if (activeCustomTemplate && activeCustomTemplate.codeSnippet?.trim()) {
+                            return <CustomBlueprintRenderer template={activeCustomTemplate} />;
+                          }
+
                           const catId = activeComponent.categoryId || activeCategory.id;
                           if (catId === 'category-02') return <ButtonRenderer />;
                           if (catId === 'category-03') return <CardRenderer />;
