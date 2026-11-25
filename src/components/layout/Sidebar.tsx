@@ -201,221 +201,243 @@ export const Sidebar: React.FC = () => {
     <>
       {/* Mobile only backdrop (hidden on desktop and laptop) */}
       <div 
-        className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity"
         onClick={() => {
           sound.playHover();
           setIsSidebarOpen(false);
         }}
       />
 
-      <aside className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-72 xl:w-80 max-w-[85vw] h-full border-r border-[#253745]/60 bg-[#06141B] flex flex-col select-none shrink-0 font-sans shadow-2xl md:shadow-none transition-transform duration-300">
-      {/* 1. Cybernetic Brand Header */}
-      <div className="p-4 border-b border-[#253745]/60 bg-[#11212D]/90 relative">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div 
-                className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-glow-cyan border"
-                style={{
-                  background: `linear-gradient(135deg, ${customizations.primaryColor}, ${customizations.accentColor})`,
-                  borderColor: `${customizations.primaryColor}80`
-                }}
-              >
-                <Boxes className="w-5 h-5 text-white" />
-              </div>
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-black animate-ping" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-black" />
-            </div>
+      <aside className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-72 xl:w-80 max-w-[85vw] my-0 md:my-2.5 md:ml-2.5 h-full md:h-[calc(100%-1.25rem)] rounded-none md:rounded-[28px] border-r md:border border-white/10 bg-[#070b1a]/85 backdrop-blur-3xl flex flex-col select-none shrink-0 font-sans shadow-2xl md:shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden relative transition-all duration-300">
+        {/* Cosmic Galaxy Atmosphere & Ambient Nebula Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.18)_0%,_rgba(168,85,247,0.1)_40%,_transparent_75%)] pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-56 h-56 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -right-24 w-56 h-56 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
 
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm tracking-tight text-white font-mono">AURORA UI STUDIO</span>
-                <span 
-                  className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase tracking-wider"
+        {/* 1. iOS-Inspired Galaxy Brand Header */}
+        <div className="p-4 border-b border-white/[0.08] relative z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                {/* iOS Squircle App Icon with Galaxy Nebula Gradient */}
+                <div 
+                  className="w-10 h-10 rounded-[14px] p-[1px] shadow-[0_0_20px_rgba(168,85,247,0.35)] ring-1 ring-white/20 transition-transform duration-300 hover:scale-105"
                   style={{
-                    backgroundColor: `${customizations.primaryColor}20`,
-                    color: customizations.primaryColor,
-                    border: `1px solid ${customizations.primaryColor}40`
+                    background: `linear-gradient(135deg, ${customizations.primaryColor}, #a855f7, ${customizations.accentColor})`,
                   }}
                 >
-                  PRO
-                </span>
+                  <div className="w-full h-full rounded-[13px] bg-[#070b1a]/70 backdrop-blur-md flex items-center justify-center font-bold text-white">
+                    <Boxes className="w-5 h-5 text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" />
+                  </div>
+                </div>
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-900 animate-ping" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-900" />
               </div>
-              <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
-                <span className="text-cyan-400">SYS: #0X889F</span>
-                <span>•</span>
-                <span className="text-emerald-400">STATUS: ONLINE</span>
-              </div>
-            </div>
-          </div>
 
-          <button
-            onClick={() => {
-              sound.playHover();
-              setIsSidebarOpen(false);
-            }}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-            title="Collapse Sidebar (Cmd+B)"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Tactical Blueprint Arsenal Card */}
-      <div className="p-3 pb-2 border-b border-white/5">
-        <div 
-          onClick={() => {
-            sound.playScan();
-            setIsTemplateInjectorOpen(true);
-          }}
-          className="p-3 rounded-xl bg-gradient-to-r from-cyan-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/40 hover:border-cyan-400 cursor-pointer transition-all shadow-glow-cyan flex items-center justify-between group cyber-box"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-white flex items-center gap-1.5 font-mono">
-                <span>BLUEPRINT VAULT</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/30 font-mono text-cyan-300 border border-cyan-500/40">
-                  {customTemplates.length}
-                </span>
-              </div>
-              <span className="text-[10px] text-cyan-400 font-mono block">
-                + Inject / Manage Blueprints
-              </span>
-            </div>
-          </div>
-          <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
-            <Plus className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-90 transition-transform" />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Active Protocols Grid (Categories 01 to 16) */}
-      <div className="p-3 pb-0 space-y-2">
-        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold flex items-center justify-between px-1">
-          <span>ACTIVE PROTOCOLS (01–16)</span>
-          <span className="text-[9px] text-cyan-400 font-bold">307 LIVE NODES</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
-          {CATEGORIES.map((cat) => {
-            const isSelected = activeCategory.id === cat.id;
-            const shortName = cat.name.split(' ')[0];
-            return (
-              <div
-                key={cat.id}
-                onClick={() => {
-                  sound.playConfirm();
-                  setActiveCategory(cat);
-                }}
-                className={`p-2 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                  isSelected
-                    ? 'border-cyan-400 bg-cyan-950/50 shadow-glow-cyan cyber-box'
-                    : 'border-white/10 bg-white/5 hover:border-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between text-xs mb-0.5">
-                  <span className={`font-mono font-bold text-[10px] truncate ${isSelected ? 'text-cyan-300' : 'text-slate-300'}`}>
-                    {cat.number}. {shortName.toUpperCase()}
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-sm tracking-tight text-white font-sans">AURORA STUDIO</span>
+                  <span 
+                    className="text-[9px] px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider backdrop-blur-md"
+                    style={{
+                      backgroundColor: `${customizations.primaryColor}25`,
+                      color: customizations.primaryColor,
+                      border: `1px solid ${customizations.primaryColor}50`
+                    }}
+                  >
+                    GALAXY
                   </span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-mono text-slate-400">{cat.count} Nodes</span>
-                  <span className="text-[8px] font-mono px-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">LIVE</span>
+                <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 mt-0.5">
+                  <span className="text-cyan-400 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]" />
+                    SYS: G-CORE
+                  </span>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-emerald-400 font-semibold">ONLINE</span>
                 </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                sound.playHover();
+                setIsSidebarOpen(false);
+              }}
+              className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-white transition-all shadow-sm"
+              title="Collapse Sidebar (Cmd+B)"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* 2. iOS-Inspired Galaxy Blueprint Vault Card */}
+        <div className="p-3 pb-2 border-b border-white/[0.06] relative z-10">
+          <div 
+            onClick={() => {
+              sound.playScan();
+              setIsTemplateInjectorOpen(true);
+            }}
+            className="p-3 rounded-[20px] bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-cyan-950/40 border border-white/10 hover:border-cyan-400/50 cursor-pointer transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] flex items-center justify-between group hover:shadow-[0_0_25px_rgba(6,182,212,0.25)]"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-[12px] bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform shadow-sm">
+                <Sparkles className="w-4 h-4 text-cyan-300" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white flex items-center gap-1.5 font-sans">
+                  <span>Blueprint Vault</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-cyan-500/25 font-mono text-cyan-300 border border-cyan-400/40 font-bold">
+                    {customTemplates.length}
+                  </span>
+                </div>
+                <span className="text-[10px] text-cyan-300/80 font-mono block">
+                  + Inject / Manage Blueprints
+                </span>
+              </div>
+            </div>
+            <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 transition-colors">
+              <Plus className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-90 transition-transform" />
+            </div>
+          </div>
+        </div>
+
+        {/* 3. iOS-Style Rounded Protocols Grid (Categories 01 to 16) */}
+        <div className="p-3 pb-0 space-y-2 relative z-10">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold flex items-center justify-between px-1">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400/80 shadow-[0_0_6px_#c084fc]" />
+              <span>GALAXY PROTOCOLS (01–16)</span>
+            </span>
+            <span className="text-[9px] text-cyan-400 font-bold">307 NODES</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {CATEGORIES.map((cat) => {
+              const isSelected = activeCategory.id === cat.id;
+              const shortName = cat.name.split(' ')[0];
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => {
+                    sound.playConfirm();
+                    setActiveCategory(cat);
+                  }}
+                  className={`p-2.5 rounded-[16px] border cursor-pointer transition-all duration-200 flex flex-col justify-between relative overflow-hidden ${
+                    isSelected
+                      ? 'border-cyan-400/60 bg-gradient-to-br from-indigo-600/30 via-purple-600/20 to-cyan-600/25 shadow-[0_0_20px_rgba(6,182,212,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] text-white ring-1 ring-cyan-400/30'
+                      : 'border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 text-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-mono font-bold text-[10px] truncate ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                      {cat.number}. {shortName.toUpperCase()}
+                    </span>
+                    {isSelected && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee] animate-pulse" />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-slate-400">{cat.count} Nodes</span>
+                    <span className={`text-[8px] font-mono px-1.5 py-0.2 rounded-full border ${
+                      isSelected 
+                        ? 'bg-cyan-500/30 text-cyan-200 border-cyan-400/50 font-bold' 
+                        : 'bg-white/5 text-slate-400 border-white/10'
+                    }`}>
+                      LIVE
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 4. iOS-Style Main Component Navigator */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-3.5 relative z-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          {/* Component Subcategories */}
+          {subcategories.map((subcat) => {
+            const compsInSubcat = filteredComponents.filter(c => c.subcategory === subcat.id);
+            if (compsInSubcat.length === 0 && activeFilter !== 'all') return null;
+
+            const isExpanded = expandedSubcats[subcat.id] ?? true;
+
+            return (
+              <div key={subcat.id} className="space-y-1">
+                <button
+                  onClick={() => toggleSubcat(subcat.id)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-[14px] text-slate-300 hover:text-white text-xs font-mono font-semibold uppercase tracking-wider transition-all hover:bg-white/[0.06] border border-transparent hover:border-white/[0.06]"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/70 shadow-[0_0_6px_rgba(6,182,212,0.6)]" />
+                    <span className="font-sans font-medium text-xs tracking-normal normal-case text-slate-200">{subcat.label}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-cyan-400/80 font-mono">{subcat.count}</span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${isExpanded ? 'rotate-180' : ''}`} />
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="space-y-1 pl-2.5 border-l border-white/10 ml-2">
+                    {compsInSubcat.map((comp, idx) => {
+                      const isActive = activeComponent.id === comp.id;
+                      const isFav = isFavorite(comp.id);
+                      const indexStr = (idx + 1).toString().padStart(2, '0');
+
+                      return (
+                        <div
+                          key={comp.id}
+                          onClick={() => {
+                            sound.playBlip(1300);
+                            setActiveComponent(comp);
+                            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                              setIsSidebarOpen(false);
+                            }
+                          }}
+                          className={`group relative flex items-center justify-between px-3 py-2 rounded-[14px] text-xs cursor-pointer transition-all duration-200 ${
+                            isActive
+                              ? 'bg-white/[0.12] text-white font-semibold backdrop-blur-xl border border-white/25 shadow-[0_4px_20px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] ring-1 ring-cyan-400/40'
+                              : 'text-slate-300 hover:bg-white/[0.05] hover:text-white border border-transparent'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 truncate">
+                            <span className={`text-[10px] font-mono shrink-0 ${isActive ? 'text-cyan-300 font-bold' : 'text-slate-500'}`}>
+                              {indexStr}.
+                            </span>
+                            <span className="truncate">{comp.name}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {isActive && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse" />
+                            )}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                sound.playConfirm();
+                                toggleFavorite(comp.id);
+                              }}
+                              className={`p-1 rounded-full hover:bg-white/10 transition-colors ${
+                                isFav ? 'text-amber-400' : 'text-slate-600 opacity-0 group-hover:opacity-100'
+                              }`}
+                              title={isFav ? 'Remove Favorite' : 'Add to Favorites'}
+                            >
+                              <Star className={`w-3.5 h-3.5 ${isFav ? 'fill-amber-400' : ''}`} />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
-      </div>
-
-      {/* 5. Main Component Navigator */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-4">
-        {/* Component Subcategories */}
-        {subcategories.map((subcat) => {
-          const compsInSubcat = filteredComponents.filter(c => c.subcategory === subcat.id);
-          if (compsInSubcat.length === 0 && activeFilter !== 'all') return null;
-
-          const isExpanded = expandedSubcats[subcat.id] ?? true;
-
-          return (
-            <div key={subcat.id} className="space-y-1">
-              <button
-                onClick={() => toggleSubcat(subcat.id)}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-mono font-semibold uppercase tracking-wider transition-colors hover:bg-white/5"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/60" />
-                  <span>{subcat.label}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] opacity-60 text-cyan-400">{subcat.count}</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </div>
-              </button>
-
-              {isExpanded && (
-                <div className="space-y-1 pl-2 border-l border-cyan-500/20 ml-2">
-                  {compsInSubcat.map((comp, idx) => {
-                    const isActive = activeComponent.id === comp.id;
-                    const isFav = isFavorite(comp.id);
-                    const indexStr = (idx + 1).toString().padStart(2, '0');
-
-                    return (
-                      <div
-                        key={comp.id}
-                        onClick={() => {
-                          sound.playBlip(1300);
-                          setActiveComponent(comp);
-                          if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-                            setIsSidebarOpen(false);
-                          }
-                        }}
-                        className={`group relative flex items-center justify-between px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
-                          isActive
-                            ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-400 shadow-glow-cyan cyber-box'
-                            : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 truncate">
-                          <span className={`text-[10px] font-mono shrink-0 ${isActive ? 'text-cyan-400 font-bold' : 'text-slate-500'}`}>
-                            {indexStr}.
-                          </span>
-                          <span className="truncate">{comp.name}</span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          {isActive && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-glow-cyan animate-pulse" />
-                          )}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              sound.playConfirm();
-                              toggleFavorite(comp.id);
-                            }}
-                            className={`p-1 rounded hover:bg-white/10 ${
-                              isFav ? 'text-amber-400' : 'text-slate-600 opacity-0 group-hover:opacity-100'
-                            }`}
-                            title={isFav ? 'Remove Favorite' : 'Add to Favorites'}
-                          >
-                            <Star className={`w-3.5 h-3.5 ${isFav ? 'fill-amber-400' : ''}`} />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </aside>
-  </>
-);
+      </aside>
+    </>
+  );
 };

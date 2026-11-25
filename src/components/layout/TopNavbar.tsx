@@ -37,60 +37,64 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   return (
-    <header className="h-11 border-b border-[#253745]/30 bg-[#06141B]/95 backdrop-blur-md px-2 sm:px-4 flex items-center justify-between z-20 shrink-0 select-none min-w-0 w-full gap-2">
+    <header className="mx-2 sm:mx-3 mt-2 sm:mt-2.5 h-12 rounded-[22px] sm:rounded-[26px] bg-[#070b1a]/80 backdrop-blur-3xl border border-white/[0.12] px-3 sm:px-4 flex items-center justify-between z-20 shrink-0 select-none min-w-0 shadow-[0_10px_35px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] relative overflow-hidden gap-2">
+      {/* Cosmic Galaxy Atmosphere & Specular Top Hairline */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.18)_0%,_rgba(6,182,212,0.08)_50%,_transparent_80%)] pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
+
       {/* Left: Sidebar Collapse/Expand Toggle + Search + Clean Breadcrumb */}
-      <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-        {/* Sidebar Toggle Button (next to Search) */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 relative z-10">
+        {/* iOS-Style Sidebar Toggle Button */}
         <button
           onClick={() => {
             sound.playBlip(1200);
             setIsSidebarOpen(!isSidebarOpen);
           }}
-          className={`p-1.5 rounded-lg border transition-all shrink-0 ${
+          className={`p-2 rounded-full border transition-all shrink-0 shadow-sm ${
             isSidebarOpen 
-              ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10' 
-              : 'bg-cyan-950/40 border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/20 shadow-glow-cyan'
+              ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/15' 
+              : 'bg-gradient-to-r from-cyan-500/25 to-indigo-500/25 border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
           }`}
           title={isSidebarOpen ? "Collapse Sidebar (Cmd+B)" : "Expand Sidebar (Cmd+B)"}
         >
           {isSidebarOpen ? (
-            <PanelLeftClose className="w-4 h-4" />
+            <PanelLeftClose className="w-3.5 h-3.5" />
           ) : (
-            <PanelLeftOpen className="w-4 h-4" />
+            <PanelLeftOpen className="w-3.5 h-3.5" />
           )}
         </button>
 
-        {/* Subtle Search Trigger */}
+        {/* iOS-Style Search Trigger Pill */}
         <button
           onClick={() => {
             sound.playHover();
             setIsCommandPaletteOpen(true);
           }}
-          className="flex items-center gap-1.5 px-1.5 sm:px-2 py-1 rounded-md text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors font-mono shrink-0"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all font-sans text-xs shrink-0 shadow-sm"
           title="Search Components (⌘K)"
         >
-          <Search className="w-3.5 h-3.5 text-slate-400" />
-          <span className="hidden sm:inline text-xs text-slate-400">Search</span>
-          <kbd className="hidden md:inline-block px-1 py-0.2 rounded bg-white/5 text-[9px] text-slate-500 font-mono">
+          <Search className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="hidden sm:inline text-xs text-slate-300 font-medium">Search</span>
+          <kbd className="hidden md:inline-block px-1.5 py-0.2 rounded-full bg-white/10 text-[9px] text-slate-400 font-mono">
             ⌘K
           </kbd>
         </button>
 
-        <span className="text-slate-700 hidden lg:inline">/</span>
+        <span className="text-slate-600 hidden lg:inline">/</span>
 
         {/* Minimal Breadcrumb */}
-        <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 min-w-0">
+        <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 min-w-0 font-sans">
           <span className="text-slate-400 capitalize truncate">{activeComponent.subcategory}</span>
-          <span className="text-slate-700">/</span>
-          <span className="text-[#CCD0CF] font-medium truncate max-w-[140px] xl:max-w-[200px]">
+          <span className="text-slate-600">/</span>
+          <span className="text-white font-semibold truncate max-w-[140px] xl:max-w-[200px]">
             {activeComponent.name}
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 ml-1 opacity-80 shrink-0" title="Operational" />
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse ml-1 opacity-90 shrink-0" title="Active" />
         </div>
       </div>
 
-      {/* Center: Apple/Linear-Style Segmented View Switcher */}
-      <div className="flex items-center bg-black/40 p-0.5 rounded-lg border border-white/5 text-xs shrink-0">
+      {/* Center: iOS Liquid Glass Segmented View Switcher */}
+      <div className="flex items-center bg-black/40 p-1 rounded-full border border-white/10 shadow-inner backdrop-blur-xl text-xs shrink-0 relative z-10">
         {[
           { id: 'preview', label: 'Simulator' },
           { id: 'code', label: 'Code' },
@@ -104,10 +108,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
                 sound.playBlip(1200);
                 setActiveTab(tab.id as any);
               }}
-              className={`px-2 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs transition-all ${
+              className={`px-3.5 sm:px-4 py-1 rounded-full text-[11px] sm:text-xs transition-all ${
                 isActive
-                  ? 'bg-[#253745]/80 text-[#CCD0CF] font-medium shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white/20 text-white font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.35)] backdrop-blur-md'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {tab.label}
@@ -116,31 +120,31 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
         })}
       </div>
 
-      {/* Right: Clean, Uncluttered Actions */}
-      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+      {/* Right: iOS Rounded Controls */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 relative z-10">
         {/* Minimal Theme Dropdown */}
         <div className="relative">
           <button
             onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-slate-300 hover:bg-white/5 transition-colors font-mono"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 hover:text-white transition-all font-sans shadow-sm"
             title="Switch Theme"
           >
             <span 
-              className="w-2.5 h-2.5 rounded-full ring-1 ring-white/20 shrink-0" 
+              className="w-2.5 h-2.5 rounded-full ring-1 ring-white/30 shadow-[0_0_6px_rgba(255,255,255,0.3)] shrink-0" 
               style={{ backgroundColor: customizations.primaryColor }}
             />
-            <span className="capitalize hidden md:inline text-xs text-slate-300">
+            <span className="capitalize hidden md:inline text-xs text-slate-200 font-medium">
               {customizations.theme}
             </span>
-            <ChevronDown className="w-3 h-3 text-slate-500 hidden sm:inline" />
+            <ChevronDown className="w-3 h-3 text-slate-400 hidden sm:inline" />
           </button>
 
           {themeDropdownOpen && (
-            <div className="absolute right-0 top-8 w-48 p-1 rounded-xl bg-[#0B151F] border border-[#253745] shadow-2xl z-50 animate-in fade-in zoom-in-95">
-              <div className="px-2 py-1 text-[9px] font-mono uppercase tracking-wider text-slate-500">
+            <div className="absolute right-0 top-11 w-52 p-2 rounded-[22px] bg-[#090e21]/95 border border-white/15 shadow-2xl backdrop-blur-3xl z-50 animate-in fade-in zoom-in-95">
+              <div className="px-2.5 py-1 text-[9px] font-mono uppercase tracking-wider text-slate-400">
                 Themes & Palettes
               </div>
-              <div className="max-h-60 overflow-y-auto space-y-0.5">
+              <div className="max-h-60 overflow-y-auto space-y-1 mt-1 pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
                 {Object.keys(THEME_PRESETS).map((tKey) => {
                   const preset = THEME_PRESETS[tKey as ThemePreset];
                   const isCurrent = customizations.theme === tKey;
@@ -152,9 +156,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
                         applyTheme(tKey as ThemePreset);
                         setThemeDropdownOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-full text-xs transition-colors ${
                         isCurrent 
-                          ? 'bg-[#253745]/60 text-cyan-200 font-semibold' 
+                          ? 'bg-white/15 text-white font-semibold shadow-sm' 
                           : 'hover:bg-white/5 text-slate-300'
                       }`}
                     >
@@ -174,29 +178,29 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
           )}
         </div>
 
-        {/* Clean Export Button */}
+        {/* iOS-Style Clean Export Button */}
         <button
           onClick={() => {
             sound.playHover();
             onOpenExport?.();
           }}
-          className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-mono shrink-0"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 hover:text-white transition-all font-sans shrink-0 shadow-sm"
           title="Export Component"
         >
-          <Share2 className="w-3 h-3 text-slate-400" />
-          <span className="hidden sm:inline text-xs">Export</span>
+          <Share2 className="w-3 h-3 text-slate-300" />
+          <span className="hidden sm:inline text-xs font-medium">Export</span>
         </button>
 
-        {/* Minimal Inspector Toggle */}
+        {/* iOS-Style Inspector Toggle */}
         <button
           onClick={() => {
             sound.playHover();
             setIsInspectorOpen(!isInspectorOpen);
           }}
-          className={`p-1.5 rounded-md transition-colors shrink-0 ${
+          className={`p-2 rounded-full border transition-all shrink-0 shadow-sm ${
             isInspectorOpen
-              ? 'bg-[#253745]/80 text-[#CCD0CF]' 
-              : 'text-slate-400 hover:text-white hover:bg-white/5'
+              ? 'bg-white/20 border-white/30 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]' 
+              : 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/15'
           }`}
           title="Toggle Inspector (⌘I)"
         >

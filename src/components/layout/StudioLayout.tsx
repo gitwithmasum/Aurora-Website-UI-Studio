@@ -117,33 +117,33 @@ export const StudioLayout: React.FC = () => {
             {/* Main Stage */}
             <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden w-full">
               {/* Component Header & Variant Switcher */}
-              <div className="px-3 sm:px-6 py-2.5 border-b border-[#253745]/70 bg-gradient-to-r from-[#06141B]/95 via-[#11212D]/90 to-[#0A1622]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-2.5 shrink-0 min-w-0 w-full relative">
+              <div className="px-3 sm:px-6 py-2.5 bg-[#070b1a]/60 backdrop-blur-2xl border-b border-white/[0.06] flex flex-col items-center justify-center gap-2.5 shrink-0 min-w-0 w-full relative">
                 {/* Holographic Top Laser Hairline Accent */}
-                <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
+                <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 via-cyan-400/40 to-transparent pointer-events-none" />
 
                 {/* 1. Centered Component Identity & Badge */}
                 <div className="flex items-center justify-center gap-2.5 flex-wrap">
-                  <h1 className="text-sm sm:text-base font-bold tracking-tight text-white truncate">
+                  <h1 className="text-sm sm:text-base font-bold tracking-tight text-white truncate font-sans">
                     {activeComponent.name}
                   </h1>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10">
                     {activeComponent.subcategory}
                   </span>
                   {activeCustomTemplate && (
-                    <span className="text-[10px] font-mono tracking-wider text-cyan-300 bg-cyan-950/70 px-2.5 py-0.5 rounded-md border border-cyan-400/50 flex items-center gap-1.5 shadow-glow-cyan animate-pulse">
+                    <span className="text-[10px] font-mono tracking-wider text-cyan-300 bg-gradient-to-r from-indigo-950/80 to-purple-950/80 px-3 py-0.5 rounded-full border border-cyan-400/50 flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.35)] animate-pulse">
                       <Sparkles className="w-3 h-3 text-cyan-400" />
                       <span className="font-bold">ACTIVE: {activeCustomTemplate.name}</span>
                     </span>
                   )}
                 </div>
 
-                {/* 2. Centered Futuristic HUD Template & Variant Dock Underneath */}
+                {/* 2. Centered iOS-Style Floating Glass Templates & Variant Dock */}
                 <div className="w-full flex items-center justify-center min-w-0 px-2 overflow-hidden">
                   <div 
                     onWheel={(e) => { e.currentTarget.scrollLeft += e.deltaY; }}
-                    className="flex items-center p-1 rounded-xl bg-black/60 border border-cyan-500/20 backdrop-blur-md shadow-lg max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth"
+                    className="flex items-center p-1.5 rounded-full bg-[#080d1e]/80 border border-white/[0.12] backdrop-blur-3xl shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth"
                   >
-                    <div className="flex items-center gap-1.5 px-2 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
+                    <div className="flex items-center gap-1.5 px-3 shrink-0 text-[10px] font-mono uppercase text-cyan-400 font-bold border-r border-white/10 mr-1">
                       <Layers className="w-3.5 h-3.5 text-cyan-400" />
                       <span className="hidden sm:inline">Templates:</span>
                     </div>
@@ -160,14 +160,14 @@ export const StudioLayout: React.FC = () => {
                               setActiveVariantId(v.id);
                               setActiveCustomTemplateId(null);
                             }}
-                            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+                            className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
                               isSelected
-                                ? 'bg-gradient-to-r from-cyan-500/30 via-sky-500/20 to-blue-500/30 text-cyan-200 font-bold border border-cyan-400/60 shadow-glow-cyan'
-                                : 'text-slate-400 hover:text-white hover:bg-white/10 border border-transparent'
+                                ? 'bg-gradient-to-r from-indigo-500/35 via-purple-500/30 to-cyan-500/35 text-white font-bold border border-cyan-400/60 shadow-[0_0_16px_rgba(6,182,212,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)]'
+                                : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent'
                             }`}
                           >
                             {isSelected && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-glow-cyan animate-pulse shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee] animate-pulse shrink-0" />
                             )}
                             <span>{v.name}</span>
                           </button>
@@ -177,7 +177,7 @@ export const StudioLayout: React.FC = () => {
                       {/* Custom User Blueprints / Templates for this Component */}
                       {componentCustomTemplates.length > 0 && (
                         <>
-                          <div className="h-4 w-[1px] bg-cyan-500/20 mx-1 shrink-0" />
+                          <div className="h-4 w-[1px] bg-white/10 mx-1 shrink-0" />
                           {componentCustomTemplates.map((tmpl) => {
                             const isSelected = activeCustomTemplateId === tmpl.id;
                             return (
@@ -186,20 +186,20 @@ export const StudioLayout: React.FC = () => {
                                   onClick={() => {
                                     applyCustomTemplate(tmpl);
                                   }}
-                                  className={`px-3 py-1 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+                                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
                                     isSelected
-                                      ? 'bg-gradient-to-r from-cyan-500/30 via-emerald-500/20 to-teal-500/30 text-cyan-200 font-bold border border-cyan-400/70 shadow-glow-cyan ring-1 ring-cyan-400/30'
-                                      : 'text-cyan-300/80 hover:text-white hover:bg-cyan-500/10 border border-cyan-500/20'
+                                      ? 'bg-gradient-to-r from-cyan-500/30 via-emerald-500/25 to-teal-500/30 text-white font-bold border border-cyan-400/70 shadow-[0_0_16px_rgba(6,182,212,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] ring-1 ring-cyan-400/30'
+                                      : 'text-cyan-300 hover:text-white hover:bg-white/10 border border-cyan-500/30'
                                   }`}
                                   title={`Custom Blueprint: ${tmpl.name}`}
                                 >
                                   {isSelected ? (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-glow-cyan animate-pulse shrink-0" />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee] animate-pulse shrink-0" />
                                   ) : (
                                     <Sparkles className="w-3 h-3 text-cyan-400 shrink-0" />
                                   )}
                                   <span className="max-w-[130px] truncate">{tmpl.name}</span>
-                                  <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
                                     BLUEPRINT
                                   </span>
                                 </button>
@@ -208,7 +208,7 @@ export const StudioLayout: React.FC = () => {
                                     e.stopPropagation();
                                     deleteCustomTemplate(tmpl.id);
                                   }}
-                                  className="opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 text-slate-500 transition-opacity ml-0.5"
+                                  className="opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 text-slate-400 transition-opacity ml-0.5"
                                   title="Delete this custom blueprint"
                                 >
                                   <X className="w-3 h-3" />
@@ -226,7 +226,7 @@ export const StudioLayout: React.FC = () => {
                         sound.playScan();
                         setIsTemplateInjectorOpen(true);
                       }}
-                      className="ml-1 px-2.5 py-1 rounded-lg bg-cyan-950/40 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-100 border border-dashed border-cyan-400/40 hover:border-cyan-400 text-xs font-mono font-medium flex items-center gap-1 transition-all shrink-0 group"
+                      className="ml-1 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-cyan-300 hover:text-white border border-dashed border-cyan-400/40 hover:border-cyan-400 text-xs font-mono font-medium flex items-center gap-1.5 transition-all shrink-0 group"
                       title="Inject a custom template or blueprint for this component"
                     >
                       <Plus className="w-3 h-3 group-hover:rotate-90 transition-transform text-cyan-400" />

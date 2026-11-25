@@ -47,35 +47,38 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
   return (
     <div className={`w-full max-w-4xl relative ${stateClass}`}>
       <nav 
-        style={styles.container}
-        className="flex items-center justify-between border shadow-xl relative z-20"
+        className="flex items-center justify-between rounded-full px-4 sm:px-6 py-2.5 border border-white/15 bg-[#070b1a]/80 backdrop-blur-3xl shadow-[0_10px_35px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)] relative z-20 overflow-hidden"
       >
-        <div className="flex items-center gap-2">
+        {/* Cosmic Galaxy Atmosphere & Top Specular Hairline */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.2)_0%,_rgba(6,182,212,0.1)_50%,_transparent_80%)] pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none" />
+
+        {/* Brand identity */}
+        <div className="flex items-center gap-2.5 relative z-10">
           <div 
-            className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs"
-            style={{ backgroundColor: settings.primaryColor, color: '#000' }}
+            className="w-8 h-8 rounded-[12px] flex items-center justify-center font-bold text-xs p-[1px] shadow-[0_0_15px_rgba(99,102,241,0.4)]"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7, #06b6d4)' }}
           >
-            <Compass className="w-4 h-4" />
+            <div className="w-full h-full rounded-[11px] bg-[#070b1a]/70 backdrop-blur-md flex items-center justify-center text-white">
+              <Compass className="w-4 h-4 text-cyan-300" />
+            </div>
           </div>
-          <span className="font-bold text-sm tracking-wide">STRATA</span>
+          <span className="font-extrabold text-sm tracking-wide text-white font-sans">STRATA // GALAXY</span>
         </div>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Desktop Links: iOS-Style Floating Glass Segmented Control */}
+        <div className="hidden md:flex items-center gap-1 bg-black/35 p-1 rounded-full border border-white/10 shadow-inner backdrop-blur-xl relative z-10">
           {navItems.map((item) => {
             const isActive = activeItem === item;
             return (
               <button
                 key={item}
                 onClick={() => setActiveItem(item)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  isActive ? 'font-semibold' : 'opacity-70 hover:opacity-100 hover:bg-white/5'
+                className={`px-3.5 py-1 rounded-full text-xs transition-all font-sans ${
+                  isActive 
+                    ? 'bg-white/20 text-white font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.35)] backdrop-blur-md' 
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
-                style={isActive ? {
-                  backgroundColor: `${settings.primaryColor}20`,
-                  color: settings.primaryColor,
-                  border: `1px solid ${settings.primaryColor}40`
-                } : undefined}
               >
                 {item}
               </button>
@@ -83,20 +86,19 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
           })}
         </div>
 
-        {/* Action Button */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Action Button: iOS Glass Capsule */}
+        <div className="hidden md:flex items-center gap-3 relative z-10">
           <button 
-            className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-black transition-transform active:scale-95"
-            style={{ backgroundColor: settings.primaryColor }}
+            className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 shadow-[0_0_15px_rgba(168,85,247,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all hover:scale-105 active:scale-95"
           >
-            New Project
+            Launch Core
           </button>
         </div>
 
         {/* Mobile Hamburger Toggle */}
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-1.5 rounded-lg bg-white/5 border border-white/10"
+          className="md:hidden p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white relative z-10"
         >
           {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
@@ -104,7 +106,7 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 mt-2 p-4 rounded-xl bg-slate-900 border border-white/10 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2">
+        <div className="md:hidden absolute top-full left-0 right-0 mt-2 p-4 rounded-[24px] bg-[#070b1a]/95 border border-white/15 shadow-2xl backdrop-blur-3xl z-50 animate-in fade-in slide-in-from-top-2">
           <div className="space-y-1">
             {navItems.map((item) => (
               <button
@@ -113,8 +115,10 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
                   setActiveItem(item);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2 rounded-lg text-xs ${
-                  activeItem === item ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'opacity-70'
+                className={`w-full text-left px-3.5 py-2 rounded-full text-xs font-medium ${
+                  activeItem === item 
+                    ? 'bg-white/15 text-white font-semibold shadow-sm' 
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 {item}
@@ -122,10 +126,9 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
             ))}
           </div>
           <button 
-            className="w-full mt-3 py-2 rounded-lg text-xs font-semibold text-black"
-            style={{ backgroundColor: settings.primaryColor }}
+            className="w-full mt-3 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 shadow-md"
           >
-            New Project
+            Launch Core
           </button>
         </div>
       )}
@@ -135,78 +138,140 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
 
 // 10. SIDEBAR NAVIGATION
 export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, variantId }) => {
-  const [activeTab, setActiveTab] = useState('clusters');
+  const [activeTab, setActiveTab] = useState('overview');
   const [clustersOpen, setClustersOpen] = useState(true);
-  const styles = getComponentStyles(settings);
 
-  return (
-    <div className="w-full max-w-xs">
-      <aside 
-        style={styles.container}
-        className="w-64 border rounded-2xl shadow-2xl flex flex-col p-3 transition-all"
-      >
-        {/* Workspace Brand */}
-        <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/10">
-          <div className="flex items-center gap-2.5">
-            <div 
-              className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs"
-              style={{ backgroundColor: settings.primaryColor, color: '#000' }}
-            >
-              <Cpu className="w-4 h-4" />
+  if (variantId === 'icon-rail') {
+    return (
+      <div className="w-full flex justify-center py-4">
+        <aside className="w-16 rounded-[28px] bg-[#070b1a]/85 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] p-3 flex flex-col items-center justify-between h-96 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.2)_0%,_transparent_70%)] pointer-events-none" />
+          
+          <div className="flex flex-col items-center gap-3 relative z-10">
+            <div className="w-10 h-10 rounded-[14px] p-[1px] shadow-[0_0_15px_rgba(99,102,241,0.5)]" style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7, #06b6d4)' }}>
+              <div className="w-full h-full rounded-[13px] bg-[#070b1a]/80 flex items-center justify-center text-cyan-300">
+                <Cpu className="w-5 h-5" />
+              </div>
             </div>
-            <div>
-              <div className="font-bold text-xs">SYNAPSE AI</div>
-              <div className="text-[10px] opacity-60">Enterprise Cloud</div>
+
+            <div className="w-8 h-[1px] bg-white/10 my-1" />
+
+            {[
+              { id: 'overview', icon: Home, label: 'Overview' },
+              { id: 'clusters', icon: Database, label: 'Clusters' },
+              { id: 'pipelines', icon: Layers, label: 'Pipelines' },
+              { id: 'security', icon: ShieldCheck, label: 'Security' },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  title={item.label}
+                  className={`w-10 h-10 rounded-[14px] flex items-center justify-center transition-all ${
+                    isActive 
+                      ? 'bg-white/20 text-white shadow-[0_0_12px_rgba(6,182,212,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] ring-1 ring-cyan-400/50' 
+                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="relative z-10">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shadow-md">
+              JD
             </div>
           </div>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">PRO</span>
+        </aside>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-xs flex justify-center">
+      <aside 
+        className="w-72 rounded-[28px] bg-[#070b1a]/85 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] flex flex-col p-4 transition-all relative overflow-hidden"
+      >
+        {/* Cosmic Galaxy Atmosphere */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.2)_0%,_rgba(168,85,247,0.12)_40%,_transparent_75%)] pointer-events-none" />
+        <div className="absolute -top-16 -left-16 w-36 h-36 rounded-full bg-purple-600/15 blur-2xl pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none" />
+
+        {/* Workspace Brand: iOS Squircle Icon & Title */}
+        <div className="flex items-center justify-between pb-3.5 mb-2.5 border-b border-white/10 relative z-10">
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-9 h-9 rounded-[13px] p-[1px] shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7, #06b6d4)' }}
+            >
+              <div className="w-full h-full rounded-[12px] bg-[#070b1a]/70 backdrop-blur-md flex items-center justify-center text-white">
+                <Cpu className="w-4 h-4 text-cyan-300" />
+              </div>
+            </div>
+            <div>
+              <div className="font-extrabold text-xs text-white font-sans tracking-wide">SYNAPSE GALAXY</div>
+              <div className="text-[10px] text-cyan-300/80 font-mono">Enterprise iOS Core</div>
+            </div>
+          </div>
+          <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/10 text-cyan-300 font-mono border border-white/15 font-bold">
+            PRO
+          </span>
         </div>
 
-        {/* Navigation Tree */}
-        <div className="flex-1 space-y-1 text-xs">
+        {/* Navigation Tree: iOS-Style Rounded Pills */}
+        <div className="flex-1 space-y-1.5 text-xs relative z-10">
           <button 
             onClick={() => setActiveTab('overview')}
-            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg transition-all ${
-              activeTab === 'overview' ? 'bg-cyan-500/15 text-cyan-300 font-semibold' : 'opacity-70 hover:opacity-100 hover:bg-white/5'
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
+              activeTab === 'overview' 
+                ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <Home className="w-4 h-4" />
+              <Home className="w-4 h-4 text-cyan-400" />
               <span>Overview</span>
             </div>
+            {activeTab === 'overview' && (
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee] animate-pulse" />
+            )}
           </button>
 
           {/* Accordion Group */}
-          <div>
+          <div className="space-y-1">
             <button 
               onClick={() => setClustersOpen(!clustersOpen)}
-              className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg opacity-70 hover:opacity-100 hover:bg-white/5 transition-all"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-[14px] text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >
               <div className="flex items-center gap-2.5">
-                <Database className="w-4 h-4 text-cyan-400" />
-                <span>Clusters</span>
+                <Database className="w-4 h-4 text-purple-400" />
+                <span>Galaxy Clusters</span>
               </div>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${clustersOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform text-slate-400 ${clustersOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {clustersOpen && (
-              <div className="pl-6 pr-1 py-1 space-y-1">
+              <div className="pl-6 pr-1 py-1 space-y-1 border-l border-white/10 ml-3">
                 {[
-                  { id: 'us-east-edge', name: 'US-East Node Alpha', count: 18 },
-                  { id: 'eu-central', name: 'EU-Frankfurt Quantum', count: 6 },
-                  { id: 'ap-tokyo', name: 'AP-Tokyo Gateway', count: 42 },
+                  { id: 'us-east-edge', name: 'US-East Nebula 01', count: 18 },
+                  { id: 'eu-central', name: 'EU-Frankfurt Pulsar', count: 6 },
+                  { id: 'ap-tokyo', name: 'AP-Tokyo Orbital', count: 42 },
                 ].map((node) => (
                   <button
                     key={node.id}
                     onClick={() => setActiveTab(node.id)}
-                    className={`w-full flex items-center justify-between px-2 py-1.5 rounded text-[11px] ${
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-full text-[11px] transition-all ${
                       activeTab === node.id 
-                        ? 'bg-cyan-500/20 text-cyan-300 font-semibold' 
-                        : 'opacity-60 hover:opacity-100'
+                        ? 'bg-white/20 text-white font-semibold shadow-sm' 
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="truncate">{node.name}</span>
-                    <span className="text-[10px] opacity-50 font-mono">{node.count}</span>
+                    <span className="text-[10px] text-cyan-400 font-mono">{node.count}</span>
                   </button>
                 ))}
               </div>
@@ -215,56 +280,62 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
 
           <button 
             onClick={() => setActiveTab('pipelines')}
-            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg transition-all ${
-              activeTab === 'pipelines' ? 'bg-cyan-500/15 text-cyan-300 font-semibold' : 'opacity-70 hover:opacity-100 hover:bg-white/5'
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
+              activeTab === 'pipelines' 
+                ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <Layers className="w-4 h-4" />
+              <Layers className="w-4 h-4 text-indigo-400" />
               <span>Pipelines</span>
             </div>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-400">3</span>
+            <span className="text-[10px] px-2 py-0.2 rounded-full bg-cyan-500/25 text-cyan-300 font-mono font-bold">3</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('security')}
-            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg transition-all ${
-              activeTab === 'security' ? 'bg-cyan-500/15 text-cyan-300 font-semibold' : 'opacity-70 hover:opacity-100 hover:bg-white/5'
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
+              activeTab === 'security' 
+                ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>Security Vault</span>
             </div>
           </button>
 
           <button 
             onClick={() => setActiveTab('terminal')}
-            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg transition-all ${
-              activeTab === 'terminal' ? 'bg-cyan-500/15 text-cyan-300 font-semibold' : 'opacity-70 hover:opacity-100 hover:bg-white/5'
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
+              activeTab === 'terminal' 
+                ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <Terminal className="w-4 h-4" />
-              <span>Cloud Shell</span>
+              <Terminal className="w-4 h-4 text-cyan-400" />
+              <span>Galaxy Shell</span>
             </div>
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
           </button>
         </div>
 
-        {/* Pinned User Footer */}
-        <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-[11px] text-white">
+        {/* Pinned User Footer: iOS Rounded Glass User Card */}
+        <div className="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-xs relative z-10">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-xs text-white shadow-md">
               JD
             </div>
             <div className="leading-tight">
-              <div className="font-semibold text-[11px]">Jane Doe</div>
-              <div className="text-[9px] opacity-60">Architect</div>
+              <div className="font-semibold text-xs text-white">Jane Doe</div>
+              <div className="text-[10px] text-cyan-300/80">Galaxy Architect</div>
             </div>
           </div>
-          <button className="p-1.5 rounded hover:bg-white/10 opacity-70 hover:opacity-100">
-            <Settings className="w-3.5 h-3.5" />
+          <button className="p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+            <Settings className="w-4 h-4" />
           </button>
         </div>
       </aside>
