@@ -11,12 +11,14 @@ export const NAVIGATION_COMPONENTS: ComponentItem[] = [
     categoryId: 'category-01',
     subcategory: 'header',
     description: 'A futuristic primary top navigation bar featuring brand identity, breadcrumbs, search, notification counter, and quick action icons.',
-    tags: ['Header', 'Navbar', 'Top Bar', 'Brand', 'Futuristic'],
+    tags: ['Header', 'Navbar', 'Top Bar', 'Brand', 'Futuristic', 'Glassmorphism'],
     status: 'ready',
     variations: [
-      { id: 'standard', name: 'Standard HUD', description: 'Complete top bar with brand, search trigger, status indicators, and profile.' },
-      { id: 'compact', name: 'Dense Telemetry', description: 'Streamlined high-density header optimized for workspace consoles.' },
-      { id: 'glass-island', name: 'Floating Glass Bar', description: 'Detached floating navigation bar with soft backdrop blur.' },
+      { id: 'standard', name: 'Cyber HUD Deck', description: 'Command bridge header with cyber-brackets, telemetry nodes, and holographic glass glow.' },
+      { id: 'glass-island', name: 'Floating Glass Island', description: 'Ultra-luxurious detached frosted pill island with specular sheen and neon aura.' },
+      { id: 'holographic-capsule', name: 'Tri-Pod Bento Glass', description: 'Futuristic 3-piece modular glass pods (Brand Pod, Nav Island, Action Capsule).' },
+      { id: 'liquid-glass', name: 'Liquid Aurora Glass', description: 'Deep spatial glassmorphism with dynamic ambient light refraction and holographic sheen.' },
+      { id: 'compact', name: 'Dense Telemetry', description: 'Streamlined high-density glass header with live cluster metrics and tactical nodes.' },
     ],
   },
   {

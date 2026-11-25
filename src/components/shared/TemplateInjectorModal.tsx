@@ -94,21 +94,41 @@ export const Custom${cleanName} = () => {
 };`;
 
     default:
-      return `// Custom Futuristic Navigation Component
-export const Custom${cleanName} = () => {
-  return (
-    <nav className="w-full p-4 rounded-2xl bg-[#06141B]/90 border border-cyan-500/40 shadow-glow-cyan flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-        <span className="font-mono text-xs font-bold text-cyan-300">${compName.toUpperCase()}</span>
+      return `// Futuristic Spatial Glass Navigation Blueprint
+<nav class="w-full max-w-5xl mx-auto p-4 rounded-3xl bg-white/[0.04] backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_35px_rgba(0,242,254,0.18)] ring-1 ring-white/10 flex items-center justify-between text-white font-sans transition-all">
+  <!-- Brand Insignia -->
+  <div class="flex items-center gap-3">
+    <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(0,242,254,0.6)] font-bold">
+      ✦
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="font-extrabold tracking-wider text-sm text-white">${compName.toUpperCase()}</span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono border border-cyan-500/30 font-semibold">V4.8</span>
       </div>
-      <div className="flex gap-4 text-xs font-medium text-slate-300">
-        <a href="#link" className="hover:text-cyan-400">Node 01</a>
-        <a href="#link" className="hover:text-cyan-400">Telemetry</a>
-      </div>
-    </nav>
-  );
-};`;
+      <span class="text-[10px] text-slate-400 font-mono tracking-tight block">Spatial Glass Architecture</span>
+    </div>
+  </div>
+
+  <!-- Frosted Nav Links -->
+  <div class="hidden md:flex items-center gap-1.5 p-1 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
+    <a href="#overview" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 shadow-[0_0_15px_rgba(0,242,254,0.3)]">Overview</a>
+    <a href="#telemetry" class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all">Telemetry</a>
+    <a href="#deployments" class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all">Deployments</a>
+    <a href="#security" class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all">Security</a>
+  </div>
+
+  <!-- Holographic Quick Actions -->
+  <div class="flex items-center gap-3">
+    <button class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-cyan-300 flex items-center gap-2 transition-all">
+      <span>Search</span>
+      <kbd class="px-1 py-0.5 rounded bg-white/10 text-[9px] text-slate-400 font-mono">⌘K</kbd>
+    </button>
+    <button class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 hover:from-cyan-300 hover:to-sky-400 text-black font-extrabold text-xs shadow-[0_0_20px_rgba(0,242,254,0.5)] transition-all">
+      Connect
+    </button>
+  </div>
+</nav>`;
   }
 };
 

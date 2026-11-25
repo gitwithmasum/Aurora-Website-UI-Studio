@@ -176,18 +176,36 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return [
       {
         id: 'template_quantum_core',
-        name: 'Quantum Hyper-Grid Header',
+        name: 'Quantum Spatial Glass Island',
         componentId: 'top-navigation-bar',
-        description: 'Deep space telemetry header with cyan laser brackets and biometric status node.',
-        codeSnippet: `// Sample Quantum Header Blueprint\nexport const QuantumHeader = () => (\n  <header className="p-4 bg-black/90 border border-cyan-500/50 rounded-2xl shadow-glow-cyan flex justify-between">\n    <span className="font-mono text-cyan-400 font-bold">AURORA // CORE</span>\n  </header>\n);`,
-        tags: ['Cyberpunk', 'Quantum', 'HUD'],
+        description: 'Ultra-luxurious frosted glass floating island with specular highlight rim, gradient neon aura, and frosted pill links.',
+        codeSnippet: `<nav class="w-full max-w-4xl mx-auto p-3.5 rounded-full bg-white/[0.05] backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_35px_rgba(0,242,254,0.2)] ring-1 ring-white/10 flex items-center justify-between text-white font-sans transition-all relative overflow-hidden">
+  <div class="absolute top-0 inset-x-8 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent pointer-events-none"></div>
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(0,242,254,0.7)] font-bold text-xs">
+      ✦
+    </div>
+    <span class="font-extrabold tracking-wider text-xs sm:text-sm text-white">QUANTUM // SPATIAL</span>
+  </div>
+  <div class="hidden md:flex items-center gap-1 bg-black/40 p-1 rounded-full border border-white/10 backdrop-blur-md text-xs font-semibold">
+    <a href="#overview" class="px-3.5 py-1.5 rounded-full bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 shadow-[0_0_15px_rgba(0,242,254,0.3)]">Overview</a>
+    <a href="#telemetry" class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Telemetry</a>
+    <a href="#deploy" class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Deployments</a>
+  </div>
+  <div class="flex items-center gap-2">
+    <button class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-cyan-300 transition-all">Search ⌘K</button>
+    <button class="px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 text-black font-extrabold text-xs shadow-[0_0_20px_rgba(0,242,254,0.5)]">Connect</button>
+  </div>
+</nav>`,
+        tags: ['Glassmorphism', 'Spatial', 'HUD', 'Floating Island'],
         settings: {
           ...DEFAULT_CUSTOMIZATION,
           theme: 'cyberpunk',
           primaryColor: '#00f2fe',
           accentColor: '#f43f5e',
           shadowStyle: 'neon',
-          borderRadius: 4,
+          borderRadius: 9999,
+          blurIntensity: 24,
         },
         isUserCreated: false,
         createdAt: 'Official Blueprint',
