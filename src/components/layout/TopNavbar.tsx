@@ -8,7 +8,8 @@ import {
   Check, 
   ChevronDown,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Bookmark
 } from 'lucide-react';
 import { THEME_PRESETS } from '../../data/themePresets';
 import { ThemePreset } from '../../types/studio';
@@ -20,7 +21,11 @@ interface TopNavbarProps {
   onOpenStyleSamples?: () => void;
 }
 
-export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
+export const TopNavbar: React.FC<TopNavbarProps> = ({ 
+  onOpenExport,
+  onOpenSavePreset,
+  onOpenStyleSamples
+}) => {
   const { 
     activeComponent, 
     activeTab, 
@@ -177,6 +182,36 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenExport }) => {
             </div>
           )}
         </div>
+
+        {/* iOS-Style Style Archetypes Button */}
+        {onOpenStyleSamples && (
+          <button
+            onClick={() => {
+              sound.playConfirm();
+              onOpenStyleSamples();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-400/20 text-xs text-indigo-300 hover:text-indigo-200 transition-all font-sans shrink-0 shadow-sm"
+            title="Futuristic Style Archetypes"
+          >
+            <Sparkles className="w-3 h-3 text-indigo-400" />
+            <span className="hidden xl:inline text-xs font-medium">Styles</span>
+          </button>
+        )}
+
+        {/* iOS-Style Save Preset Button */}
+        {onOpenSavePreset && (
+          <button
+            onClick={() => {
+              sound.playConfirm();
+              onOpenSavePreset();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/25 text-xs text-cyan-300 hover:text-cyan-200 transition-all font-sans shrink-0 shadow-sm"
+            title="Save Design Preset"
+          >
+            <Bookmark className="w-3 h-3 text-cyan-400" />
+            <span className="hidden lg:inline text-xs font-medium">Preset</span>
+          </button>
+        )}
 
         {/* iOS-Style Clean Export Button */}
         <button

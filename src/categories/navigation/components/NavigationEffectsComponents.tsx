@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { CustomizationSettings } from '../../../types/studio';
 import { getComponentStyles } from '../../../utils/styleHelper';
+import { sound } from '../../../utils/soundEngine';
 
 interface EffectsProps {
   settings: CustomizationSettings;
@@ -295,6 +296,7 @@ export const HoverRevealMenuComponent: React.FC<EffectsProps> = ({ settings, var
 // 35. COLLAPSIBLE SIDEBAR
 export const CollapsibleSidebarComponent: React.FC<EffectsProps> = ({ settings, variantId }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [activeItem, setActiveItem] = useState('Overview');
 
   const items = [
     { label: 'Overview', icon: Layout },
@@ -317,7 +319,10 @@ export const CollapsibleSidebarComponent: React.FC<EffectsProps> = ({ settings, 
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/10">
               {!collapsed && <span className="font-bold text-xs">RAIL SYSTEM</span>}
               <button 
-                onClick={() => setCollapsed(!collapsed)}
+                onClick={() => {
+                  sound.playHover();
+                  setCollapsed(!collapsed);
+                }}
                 className="p-1.5 rounded-lg hover:bg-white/10 mx-auto text-cyan-400"
                 title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
               >
@@ -326,13 +331,18 @@ export const CollapsibleSidebarComponent: React.FC<EffectsProps> = ({ settings, 
             </div>
 
             <div className="space-y-1">
-              {items.map((item, i) => {
+              {items.map((item) => {
                 const Icon = item.icon;
+                const isActive = activeItem === item.label;
                 return (
                   <button
                     key={item.label}
+                    onClick={() => {
+                      sound.playBlip(1200);
+                      setActiveItem(item.label);
+                    }}
                     className={`w-full flex items-center gap-3 p-2 rounded-xl text-xs transition-colors ${
-                      i === 0 ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'hover:bg-white/5 text-slate-300'
+                      isActive ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-400/30' : 'hover:bg-white/5 text-slate-300'
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0 mx-auto" />

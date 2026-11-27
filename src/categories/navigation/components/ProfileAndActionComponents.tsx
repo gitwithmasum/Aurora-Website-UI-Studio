@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { CustomizationSettings } from '../../../types/studio';
 import { getComponentStyles } from '../../../utils/styleHelper';
+import { sound } from '../../../utils/soundEngine';
 
 interface ProfileProps {
   settings: CustomizationSettings;
@@ -32,10 +33,11 @@ interface ProfileProps {
 
 // 23. PROFILE NAVIGATION
 export const ProfileNavigationComponent: React.FC<ProfileProps> = ({ settings, variantId }) => {
+  const [settingsActive, setSettingsActive] = useState(false);
   const styles = getComponentStyles(settings);
 
   return (
-    <div className="w-full max-w-sm flex flex-col items-center">
+    <div className="w-full max-w-sm flex flex-col items-center relative">
       <div 
         style={styles.container}
         className="flex items-center gap-3 p-2.5 px-4 rounded-2xl border shadow-xl backdrop-blur-xl"
@@ -70,10 +72,34 @@ export const ProfileNavigationComponent: React.FC<ProfileProps> = ({ settings, v
         </div>
 
         {/* Settings button */}
-        <button className="p-1.5 rounded-lg hover:bg-white/10 opacity-70 hover:opacity-100">
+        <button 
+          onClick={() => {
+            sound.playHover();
+            setSettingsActive(!settingsActive);
+          }}
+          className={`p-1.5 rounded-lg transition-colors ${
+            settingsActive ? 'bg-cyan-500/20 text-cyan-300' : 'hover:bg-white/10 opacity-70 hover:opacity-100'
+          }`}
+          title="Quick Settings"
+        >
           <Settings className="w-4 h-4" />
         </button>
       </div>
+
+      {settingsActive && (
+        <div className="absolute top-16 w-64 p-3 rounded-2xl bg-[#070b1a]/95 border border-cyan-400/40 shadow-2xl backdrop-blur-2xl z-50 text-xs animate-in fade-in zoom-in-95">
+          <div className="flex items-center justify-between pb-1.5 border-b border-white/10 mb-2">
+            <span className="font-bold text-cyan-300">Vesper System Controls</span>
+            <button onClick={() => setSettingsActive(false)} className="text-slate-400 hover:text-white">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="space-y-1 text-[11px] text-slate-300">
+            <div>Encrypted Key: 0x99A...E8</div>
+            <div className="text-emerald-400 font-mono">Sync Status: Fully Linked</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -81,13 +107,23 @@ export const ProfileNavigationComponent: React.FC<ProfileProps> = ({ settings, v
 // 24. PROFILE DROPDOWN
 export const ProfileDropdownComponent: React.FC<ProfileProps> = ({ settings, variantId }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const styles = getComponentStyles(settings);
 
+  const handleAction = (label: string) => {
+    sound.playConfirm();
+    setFeedbackMsg(`${label} Activated ✓`);
+    setTimeout(() => setFeedbackMsg(null), 2500);
+  };
+
   return (
-    <div className="w-full max-w-sm flex flex-col items-center">
+    <div className="w-full max-w-sm flex flex-col items-center relative">
       <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs mb-3 font-medium"
+        onClick={() => {
+          sound.playHover();
+          setIsOpen(!isOpen);
+        }}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs mb-3 font-medium transition-colors"
       >
         <div className="w-6 h-6 rounded-full bg-cyan-500 text-black flex items-center justify-center font-bold text-[10px]">
           DR
@@ -95,6 +131,12 @@ export const ProfileDropdownComponent: React.FC<ProfileProps> = ({ settings, var
         <span>Dr. Vance</span>
         <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
+
+      {feedbackMsg && (
+        <div className="absolute top-10 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-xs font-mono mb-2 animate-in fade-in z-50">
+          {feedbackMsg}
+        </div>
+      )}
 
       {isOpen && (
         <div 
@@ -115,26 +157,41 @@ export const ProfileDropdownComponent: React.FC<ProfileProps> = ({ settings, var
 
           {/* Links */}
           <div className="space-y-0.5 text-xs">
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors">
+            <button 
+              onClick={() => handleAction('Personal Profile')}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors"
+            >
               <User className="w-3.5 h-3.5 opacity-70" />
               <span>Personal Profile</span>
             </button>
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors">
+            <button 
+              onClick={() => handleAction('Security & 2FA Keys')}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors"
+            >
               <Shield className="w-3.5 h-3.5 opacity-70" />
               <span>Security & 2FA Keys</span>
             </button>
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors">
+            <button 
+              onClick={() => handleAction('Billing & Plan Usage')}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors"
+            >
               <CreditCard className="w-3.5 h-3.5 opacity-70" />
               <span>Billing & Plan Usage</span>
             </button>
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors">
+            <button 
+              onClick={() => handleAction('Studio Preferences')}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 text-left transition-colors"
+            >
               <Settings className="w-3.5 h-3.5 opacity-70" />
               <span>Studio Preferences</span>
             </button>
           </div>
 
           <div className="pt-2 border-t border-white/10">
-            <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-rose-500/20 text-rose-400 text-left transition-colors text-xs font-semibold">
+            <button 
+              onClick={() => handleAction('Session Terminated')}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-rose-500/20 text-rose-400 text-left transition-colors text-xs font-semibold"
+            >
               <LogOut className="w-3.5 h-3.5" />
               <span>Terminate Session</span>
             </button>
@@ -275,25 +332,35 @@ export const SearchBarComponent: React.FC<ProfileProps> = ({ settings, variantId
 export const NotificationMenuComponent: React.FC<ProfileProps> = ({ settings, variantId }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [filter, setFilter] = useState<'all' | 'alerts' | 'deploy'>('all');
+  const [clearedAll, setClearedAll] = useState(false);
   const styles = getComponentStyles(settings);
 
-  const notifications = [
+  const initialNotifications = [
     { id: '1', title: 'Critical CPU spike detected on Node-04', time: '2m ago', type: 'alerts', unread: true },
     { id: '2', title: 'New build deployed to staging (commit #e4f9b)', time: '14m ago', type: 'deploy', unread: true },
     { id: '3', title: 'Database snapshot backed up to AWS S3', time: '1h ago', type: 'all', unread: false },
   ];
 
+  const notifications = initialNotifications.map(n => clearedAll ? { ...n, unread: false } : n);
   const filtered = notifications.filter(n => filter === 'all' || n.type === filter);
+  const unreadTotal = notifications.filter(n => n.unread).length;
 
   return (
     <div className="w-full max-w-sm flex flex-col items-center">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-semibold flex items-center gap-2 mb-3"
+        onClick={() => {
+          sound.playHover();
+          setIsOpen(!isOpen);
+        }}
+        className="relative px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-semibold flex items-center gap-2 mb-3 transition-colors"
       >
         <Bell className="w-4 h-4 text-cyan-400" />
         <span>Notifications</span>
-        <span className="px-1.5 py-0.2 rounded-full bg-cyan-500 text-black text-[10px] font-bold">2</span>
+        {unreadTotal > 0 && (
+          <span className="px-1.5 py-0.2 rounded-full bg-cyan-500 text-black text-[10px] font-bold">
+            {unreadTotal}
+          </span>
+        )}
       </button>
 
       {isOpen && (
@@ -307,9 +374,12 @@ export const NotificationMenuComponent: React.FC<ProfileProps> = ({ settings, va
               {(['all', 'alerts', 'deploy'] as const).map((f) => (
                 <button
                   key={f}
-                  onClick={() => setFilter(f)}
-                  className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono ${
-                    filter === f ? 'bg-cyan-500 text-black font-bold' : 'opacity-60 hover:opacity-100'
+                  onClick={() => {
+                    sound.playBlip(1200);
+                    setFilter(f);
+                  }}
+                  className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono transition-colors ${
+                    filter === f ? 'bg-cyan-500 text-black font-bold' : 'opacity-60 hover:opacity-100 text-slate-300'
                   }`}
                 >
                   {f}
@@ -336,8 +406,14 @@ export const NotificationMenuComponent: React.FC<ProfileProps> = ({ settings, va
           </div>
 
           <div className="pt-2 border-t border-white/10 text-center">
-            <button className="text-[11px] text-cyan-400 hover:underline font-mono">
-              Mark all as read
+            <button 
+              onClick={() => {
+                sound.playConfirm();
+                setClearedAll(true);
+              }}
+              className="text-[11px] text-cyan-400 hover:underline font-mono"
+            >
+              {clearedAll ? 'All notifications cleared ✓' : 'Mark all as read'}
             </button>
           </div>
         </div>
@@ -350,6 +426,7 @@ export const NotificationMenuComponent: React.FC<ProfileProps> = ({ settings, va
 export const AccountSwitcherComponent: React.FC<ProfileProps> = ({ settings, variantId }) => {
   const [selected, setSelected] = useState('nexus-corp');
   const [isOpen, setIsOpen] = useState(true);
+  const [workspaceCreatedMsg, setWorkspaceCreatedMsg] = useState(false);
   const styles = getComponentStyles(settings);
 
   const workspaces = [
@@ -361,8 +438,11 @@ export const AccountSwitcherComponent: React.FC<ProfileProps> = ({ settings, var
   return (
     <div className="w-full max-w-sm flex flex-col items-center">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-64 flex items-center justify-between px-3 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs mb-3 font-medium"
+        onClick={() => {
+          sound.playHover();
+          setIsOpen(!isOpen);
+        }}
+        className="w-64 flex items-center justify-between px-3 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs mb-3 font-medium transition-colors"
       >
         <div className="flex items-center gap-2">
           <Building2 className="w-4 h-4 text-cyan-400" />
@@ -387,7 +467,10 @@ export const AccountSwitcherComponent: React.FC<ProfileProps> = ({ settings, var
             return (
               <button
                 key={w.id}
-                onClick={() => setSelected(w.id)}
+                onClick={() => {
+                  sound.playBlip(1200);
+                  setSelected(w.id);
+                }}
                 className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
                   isCurrent ? 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-300' : 'hover:bg-white/5'
                 }`}
@@ -402,9 +485,16 @@ export const AccountSwitcherComponent: React.FC<ProfileProps> = ({ settings, var
           })}
 
           <div className="pt-2 border-t border-white/10">
-            <button className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-dashed border-white/20 hover:border-cyan-400 text-xs opacity-70 hover:opacity-100 transition-all">
+            <button 
+              onClick={() => {
+                sound.playScan();
+                setWorkspaceCreatedMsg(true);
+                setTimeout(() => setWorkspaceCreatedMsg(false), 2500);
+              }}
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-dashed border-white/20 hover:border-cyan-400 text-xs opacity-70 hover:opacity-100 transition-all text-slate-200"
+            >
               <Plus className="w-3.5 h-3.5" />
-              <span>Create Workspace</span>
+              <span>{workspaceCreatedMsg ? 'Workspace Provisioned ✓' : 'Create Workspace'}</span>
             </button>
           </div>
         </div>

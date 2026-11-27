@@ -395,7 +395,7 @@ export const StudioLayout: React.FC = () => {
             </main>
 
             {/* 3. Right Customization Inspector */}
-            <Inspector />
+            <Inspector onOpenSavePreset={() => setIsSaveModalOpen(true)} />
           </div>
         </div>
       </div>

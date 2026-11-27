@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { CustomizationSettings } from '../../../types/studio';
 import { getComponentStyles, getInteractionStateClasses } from '../../../utils/styleHelper';
+import { sound } from '../../../utils/soundEngine';
 
 interface NavProps {
   settings: CustomizationSettings;
@@ -39,6 +40,7 @@ interface NavProps {
 export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => {
   const [activeItem, setActiveItem] = useState('Workspace');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [launched, setLaunched] = useState(false);
   const styles = getComponentStyles(settings);
   const stateClass = getInteractionStateClasses(settings.activeState);
 
@@ -73,7 +75,10 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
             return (
               <button
                 key={item}
-                onClick={() => setActiveItem(item)}
+                onClick={() => {
+                  sound.playBlip(1200);
+                  setActiveItem(item);
+                }}
                 className={`px-3.5 py-1 rounded-full text-xs transition-all font-sans ${
                   isActive 
                     ? 'bg-white/20 text-white font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.35)] backdrop-blur-md' 
@@ -89,15 +94,26 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
         {/* Action Button: iOS Glass Capsule */}
         <div className="hidden md:flex items-center gap-3 relative z-10">
           <button 
-            className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 shadow-[0_0_15px_rgba(168,85,247,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all hover:scale-105 active:scale-95"
+            onClick={() => {
+              sound.playConfirm();
+              setLaunched(!launched);
+            }}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold text-white shadow-md transition-all hover:scale-105 active:scale-95 ${
+              launched 
+                ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' 
+                : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 shadow-[0_0_15px_rgba(168,85,247,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)]'
+            }`}
           >
-            Launch Core
+            {launched ? 'CORE ACTIVE ✓' : 'Launch Core'}
           </button>
         </div>
 
         {/* Mobile Hamburger Toggle */}
         <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => {
+            sound.playHover();
+            setMobileMenuOpen(!mobileMenuOpen);
+          }}
           className="md:hidden p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white relative z-10"
         >
           {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -112,6 +128,7 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
               <button
                 key={item}
                 onClick={() => {
+                  sound.playBlip(1200);
                   setActiveItem(item);
                   setMobileMenuOpen(false);
                 }}
@@ -126,9 +143,17 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
             ))}
           </div>
           <button 
-            className="w-full mt-3 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 shadow-md"
+            onClick={() => {
+              sound.playConfirm();
+              setLaunched(!launched);
+            }}
+            className={`w-full mt-3 py-2 rounded-full text-xs font-semibold text-white shadow-md transition-all ${
+              launched 
+                ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' 
+                : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500'
+            }`}
           >
-            Launch Core
+            {launched ? 'CORE ACTIVE ✓' : 'Launch Core'}
           </button>
         </div>
       )}
@@ -140,10 +165,12 @@ export const NavbarComponent: React.FC<NavProps> = ({ settings, variantId }) => 
 export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, variantId }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [clustersOpen, setClustersOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
 
   if (variantId === 'icon-rail') {
     return (
-      <div className="w-full flex justify-center py-4">
+      <div className="w-full flex justify-center py-4 relative">
         <aside className="w-16 rounded-[28px] bg-[#070b1a]/85 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] p-3 flex flex-col items-center justify-between h-96 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.2)_0%,_transparent_70%)] pointer-events-none" />
           
@@ -167,7 +194,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => {
+                    sound.playBlip(1200);
+                    setActiveTab(item.id);
+                  }}
                   title={item.label}
                   className={`w-10 h-10 rounded-[14px] flex items-center justify-center transition-all ${
                     isActive 
@@ -182,17 +212,36 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
           </div>
 
           <div className="relative z-10">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shadow-md">
+            <button 
+              onClick={() => {
+                sound.playBlip(1300);
+                setUserOpen(!userOpen);
+              }}
+              title="Jane Doe (Lead Architect)"
+              className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shadow-md hover:scale-105 active:scale-95 transition-transform"
+            >
               JD
-            </div>
+            </button>
           </div>
         </aside>
+
+        {/* Icon Rail User Popover */}
+        {userOpen && (
+          <div className="absolute left-1/2 ml-10 bottom-6 w-52 p-3 rounded-2xl bg-[#070b1a]/95 border border-white/20 shadow-2xl backdrop-blur-2xl z-50 text-xs animate-in fade-in zoom-in-95">
+            <div className="font-bold text-white">Jane Doe</div>
+            <div className="text-[10px] text-cyan-400 font-mono">Lead Galaxy Architect</div>
+            <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1.5 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              STATUS: ONLINE
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-xs flex justify-center">
+    <div className="w-full max-w-xs flex justify-center relative">
       <aside 
         className="w-72 rounded-[28px] bg-[#070b1a]/85 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.25)] flex flex-col p-4 transition-all relative overflow-hidden"
       >
@@ -225,7 +274,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
         {/* Navigation Tree: iOS-Style Rounded Pills */}
         <div className="flex-1 space-y-1.5 text-xs relative z-10">
           <button 
-            onClick={() => setActiveTab('overview')}
+            onClick={() => {
+              sound.playBlip(1200);
+              setActiveTab('overview');
+            }}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
               activeTab === 'overview' 
                 ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
@@ -244,7 +296,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
           {/* Accordion Group */}
           <div className="space-y-1">
             <button 
-              onClick={() => setClustersOpen(!clustersOpen)}
+              onClick={() => {
+                sound.playHover();
+                setClustersOpen(!clustersOpen);
+              }}
               className="w-full flex items-center justify-between px-3 py-2 rounded-[14px] text-slate-300 hover:text-white hover:bg-white/5 transition-all"
             >
               <div className="flex items-center gap-2.5">
@@ -263,7 +318,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
                 ].map((node) => (
                   <button
                     key={node.id}
-                    onClick={() => setActiveTab(node.id)}
+                    onClick={() => {
+                      sound.playBlip(1200);
+                      setActiveTab(node.id);
+                    }}
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-full text-[11px] transition-all ${
                       activeTab === node.id 
                         ? 'bg-white/20 text-white font-semibold shadow-sm' 
@@ -279,7 +337,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
           </div>
 
           <button 
-            onClick={() => setActiveTab('pipelines')}
+            onClick={() => {
+              sound.playBlip(1200);
+              setActiveTab('pipelines');
+            }}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
               activeTab === 'pipelines' 
                 ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
@@ -294,7 +355,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
           </button>
 
           <button 
-            onClick={() => setActiveTab('security')}
+            onClick={() => {
+              sound.playBlip(1200);
+              setActiveTab('security');
+            }}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
               activeTab === 'security' 
                 ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
@@ -308,7 +372,10 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
           </button>
 
           <button 
-            onClick={() => setActiveTab('terminal')}
+            onClick={() => {
+              sound.playBlip(1200);
+              setActiveTab('terminal');
+            }}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-[14px] transition-all ${
               activeTab === 'terminal' 
                 ? 'bg-white/15 text-white font-semibold backdrop-blur-md border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25)] ring-1 ring-cyan-400/30' 
@@ -325,7 +392,14 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
 
         {/* Pinned User Footer: iOS Rounded Glass User Card */}
         <div className="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-xs relative z-10">
-          <div className="flex items-center gap-2.5">
+          <button 
+            onClick={() => {
+              sound.playBlip(1300);
+              setUserOpen(!userOpen);
+              setSettingsOpen(false);
+            }}
+            className="flex items-center gap-2.5 text-left p-1 rounded-xl hover:bg-white/5 transition-colors"
+          >
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-xs text-white shadow-md">
               JD
             </div>
@@ -333,11 +407,60 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
               <div className="font-semibold text-xs text-white">Jane Doe</div>
               <div className="text-[10px] text-cyan-300/80">Galaxy Architect</div>
             </div>
-          </div>
-          <button className="p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+          </button>
+          <button 
+            onClick={() => {
+              sound.playHover();
+              setSettingsOpen(!settingsOpen);
+              setUserOpen(false);
+            }}
+            className={`p-1.5 rounded-full transition-colors ${
+              settingsOpen ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40' : 'hover:bg-white/10 text-slate-400 hover:text-white'
+            }`}
+            title="Cluster Settings"
+          >
             <Settings className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Interactive Settings Card */}
+        {settingsOpen && (
+          <div className="absolute bottom-16 right-4 left-4 p-3 rounded-2xl bg-[#070b1a]/95 border border-cyan-400/40 shadow-2xl backdrop-blur-3xl z-50 text-xs animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="font-bold text-cyan-300">Cluster Settings</span>
+              <button onClick={() => setSettingsOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <div className="mt-2 space-y-1.5 text-[11px]">
+              <div className="flex items-center justify-between py-1 text-slate-300">
+                <span>Autonomous Scaling</span>
+                <span className="text-emerald-400 font-mono font-bold">ENABLED</span>
+              </div>
+              <div className="flex items-center justify-between py-1 text-slate-300">
+                <span>Quantum Enclave</span>
+                <span className="text-cyan-400 font-mono font-bold">L3 SECURE</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Interactive User Profile Card */}
+        {userOpen && (
+          <div className="absolute bottom-16 left-4 right-4 p-3.5 rounded-2xl bg-[#070b1a]/95 border border-indigo-400/40 shadow-2xl backdrop-blur-3xl z-50 text-xs animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="font-bold text-white">Operator Session</span>
+              <button onClick={() => setUserOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <div className="mt-2 space-y-1 text-[11px]">
+              <div className="text-white font-medium">Jane Doe // UID: 0x98A1</div>
+              <div className="text-slate-400 text-[10px]">jane.doe@nexus.synapse</div>
+              <div className="text-emerald-400 font-mono text-[10px] mt-1">● Biometric Lock: Active</div>
+            </div>
+          </div>
+        )}
       </aside>
     </div>
   );
@@ -346,6 +469,7 @@ export const SidebarNavigationComponent: React.FC<NavProps> = ({ settings, varia
 // 11. BOTTOM NAVIGATION BAR
 export const BottomNavigationBarComponent: React.FC<NavProps> = ({ settings, variantId }) => {
   const [activeItem, setActiveItem] = useState('home');
+  const [createOpen, setCreateOpen] = useState(false);
   const styles = getComponentStyles(settings);
 
   const items = [
@@ -357,7 +481,7 @@ export const BottomNavigationBarComponent: React.FC<NavProps> = ({ settings, var
   ];
 
   return (
-    <div className="w-full max-w-md flex flex-col items-center">
+    <div className="w-full max-w-md flex flex-col items-center relative">
       <div 
         style={styles.container}
         className="w-full border rounded-2xl shadow-2xl flex items-center justify-around py-2 px-3 backdrop-blur-xl"
@@ -370,15 +494,19 @@ export const BottomNavigationBarComponent: React.FC<NavProps> = ({ settings, var
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveItem(item.id)}
-                className="relative -top-4 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
+                onClick={() => {
+                  sound.playScan();
+                  setCreateOpen(!createOpen);
+                }}
+                title="Create Quick Action"
+                className="relative -top-4 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95 hover:scale-105"
                 style={{ 
                   backgroundColor: settings.primaryColor,
                   color: '#000',
                   boxShadow: `0 0 20px ${settings.primaryColor}80`
                 }}
               >
-                <Plus className="w-6 h-6 stroke-[2.5]" />
+                <Plus className={`w-6 h-6 stroke-[2.5] transition-transform ${createOpen ? 'rotate-45' : ''}`} />
               </button>
             );
           }
@@ -386,7 +514,11 @@ export const BottomNavigationBarComponent: React.FC<NavProps> = ({ settings, var
           return (
             <button
               key={item.id}
-              onClick={() => setActiveItem(item.id)}
+              onClick={() => {
+                sound.playBlip(1200);
+                setActiveItem(item.id);
+                setCreateOpen(false);
+              }}
               className={`flex flex-col items-center gap-1 transition-all ${
                 isActive ? 'scale-105' : 'opacity-60 hover:opacity-90'
               }`}
@@ -405,6 +537,30 @@ export const BottomNavigationBarComponent: React.FC<NavProps> = ({ settings, var
           );
         })}
       </div>
+
+      {/* Quick Action Sheet */}
+      {createOpen && (
+        <div className="absolute bottom-20 w-64 p-3 rounded-2xl bg-[#070b1a]/95 border border-cyan-400/50 shadow-2xl backdrop-blur-3xl z-50 text-xs animate-in fade-in slide-in-from-bottom-2">
+          <div className="text-[10px] uppercase font-bold text-slate-400 pb-1.5 border-b border-white/10 mb-2">
+            Instant Deployment
+          </div>
+          <div className="space-y-1">
+            {['Deploy Quantum Node', 'Generate Security Token', 'Initialize Pipeline'].map((action) => (
+              <button
+                key={action}
+                onClick={() => {
+                  sound.playConfirm();
+                  setCreateOpen(false);
+                }}
+                className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-slate-200 hover:text-white transition-colors"
+              >
+                {action}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <span className="text-[11px] opacity-50 mt-3 font-mono">Mobile viewport dock with elevated action trigger</span>
     </div>
   );
@@ -428,7 +584,10 @@ export const FloatingNavigationComponent: React.FC<NavProps> = ({ settings, vari
           return (
             <button
               key={p}
-              onClick={() => setActive(p)}
+              onClick={() => {
+                sound.playBlip(1200);
+                setActive(p);
+              }}
               className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${
                 isActive 
                   ? 'text-black font-semibold shadow-md' 
@@ -452,6 +611,7 @@ export const FloatingNavigationComponent: React.FC<NavProps> = ({ settings, vari
 // 13. GLASS NAVIGATION BAR
 export const GlassNavigationBarComponent: React.FC<NavProps> = ({ settings, variantId }) => {
   const [activeTab, setActiveTab] = useState('Design');
+  const [inspected, setInspected] = useState(false);
 
   return (
     <div className="w-full max-w-3xl relative p-6 rounded-2xl bg-cyberpunk-mesh border border-white/10 shadow-2xl overflow-hidden">
@@ -473,7 +633,10 @@ export const GlassNavigationBarComponent: React.FC<NavProps> = ({ settings, vari
           {['Design', 'Motion', 'Tokens', 'Components'].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => {
+                sound.playBlip(1200);
+                setActiveTab(tab);
+              }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab 
                   ? 'bg-white/20 text-white font-semibold backdrop-blur-sm shadow' 
@@ -486,9 +649,17 @@ export const GlassNavigationBarComponent: React.FC<NavProps> = ({ settings, vari
         </div>
 
         <button 
-          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white border border-white/25 hover:border-cyan-400 bg-white/10 backdrop-blur-md transition-all"
+          onClick={() => {
+            sound.playConfirm();
+            setInspected(!inspected);
+          }}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            inspected 
+              ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.4)]' 
+              : 'border border-white/25 hover:border-cyan-400 bg-white/10 text-white backdrop-blur-md'
+          }`}
         >
-          Inspect Node
+          {inspected ? 'NODE 0x9F ACTIVE ✓' : 'Inspect Node'}
         </button>
       </div>
     </div>

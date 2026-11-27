@@ -18,10 +18,18 @@ import {
   Layers,
   Activity,
   SlidersHorizontal,
-  ExternalLink
+  ExternalLink,
+  Check,
+  Copy,
+  Zap,
+  CheckCircle2,
+  Lock,
+  LogOut,
+  Sliders
 } from 'lucide-react';
 import { CustomizationSettings } from '../../../types/studio';
 import { getComponentStyles, getInteractionStateClasses } from '../../../utils/styleHelper';
+import { sound } from '../../../utils/soundEngine';
 
 interface HeaderProps {
   settings: CustomizationSettings;
@@ -32,11 +40,157 @@ interface HeaderProps {
 export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId }) => {
   const [activeLink, setActiveLink] = useState('Overview');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(3);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [copiedProfile, setCopiedProfile] = useState(false);
   const stateClass = getInteractionStateClasses(settings.activeState);
 
   const links = ['Overview', 'Telemetry', 'Deployments', 'Security', 'Settings'];
+
+  const toggleSearch = () => {
+    sound.playHover();
+    setSearchOpen(!searchOpen);
+    setNotifOpen(false);
+    setProfileOpen(false);
+  };
+
+  const toggleNotif = () => {
+    sound.playBlip(1200);
+    setNotifOpen(!notifOpen);
+    setSearchOpen(false);
+    setProfileOpen(false);
+    if (unreadCount > 0) setUnreadCount(0);
+  };
+
+  const toggleProfile = () => {
+    sound.playBlip(1400);
+    setProfileOpen(!profileOpen);
+    setSearchOpen(false);
+    setNotifOpen(false);
+  };
+
+  // Shared Floating Interactive Popovers for all TopNavigationBar templates
+  const renderInteractiveModals = () => (
+    <>
+      {/* 1. Global Interactive Search Modal */}
+      {searchOpen && (
+        <div className="absolute top-14 left-1/2 -translate-x-1/2 max-w-md w-[92%] p-3.5 rounded-2xl bg-[#070b1a]/95 backdrop-blur-3xl border border-cyan-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(6,182,212,0.25)] z-50 animate-in fade-in zoom-in-95 font-sans">
+          <div className="flex items-center gap-2 px-3 py-2 bg-black/60 rounded-xl border border-white/10">
+            <Search className="w-4 h-4 text-cyan-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Quantum Island matrix, telemetry, nodes..."
+              autoFocus
+              className="flex-1 bg-transparent text-xs text-white placeholder-slate-400 focus:outline-none font-mono"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-white">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-slate-400 font-mono">ESC</kbd>
+          </div>
+          <div className="mt-2.5 pt-2 border-t border-white/10 space-y-1">
+            <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold px-2 block">Quick Navigation Targets</span>
+            {links.map((link) => (
+              <button
+                key={link}
+                onClick={() => {
+                  sound.playConfirm();
+                  setActiveLink(link);
+                  setSearchOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <span>Navigate to {link}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-cyan-400" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 2. Global Interactive System Telemetry Feed */}
+      {notifOpen && (
+        <div className="absolute top-14 right-4 sm:right-8 max-w-sm w-[90%] p-3.5 rounded-2xl bg-[#070b1a]/95 backdrop-blur-3xl border border-cyan-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(6,182,212,0.25)] z-50 animate-in fade-in zoom-in-95 font-sans">
+          <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-cyan-400" />
+              <span className="text-xs font-bold text-white">System Telemetry Feed</span>
+            </div>
+            <button 
+              onClick={() => {
+                sound.playBlip(1000);
+                setUnreadCount(0);
+              }}
+              className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono hover:underline"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="mt-2.5 space-y-2 text-xs">
+            <div className="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30">
+              <div className="font-semibold text-cyan-300 flex items-center justify-between">
+                <span>Optical Bridge Rebalanced</span>
+                <span className="text-[9px] text-emerald-400 font-mono">JUST NOW</span>
+              </div>
+              <div className="text-[10px] text-slate-300 mt-1 font-mono">Zero packet latency across US-East cluster nodes.</div>
+            </div>
+            <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30">
+              <div className="font-semibold text-purple-300 flex items-center justify-between">
+                <span>Quantum Shield Active</span>
+                <span className="text-[9px] text-purple-400 font-mono">2M AGO</span>
+              </div>
+              <div className="text-[10px] text-slate-300 mt-1 font-mono">Core integrity holding steady at 99.8%.</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Global Interactive Operator Profile Dropdown */}
+      {profileOpen && (
+        <div className="absolute top-14 right-4 sm:right-6 max-w-xs w-[85%] p-4 rounded-2xl bg-[#070b1a]/95 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-50 animate-in fade-in zoom-in-95 font-sans">
+          <div className="flex items-center gap-3 pb-3 border-b border-white/10">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-sm text-white shadow-md">
+              DR
+            </div>
+            <div>
+              <div className="font-bold text-xs text-white">Dr. Vance</div>
+              <div className="text-[10px] text-cyan-300 font-mono">Chief Systems Architect</div>
+            </div>
+          </div>
+          <div className="py-2.5 space-y-2 text-xs font-mono">
+            <div className="flex items-center justify-between text-[11px] text-slate-300 px-2 py-1 bg-white/5 rounded-lg">
+              <span>STATUS:</span>
+              <span className="text-emerald-400 font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> ONLINE
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-300 px-2 py-1 bg-white/5 rounded-lg">
+              <span>CLEARANCE:</span>
+              <span className="text-cyan-300 font-bold">LEVEL 5 (APEX)</span>
+            </div>
+            <button
+              onClick={() => {
+                sound.playConfirm();
+                navigator.clipboard?.writeText('#0X-889F-VANCE');
+                setCopiedProfile(true);
+                setTimeout(() => setCopiedProfile(false), 2000);
+              }}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 transition-colors"
+            >
+              <span>{copiedProfile ? 'Copied to Clipboard!' : 'Copy Operator Key'}</span>
+              <Check className="w-3.5 h-3.5 text-cyan-400" />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   // ==========================================
   // TEMPLATE 1: FLOATING GLASS ISLAND (glass-island)
@@ -65,11 +219,13 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           {/* Left: Holographic Island Brand */}
           <div className="flex items-center gap-3">
             <div 
+              onClick={toggleProfile}
               className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white shadow-lg relative group cursor-pointer"
               style={{
                 background: `linear-gradient(135deg, ${settings.primaryColor}, ${settings.accentColor})`,
                 boxShadow: `0 0 18px ${settings.primaryColor}70`
               }}
+              title="Click to view Operator Profile"
             >
               <Sparkles className="w-4 h-4 text-white" />
               <span className="absolute -inset-1 rounded-full border border-white/30 animate-pulse pointer-events-none" />
@@ -94,7 +250,10 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
               return (
                 <button
                   key={link}
-                  onClick={() => setActiveLink(link)}
+                  onClick={() => {
+                    sound.playBlip(1400);
+                    setActiveLink(link);
+                  }}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 relative ${
                     isActive 
                       ? 'text-white shadow-lg' 
@@ -115,7 +274,7 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           {/* Right: Frosted Circular Controls */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={toggleSearch}
               className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/15 text-slate-200 transition-all shadow-inner"
               title="Quick Search"
             >
@@ -123,12 +282,9 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
             </button>
 
             <button
-              onClick={() => {
-                setNotifOpen(!notifOpen);
-                if (unreadCount > 0) setUnreadCount(0);
-              }}
+              onClick={toggleNotif}
               className="relative p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/15 text-slate-200 transition-all shadow-inner"
-              title="Notifications"
+              title="Notifications Feed"
             >
               <Bell className="w-3.5 h-3.5" />
               {unreadCount > 0 && (
@@ -142,25 +298,17 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
             </button>
 
             <div 
-              className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs border border-white/30 ml-1 cursor-pointer"
+              onClick={toggleProfile}
+              className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs border border-white/30 ml-1 cursor-pointer hover:scale-105 transition-transform"
               style={{ backgroundColor: `${settings.accentColor}30`, color: settings.accentColor }}
+              title="Click to view Operator Profile"
             >
               DR
             </div>
           </div>
         </header>
 
-        {/* Search Modal Dropdown */}
-        {searchOpen && (
-          <div className="absolute top-20 max-w-md w-full p-3 rounded-2xl bg-[#06141B]/95 backdrop-blur-2xl border border-cyan-500/40 shadow-2xl z-50 animate-in fade-in zoom-in-95">
-            <input 
-              type="text" 
-              placeholder="Search Quantum Island matrix..." 
-              autoFocus
-              className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-400 font-mono"
-            />
-          </div>
-        )}
+        {renderInteractiveModals()}
       </div>
     );
   }
@@ -174,12 +322,14 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
       <div className={`w-full py-4 flex flex-wrap lg:flex-nowrap items-center justify-between gap-3 relative transition-all ${stateClass}`}>
         {/* Pod 1: Brand Pod */}
         <div 
-          className="flex items-center gap-3 px-4 py-2.5 rounded-2xl backdrop-blur-2xl border shadow-xl transition-all"
+          onClick={toggleProfile}
+          className="flex items-center gap-3 px-4 py-2.5 rounded-2xl backdrop-blur-2xl border shadow-xl transition-all cursor-pointer hover:border-cyan-400/60"
           style={{
             background: 'linear-gradient(135deg, rgba(6, 20, 27, 0.85) 0%, rgba(17, 33, 45, 0.75) 100%)',
             borderColor: `${settings.primaryColor}50`,
             boxShadow: `0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px ${settings.primaryColor}20, inset 0 1px 1px rgba(255,255,255,0.15)`
           }}
+          title="Click to view Operator Profile"
         >
           <div 
             className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white shadow-inner"
@@ -213,7 +363,10 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
             return (
               <button
                 key={link}
-                onClick={() => setActiveLink(link)}
+                onClick={() => {
+                  sound.playBlip(1400);
+                  setActiveLink(link);
+                }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   isActive 
                     ? 'text-white shadow-lg' 
@@ -241,28 +394,36 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           }}
         >
           <button
-            onClick={() => setSearchOpen(!searchOpen)}
+            onClick={toggleSearch}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 hover:text-white transition-all"
+            title="Search Matrix (⌘K)"
           >
             <Search className="w-3.5 h-3.5 text-cyan-400" />
             <kbd className="text-[9px] px-1 py-0.2 rounded bg-white/10 font-mono text-slate-400">⌘K</kbd>
           </button>
 
           <button
-            onClick={() => setNotifOpen(!notifOpen)}
+            onClick={toggleNotif}
             className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 relative text-slate-300 hover:text-white"
+            title="Notifications Feed"
           >
             <Bell className="w-3.5 h-3.5" />
-            <span className="w-2 h-2 rounded-full bg-cyan-400 absolute top-1 right-1 shadow-glow-cyan" />
+            {unreadCount > 0 && (
+              <span className="w-2 h-2 rounded-full bg-cyan-400 absolute top-1 right-1 shadow-glow-cyan" />
+            )}
           </button>
 
           <div 
-            className="w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs border border-white/20"
+            onClick={toggleProfile}
+            className="w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs border border-white/20 cursor-pointer hover:scale-105 transition-transform"
             style={{ backgroundColor: `${settings.primaryColor}30`, color: settings.primaryColor }}
+            title="Click to view Operator Profile"
           >
             VX
           </div>
         </div>
+
+        {renderInteractiveModals()}
       </div>
     );
   }
@@ -293,9 +454,13 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent pointer-events-none" />
 
           {/* Left: Liquid Brand Orb */}
-          <div className="flex items-center gap-3">
+          <div 
+            onClick={toggleProfile}
+            className="flex items-center gap-3 cursor-pointer group"
+            title="Click to view Operator Profile"
+          >
             <div 
-              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-2xl relative overflow-hidden"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-2xl relative overflow-hidden group-hover:scale-105 transition-transform"
               style={{
                 background: `linear-gradient(135deg, ${settings.primaryColor}, ${settings.accentColor})`,
                 boxShadow: `0 0 25px ${settings.primaryColor}80`
@@ -330,7 +495,10 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
               return (
                 <button
                   key={link}
-                  onClick={() => setActiveLink(link)}
+                  onClick={() => {
+                    sound.playBlip(1400);
+                    setActiveLink(link);
+                  }}
                   className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                     isActive 
                       ? 'text-white shadow-lg' 
@@ -351,8 +519,9 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           {/* Right: Liquid Glass Controls */}
           <div className="flex items-center gap-2.5">
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={toggleSearch}
               className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/15 text-xs text-slate-200 transition-all backdrop-blur-md"
+              title="Search Matrix (⌘K)"
             >
               <Search className="w-3.5 h-3.5 text-cyan-400" />
               <span className="hidden sm:inline font-mono text-[11px]">Search Matrix</span>
@@ -360,14 +529,19 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
             </button>
 
             <button
-              onClick={() => setNotifOpen(!notifOpen)}
+              onClick={toggleNotif}
               className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/15 relative text-slate-200 transition-all"
+              title="Notifications Feed"
             >
               <Bell className="w-4 h-4" />
-              <span className="w-2 h-2 rounded-full bg-cyan-400 absolute top-1.5 right-1.5 shadow-glow-cyan" />
+              {unreadCount > 0 && (
+                <span className="w-2 h-2 rounded-full bg-cyan-400 absolute top-1.5 right-1.5 shadow-glow-cyan" />
+              )}
             </button>
           </div>
         </header>
+
+        {renderInteractiveModals()}
       </div>
     );
   }
@@ -388,9 +562,13 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           }}
         >
           {/* Left: Compact Brand + Telemetry Link */}
-          <div className="flex items-center gap-3">
+          <div 
+            onClick={toggleProfile}
+            className="flex items-center gap-3 cursor-pointer group"
+            title="Click to view Operator Profile"
+          >
             <div 
-              className="w-7 h-7 rounded-lg flex items-center justify-center font-mono font-bold text-xs text-white shadow-md"
+              className="w-7 h-7 rounded-lg flex items-center justify-center font-mono font-bold text-xs text-white shadow-md group-hover:scale-105 transition-transform"
               style={{ background: `linear-gradient(135deg, ${settings.primaryColor}, ${settings.accentColor})` }}
             >
               N
@@ -410,7 +588,10 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
               return (
                 <button
                   key={link}
-                  onClick={() => setActiveLink(link)}
+                  onClick={() => {
+                    sound.playBlip(1400);
+                    setActiveLink(link);
+                  }}
                   className={`px-2.5 py-1 rounded-lg transition-all ${
                     isActive 
                       ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40' 
@@ -430,13 +611,23 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
               <span>SHIELD: 100%</span>
             </div>
             <button 
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={toggleSearch}
               className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white"
+              title="Search (⌘K)"
             >
               <Search className="w-3.5 h-3.5" />
             </button>
+            <button 
+              onClick={toggleNotif}
+              className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white"
+              title="Notifications"
+            >
+              <Bell className="w-3.5 h-3.5" />
+            </button>
           </div>
         </header>
+
+        {renderInteractiveModals()}
       </div>
     );
   }
@@ -468,9 +659,13 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
         <div className="absolute bottom-1.5 right-2 text-cyan-400/60 font-mono text-[9px] pointer-events-none select-none">┘</div>
 
         {/* Left: Brand Identity with Holographic Badge */}
-        <div className="flex items-center gap-3">
+        <div 
+          onClick={toggleProfile}
+          className="flex items-center gap-3 cursor-pointer group"
+          title="Click to view Operator Profile"
+        >
           <div 
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-xl relative overflow-hidden"
+            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-xl relative overflow-hidden group-hover:scale-105 transition-transform"
             style={{ 
               background: `linear-gradient(135deg, ${settings.primaryColor}, ${settings.accentColor})`,
               boxShadow: `0 0 20px ${settings.primaryColor}70`
@@ -505,7 +700,10 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
             return (
               <button
                 key={link}
-                onClick={() => setActiveLink(link)}
+                onClick={() => {
+                  sound.playBlip(1400);
+                  setActiveLink(link);
+                }}
                 className={`relative px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   isActive 
                     ? 'text-white shadow-lg' 
@@ -533,33 +731,21 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
         <div className="flex items-center gap-2.5">
           <div className="relative">
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={toggleSearch}
               className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/15 hover:border-white/25 bg-white/5 text-xs text-slate-200 transition-all shadow-inner"
+              title="Search (⌘K)"
             >
               <Search className="w-3.5 h-3.5" style={{ color: settings.primaryColor }} />
               <span className="hidden sm:inline font-mono text-[11px]">Search...</span>
               <kbd className="hidden sm:inline-block px-1 py-0.5 text-[9px] rounded bg-white/10 font-mono text-slate-400">⌘K</kbd>
             </button>
-
-            {searchOpen && (
-              <div className="absolute right-0 top-11 w-72 p-2.5 rounded-2xl bg-[#06141B]/95 backdrop-blur-2xl border border-cyan-500/40 shadow-2xl z-50 animate-in fade-in zoom-in-95 font-mono">
-                <input 
-                  type="text" 
-                  placeholder="Query HUD modules..." 
-                  autoFocus
-                  className="w-full px-3 py-1.5 bg-black/60 border border-white/15 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-400"
-                />
-              </div>
-            )}
           </div>
 
           <div className="relative">
             <button
-              onClick={() => {
-                setNotifOpen(!notifOpen);
-                if (unreadCount > 0) setUnreadCount(0);
-              }}
+              onClick={toggleNotif}
               className="relative p-2 rounded-xl border border-white/15 hover:border-white/25 bg-white/5 text-slate-200 transition-all"
+              title="Notifications Feed"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
@@ -571,24 +757,13 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
                 </span>
               )}
             </button>
-
-            {notifOpen && (
-              <div className="absolute right-0 top-11 w-80 p-3 rounded-2xl bg-[#06141B]/95 backdrop-blur-2xl border border-cyan-500/40 shadow-2xl z-50 font-mono">
-                <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                  <span className="text-xs font-semibold text-white">System Telemetry Feed</span>
-                  <span className="text-[10px] text-cyan-400 cursor-pointer">Clear</span>
-                </div>
-                <div className="mt-2 space-y-2 text-xs">
-                  <div className="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30">
-                    <div className="font-semibold text-cyan-300">Optical Bridge Rebalanced</div>
-                    <div className="text-[10px] text-slate-400">Zero packet latency across US-East cluster.</div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="flex items-center gap-2 pl-2 border-l border-white/10">
+          <div 
+            onClick={toggleProfile}
+            className="flex items-center gap-2 pl-2 border-l border-white/10 cursor-pointer hover:opacity-80 transition-opacity"
+            title="Click to view Operator Profile"
+          >
             <div 
               className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ring-1 ring-white/30"
               style={{ backgroundColor: `${settings.accentColor}30`, color: settings.accentColor }}
@@ -602,6 +777,8 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
           </div>
         </div>
       </header>
+
+      {renderInteractiveModals()}
     </div>
   );
 };
@@ -609,6 +786,7 @@ export const TopNavigationBar: React.FC<HeaderProps> = ({ settings, variantId })
 // 2. STICKY HEADER
 export const StickyHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
   const [scrollY, setScrollY] = useState(0);
+  const [launched, setLaunched] = useState(false);
   const isScrolled = scrollY > 60;
   const styles = getComponentStyles(settings);
 
@@ -660,10 +838,19 @@ export const StickyHeader: React.FC<HeaderProps> = ({ settings, variantId }) => 
                   {isScrolled ? 'PINNED & SHRUNK' : 'RESTING STATE'}
                 </span>
                 <button 
-                  className="px-3 py-1 rounded-md text-xs font-semibold text-black"
-                  style={{ backgroundColor: settings.primaryColor }}
+                  onClick={() => {
+                    sound.playConfirm();
+                    setLaunched(true);
+                    setTimeout(() => setLaunched(false), 3000);
+                  }}
+                  className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
+                    launched 
+                      ? 'bg-emerald-400 text-black shadow-[0_0_15px_#34d399]' 
+                      : 'text-black'
+                  }`}
+                  style={{ backgroundColor: launched ? '#34d399' : settings.primaryColor }}
                 >
-                  Launch
+                  {launched ? 'HYPERDRIVE ACTIVE ✓' : 'Launch'}
                 </button>
               </div>
             </div>
@@ -698,6 +885,10 @@ export const StickyHeader: React.FC<HeaderProps> = ({ settings, variantId }) => 
 // 3. TRANSPARENT HEADER
 export const TransparentHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
   const [backdrop, setBackdrop] = useState<'neon-grid' | 'space' | 'gradient'>('neon-grid');
+  const [connected, setConnected] = useState(false);
+  const [activeNav, setActiveNav] = useState('Ecosystem');
+
+  const navItems = ['Ecosystem', 'Hardware', 'Enterprise', 'Docs'];
 
   return (
     <div className="w-full max-w-4xl rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
@@ -727,17 +918,35 @@ export const TransparentHeader: React.FC<HeaderProps> = ({ settings, variantId }
           </div>
 
           <nav className="flex items-center gap-6 text-xs font-medium text-slate-200">
-            <span className="hover:text-cyan-400 cursor-pointer drop-shadow">Ecosystem</span>
-            <span className="hover:text-cyan-400 cursor-pointer drop-shadow">Hardware</span>
-            <span className="hover:text-cyan-400 cursor-pointer drop-shadow">Enterprise</span>
-            <span className="hover:text-cyan-400 cursor-pointer drop-shadow">Docs</span>
+            {navItems.map((item) => (
+              <span 
+                key={item}
+                onClick={() => {
+                  sound.playBlip(1400);
+                  setActiveNav(item);
+                }}
+                className={`cursor-pointer transition-all drop-shadow ${
+                  activeNav === item ? 'text-cyan-400 font-bold border-b border-cyan-400 pb-0.5' : 'hover:text-cyan-300 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {item}
+              </span>
+            ))}
           </nav>
 
           <button 
-            className="px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md border border-white/20 text-white hover:border-cyan-400 transition-all"
-            style={{ backgroundColor: `${settings.primaryColor}20` }}
+            onClick={() => {
+              sound.playConfirm();
+              setConnected(!connected);
+            }}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md border transition-all ${
+              connected 
+                ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-[0_0_15px_#34d399]' 
+                : 'border-white/20 text-white hover:border-cyan-400'
+            }`}
+            style={{ backgroundColor: connected ? undefined : `${settings.primaryColor}20` }}
           >
-            Connect Node
+            {connected ? 'NODE LINKED ✓' : 'Connect Node'}
           </button>
         </header>
 
@@ -759,7 +968,10 @@ export const TransparentHeader: React.FC<HeaderProps> = ({ settings, variantId }
             {(['neon-grid', 'space', 'gradient'] as const).map((b) => (
               <button
                 key={b}
-                onClick={() => setBackdrop(b)}
+                onClick={() => {
+                  sound.playScan();
+                  setBackdrop(b);
+                }}
                 className={`px-2.5 py-1 rounded text-[11px] font-mono uppercase ${
                   backdrop === b ? 'bg-cyan-500 text-black font-bold' : 'bg-white/10 text-white'
                 }`}
@@ -776,7 +988,11 @@ export const TransparentHeader: React.FC<HeaderProps> = ({ settings, variantId }
 
 // 4. FLOATING HEADER
 export const FloatingHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
+  const [activeItem, setActiveItem] = useState('Studio');
+  const [upgraded, setUpgraded] = useState(false);
   const styles = getComponentStyles(settings);
+
+  const navItems = ['Studio', 'Components', 'Tokens', 'Documentation'];
 
   return (
     <div className="w-full flex flex-col items-center py-6">
@@ -795,21 +1011,41 @@ export const FloatingHeader: React.FC<HeaderProps> = ({ settings, variantId }) =
         </div>
 
         <nav className="flex items-center gap-4 text-xs">
-          <span className="font-semibold text-cyan-400">Studio</span>
-          <span className="opacity-70 hover:opacity-100 cursor-pointer">Components</span>
-          <span className="opacity-70 hover:opacity-100 cursor-pointer">Tokens</span>
-          <span className="opacity-70 hover:opacity-100 cursor-pointer">Documentation</span>
+          {navItems.map((item) => (
+            <span
+              key={item}
+              onClick={() => {
+                sound.playBlip(1400);
+                setActiveItem(item);
+              }}
+              className={`cursor-pointer transition-all ${
+                activeItem === item ? 'font-semibold text-cyan-400' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              {item}
+            </span>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
-          <button className="px-3 py-1 rounded-md text-xs font-medium border border-white/10 hover:border-white/20">
+          <button 
+            onClick={() => {
+              sound.playBlip(1200);
+              alert('Opening Secure Quantum Sign-In Portal...');
+            }}
+            className="px-3 py-1 rounded-md text-xs font-medium border border-white/10 hover:border-white/20 text-slate-200"
+          >
             Sign In
           </button>
           <button 
-            className="px-3 py-1 rounded-md text-xs font-semibold text-black"
-            style={{ backgroundColor: settings.primaryColor }}
+            onClick={() => {
+              sound.playConfirm();
+              setUpgraded(!upgraded);
+            }}
+            className="px-3 py-1 rounded-md text-xs font-semibold text-black transition-all"
+            style={{ backgroundColor: upgraded ? '#34d399' : settings.primaryColor }}
           >
-            Upgrade
+            {upgraded ? 'PRO ACTIVATED ✓' : 'Upgrade'}
           </button>
         </div>
       </div>
@@ -822,7 +1058,10 @@ export const FloatingHeader: React.FC<HeaderProps> = ({ settings, variantId }) =
 
 // 5. MINIMAL HEADER
 export const MinimalHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
+  const [activeMinimal, setActiveMinimal] = useState('01. INDEX');
   const styles = getComponentStyles(settings);
+
+  const items = ['01. INDEX', '02. DOSSIER', '03. ARCHIVE', '04. DISPATCH'];
 
   return (
     <div className="w-full max-w-3xl">
@@ -842,14 +1081,24 @@ export const MinimalHeader: React.FC<HeaderProps> = ({ settings, variantId }) =>
         </div>
 
         <div className="flex items-center gap-6 text-xs font-mono">
-          <span className="hover:underline cursor-pointer">01. INDEX</span>
-          <span className="hover:underline cursor-pointer">02. DOSSIER</span>
-          <span className="hover:underline cursor-pointer">03. ARCHIVE</span>
-          <span className="hover:underline cursor-pointer">04. DISPATCH</span>
+          {items.map((item) => (
+            <span 
+              key={item}
+              onClick={() => {
+                sound.playBlip(1400);
+                setActiveMinimal(item);
+              }}
+              className={`hover:underline cursor-pointer transition-colors ${
+                activeMinimal === item ? 'text-cyan-400 font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {item}
+            </span>
+          ))}
         </div>
 
         <div className="font-mono text-xs">
-          <span className="px-2 py-1 border border-white/20 rounded-none text-[10px]">
+          <span className="px-2 py-1 border border-white/20 rounded-none text-[10px] text-emerald-400">
             SYS: OK
           </span>
         </div>
@@ -860,6 +1109,9 @@ export const MinimalHeader: React.FC<HeaderProps> = ({ settings, variantId }) =>
 
 // 6. SPLIT HEADER
 export const SplitHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
+  const [activeCluster, setActiveCluster] = useState('Projects');
+  const [deployStatus, setDeployStatus] = useState<'idle' | 'deploying' | 'live'>('idle');
+
   return (
     <div className="w-full max-w-4xl flex items-center justify-between gap-4 py-4 px-2">
       {/* Left Cluster */}
@@ -878,9 +1130,20 @@ export const SplitHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
         </div>
         <div className="h-4 w-[1px] bg-white/15" />
         <div className="flex gap-3 text-xs opacity-80">
-          <span className="hover:text-cyan-400 cursor-pointer">Projects</span>
-          <span className="hover:text-cyan-400 cursor-pointer">Clusters</span>
-          <span className="hover:text-cyan-400 cursor-pointer">Nodes</span>
+          {['Projects', 'Clusters', 'Nodes'].map((tab) => (
+            <span
+              key={tab}
+              onClick={() => {
+                sound.playBlip(1400);
+                setActiveCluster(tab);
+              }}
+              className={`cursor-pointer transition-colors ${
+                activeCluster === tab ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400'
+              }`}
+            >
+              {tab}
+            </span>
+          ))}
         </div>
       </div>
 
@@ -903,10 +1166,22 @@ export const SplitHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
           <span>CONNECTED</span>
         </div>
         <button 
-          className="px-3 py-1 rounded-lg text-xs font-semibold text-black"
-          style={{ backgroundColor: settings.primaryColor }}
+          onClick={() => {
+            sound.playConfirm();
+            setDeployStatus('deploying');
+            setTimeout(() => setDeployStatus('live'), 1500);
+            setTimeout(() => setDeployStatus('idle'), 4000);
+          }}
+          className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+            deployStatus === 'live'
+              ? 'bg-emerald-400 text-black'
+              : deployStatus === 'deploying'
+              ? 'bg-amber-400 text-black animate-pulse'
+              : 'text-black'
+          }`}
+          style={{ backgroundColor: deployStatus === 'idle' ? settings.primaryColor : undefined }}
         >
-          Quick Deploy
+          {deployStatus === 'deploying' ? 'Deploying...' : deployStatus === 'live' ? 'Live on Edge ✓' : 'Quick Deploy'}
         </button>
       </div>
     </div>
@@ -916,13 +1191,17 @@ export const SplitHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
 // 7. ANNOUNCEMENT BAR
 export const AnnouncementBar: React.FC<HeaderProps> = ({ settings, variantId }) => {
   const [dismissed, setDismissed] = useState(false);
+  const [claimed, setClaimed] = useState(false);
 
   if (dismissed) {
     return (
       <div className="p-4 rounded-xl border border-dashed border-white/10 text-center">
         <span className="text-xs opacity-60">Announcement bar dismissed. </span>
         <button 
-          onClick={() => setDismissed(false)}
+          onClick={() => {
+            sound.playScan();
+            setDismissed(false);
+          }}
           className="text-xs text-cyan-400 underline font-medium ml-2"
         >
           Restore Banner
@@ -952,17 +1231,22 @@ export const AnnouncementBar: React.FC<HeaderProps> = ({ settings, variantId }) 
           <span className="text-xs font-medium truncate">
             🚀 Autonomous Neural Routing is now in Public Preview for all clusters.
           </span>
-          <a 
-            href="#changelog" 
-            onClick={(e) => e.preventDefault()}
+          <button 
+            onClick={() => {
+              sound.playConfirm();
+              setClaimed(true);
+            }}
             className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-cyan-400 hover:underline shrink-0"
           >
-            Read Changelog <ArrowUpRight className="w-3 h-3" />
-          </a>
+            {claimed ? 'Access Granted ✓' : 'Claim Quantum Access'} <ArrowUpRight className="w-3 h-3" />
+          </button>
         </div>
 
         <button 
-          onClick={() => setDismissed(true)}
+          onClick={() => {
+            sound.playHover();
+            setDismissed(true);
+          }}
           className="p-1 rounded-md hover:bg-white/10 opacity-70 hover:opacity-100 transition-all shrink-0 ml-2"
         >
           <X className="w-3.5 h-3.5" />
@@ -976,10 +1260,14 @@ export const AnnouncementBar: React.FC<HeaderProps> = ({ settings, variantId }) 
 export const SecondaryHeader: React.FC<HeaderProps> = ({ settings, variantId }) => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [branch, setBranch] = useState('main');
+  const [activeFilter, setActiveFilter] = useState('All Services');
+  const [filterOpen, setFilterOpen] = useState(false);
   const styles = getComponentStyles(settings);
 
+  const filters = ['All Services', 'APIs', 'Workers', 'Edge DB'];
+
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-4xl relative">
       <div 
         style={styles.container}
         className="flex items-center justify-between border shadow-md transition-all py-2.5 px-4"
@@ -990,7 +1278,10 @@ export const SecondaryHeader: React.FC<HeaderProps> = ({ settings, variantId }) 
             <GitBranch className="w-3.5 h-3.5 text-cyan-400" />
             <select 
               value={branch}
-              onChange={(e) => setBranch(e.target.value)}
+              onChange={(e) => {
+                sound.playBlip(1200);
+                setBranch(e.target.value);
+              }}
               className="bg-transparent text-white focus:outline-none cursor-pointer"
             >
               <option value="main" className="bg-slate-900 text-white">main</option>
@@ -1001,42 +1292,89 @@ export const SecondaryHeader: React.FC<HeaderProps> = ({ settings, variantId }) 
           <span className="text-xs opacity-60">12 Deployments active</span>
         </div>
 
-        {/* Center: Filter Pills */}
+        {/* Center: Filter Pills with Working Active State */}
         <div className="hidden md:flex items-center gap-1 bg-white/5 p-0.5 rounded-lg border border-white/10 text-xs">
-          {['All Services', 'APIs', 'Workers', 'Edge DB'].map((f, i) => (
-            <button
-              key={f}
-              className={`px-2.5 py-1 rounded-md font-medium transition-all ${
-                i === 0 ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'opacity-70 hover:opacity-100'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {filters.map((f) => {
+            const isActive = activeFilter === f;
+            return (
+              <button
+                key={f}
+                onClick={() => {
+                  sound.playBlip(1300);
+                  setActiveFilter(f);
+                }}
+                className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+                  isActive 
+                    ? 'bg-cyan-500/25 text-cyan-300 font-semibold border border-cyan-400/40 shadow-sm' 
+                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                {f}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Right: View switcher */}
+        {/* Right: View switcher & Filter Button */}
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-white/5 rounded-lg p-0.5 border border-white/10">
             <button 
-              onClick={() => setView('grid')}
-              className={`p-1 rounded ${view === 'grid' ? 'bg-white/15 text-cyan-400' : 'opacity-50'}`}
+              onClick={() => {
+                sound.playBlip(1200);
+                setView('grid');
+              }}
+              className={`p-1 rounded transition-colors ${view === 'grid' ? 'bg-white/15 text-cyan-400' : 'opacity-50 hover:opacity-100'}`}
+              title="Grid View"
             >
               <Grid className="w-3.5 h-3.5" />
             </button>
             <button 
-              onClick={() => setView('list')}
-              className={`p-1 rounded ${view === 'list' ? 'bg-white/15 text-cyan-400' : 'opacity-50'}`}
+              onClick={() => {
+                sound.playBlip(1200);
+                setView('list');
+              }}
+              className={`p-1 rounded transition-colors ${view === 'list' ? 'bg-white/15 text-cyan-400' : 'opacity-50 hover:opacity-100'}`}
+              title="List View"
             >
               <List className="w-3.5 h-3.5" />
             </button>
           </div>
-          <button className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs border border-white/10">
-            <Filter className="w-3.5 h-3.5 text-slate-400" />
+
+          <button 
+            onClick={() => {
+              sound.playScan();
+              setFilterOpen(!filterOpen);
+            }}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border transition-colors ${
+              filterOpen ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
+            }`}
+          >
+            <Filter className="w-3.5 h-3.5" />
             <span>Filter</span>
           </button>
         </div>
       </div>
+
+      {/* Filter Dropdown Popover */}
+      {filterOpen && (
+        <div className="absolute right-4 top-14 w-56 p-3 rounded-xl bg-[#070b1a]/95 backdrop-blur-2xl border border-white/15 shadow-2xl z-50 text-xs font-mono animate-in fade-in zoom-in-95">
+          <span className="text-[10px] text-slate-500 uppercase font-bold block mb-2">Filter By Status</span>
+          <div className="space-y-1">
+            {['Active Only', 'Failed Pipelines', 'Deploying', 'Staged Nodes'].map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  sound.playConfirm();
+                  setFilterOpen(false);
+                }}
+                className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

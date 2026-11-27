@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { CustomizationSettings } from '../../../types/studio';
 import { getComponentStyles } from '../../../utils/styleHelper';
+import { sound } from '../../../utils/soundEngine';
 
 interface NavProps {
   settings: CustomizationSettings;
@@ -74,6 +75,8 @@ export const HamburgerMenuComponent: React.FC<NavProps> = ({ settings, variantId
 // 17. NAVIGATION DRAWER
 export const NavigationDrawerComponent: React.FC<NavProps> = ({ settings, variantId }) => {
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [activeItem, setActiveItem] = useState('Overview');
+  const [signedOut, setSignedOut] = useState(false);
   const styles = getComponentStyles(settings);
 
   return (
@@ -84,8 +87,11 @@ export const NavigationDrawerComponent: React.FC<NavProps> = ({ settings, varian
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-mono text-cyan-400">HOST VIEWPORT CANVAS</span>
             <button
-              onClick={() => setDrawerOpen(!drawerOpen)}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/15"
+              onClick={() => {
+                sound.playHover();
+                setDrawerOpen(!drawerOpen);
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/15 transition-colors"
             >
               {drawerOpen ? 'Dismiss Drawer' : 'Trigger Drawer'}
             </button>
@@ -102,7 +108,10 @@ export const NavigationDrawerComponent: React.FC<NavProps> = ({ settings, varian
         <div className="absolute inset-0 z-20 flex animate-in fade-in duration-300">
           {/* Dimmed backdrop */}
           <div 
-            onClick={() => setDrawerOpen(false)}
+            onClick={() => {
+              sound.playHover();
+              setDrawerOpen(false);
+            }}
             className="flex-1 bg-black/60 backdrop-blur-sm cursor-pointer"
           />
 
@@ -115,33 +124,53 @@ export const NavigationDrawerComponent: React.FC<NavProps> = ({ settings, varian
               <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
                 <span className="font-bold text-xs tracking-wide">QUICK DRAWER</span>
                 <button 
-                  onClick={() => setDrawerOpen(false)}
-                  className="p-1 rounded-lg hover:bg-white/10"
+                  onClick={() => {
+                    sound.playHover();
+                    setDrawerOpen(false);
+                  }}
+                  className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               <div className="space-y-1 text-xs">
-                {['Overview', 'Deployments', 'Security Vault', 'Audit Logs', 'Documentation'].map((item, i) => (
-                  <button
-                    key={item}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-all ${
-                      i === 0 ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'hover:bg-white/5 opacity-80'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
+                {['Overview', 'Deployments', 'Security Vault', 'Audit Logs', 'Documentation'].map((item) => {
+                  const isActive = activeItem === item;
+                  return (
+                    <button
+                      key={item}
+                      onClick={() => {
+                        sound.playBlip(1200);
+                        setActiveItem(item);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-all ${
+                        isActive 
+                          ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-400/30' 
+                          : 'hover:bg-white/5 opacity-80 hover:opacity-100 text-slate-300'
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             <div className="pt-3 border-t border-white/10 text-xs">
               <button 
-                className="w-full py-2 rounded-lg text-xs font-semibold text-black"
-                style={{ backgroundColor: settings.primaryColor }}
+                onClick={() => {
+                  sound.playConfirm();
+                  setSignedOut(!signedOut);
+                }}
+                className={`w-full py-2 rounded-lg text-xs font-semibold transition-all ${
+                  signedOut 
+                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' 
+                    : 'text-black'
+                }`}
+                style={!signedOut ? { backgroundColor: settings.primaryColor } : undefined}
               >
-                Sign Out
+                {signedOut ? 'SESSION TERMINATED ✓' : 'Sign Out'}
               </button>
             </div>
           </div>
