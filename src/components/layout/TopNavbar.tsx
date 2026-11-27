@@ -69,32 +69,24 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           )}
         </button>
 
-        {/* iOS-Style Search Trigger Pill */}
+        {/* iOS-Style Search Trigger Icon Button */}
         <button
           onClick={() => {
             sound.playHover();
             setIsCommandPaletteOpen(true);
           }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all font-sans text-xs shrink-0 shadow-sm"
+          className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all shrink-0 shadow-sm"
           title="Search Components (⌘K)"
         >
           <Search className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="hidden sm:inline text-xs text-slate-300 font-medium">Search</span>
-          <kbd className="hidden md:inline-block px-1.5 py-0.2 rounded-full bg-white/10 text-[9px] text-slate-400 font-mono">
-            ⌘K
-          </kbd>
         </button>
 
-        <span className="text-slate-600 hidden lg:inline">/</span>
-
-        {/* Minimal Breadcrumb */}
-        <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 min-w-0 font-sans">
-          <span className="text-slate-400 capitalize truncate">{activeComponent.subcategory}</span>
-          <span className="text-slate-600">/</span>
-          <span className="text-white font-semibold truncate max-w-[140px] xl:max-w-[200px]">
+        {/* Clean Active Component Title */}
+        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 min-w-0 font-sans pl-1">
+          <span className="text-white font-semibold truncate max-w-[180px] md:max-w-[240px] lg:max-w-[320px]">
             {activeComponent.name}
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse ml-1 opacity-90 shrink-0" title="Active" />
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse shrink-0" title="Active" />
         </div>
       </div>
 
